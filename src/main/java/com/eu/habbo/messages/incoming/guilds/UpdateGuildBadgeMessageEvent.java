@@ -20,16 +20,16 @@ public class UpdateGuildBadgeMessageEvent extends MessageHandler {
                 if (room == null || room.getId() != guild.getRoomId())
                     return;
 
-                int count = this.packet.readInt();
+                int count = this.packet.readBoundedCount(100, 0);
 
                 String badge = "";
 
                 byte base = 1;
 
                 while (base < count) {
-                    int id = this.packet.readInt();
-                    int color = this.packet.readInt();
-                    int pos = this.packet.readInt();
+                    int id = this.packet.readRequiredInt();
+                    int color = this.packet.readRequiredInt();
+                    int pos = this.packet.readRequiredInt();
 
                     if (base == 1) {
                         badge += "b";

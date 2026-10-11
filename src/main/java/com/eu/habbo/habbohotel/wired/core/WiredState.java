@@ -25,7 +25,8 @@ import java.util.UUID;
  */
 public final class WiredState {
     
-    private final UUID runId;
+    private final WiredSafetyBudget budget;
+    private final WiredExecutionPath executionPath;
     private final int maxSteps;
     private int steps = 0;
     private long startTimeMs;
@@ -37,7 +38,22 @@ public final class WiredState {
      * @param maxSteps maximum number of steps allowed (triggers, conditions, effects)
      */
     public WiredState(int maxSteps) {
-        this.runId = UUID.randomUUID();
+        this(maxSteps, WiredSafetyBudget.forSteps(maxSteps));
+    }
+
+    /**
+     * Create a child stack state that consumes a shared root execution budget.
+     */
+    public WiredState(int maxSteps, WiredSafetyBudget budget) {
+        this(maxSteps, budget, new WiredExecutionPath(budget));
+    }
+
+    private WiredState(int maxSteps, WiredSafetyBudget budget, WiredExecutionPath executionPath) {
+        if (maxSteps <= 0) throw new IllegalArgumentException("Max steps must be positive");
+        if (budget == null) throw new IllegalArgumentException("Budget cannot be null");
+        if (executionPath == null) throw new IllegalArgumentException("Execution path cannot be null");
+        this.budget = budget;
+        this.executionPath = executionPath;
         this.maxSteps = maxSteps;
         this.startTimeMs = System.currentTimeMillis();
     }
@@ -48,14 +64,30 @@ public final class WiredState {
      * @return the run UUID
      */
     public UUID runId() {
-        return runId;
+        return this.budget.runId();
+    }
+
+    public WiredSafetyBudget budget() {
+        return this.budget;
+    }
+
+    public WiredState fork() {
+        return new WiredState(this.maxSteps, this.budget, this.executionPath.fork());
+    }
+
+    public WiredState fork(int childMaxSteps) {
+        return new WiredState(childMaxSteps, this.budget, this.executionPath.fork());
+    }
+
+    public WiredSafetyBudget.PathLease enter(WiredSafetyBudget.PathKind kind, long stableId) {
+        return this.executionPath.enter(kind, stableId);
     }
 
     /**
      * Get the current step count.
      * @return number of steps executed so far
      */
-    public int steps() {
+    public synchronized int steps() {
         return steps;
     }
 
@@ -87,7 +119,7 @@ public final class WiredState {
      * Check if the execution has been aborted.
      * @return true if aborted
      */
-    public boolean isAborted() {
+    public synchronized boolean isAborted() {
         return aborted;
     }
 
@@ -95,7 +127,7 @@ public final class WiredState {
      * Get the reason for abortion, if any.
      * @return the abort reason, or null if not aborted
      */
-    public String abortReason() {
+    public synchronized String abortReason() {
         return abortReason;
     }
 
@@ -105,33 +137,34 @@ public final class WiredState {
      * 
      * @throws WiredLimitException if the step limit has been exceeded
      */
-    public void step() {
+    public synchronized void step() {
         if (aborted) {
             throw new WiredLimitException("Wired execution was aborted: " + abortReason);
         }
         
-        steps++;
-        if (steps > maxSteps) {
+        if (steps >= maxSteps) {
             throw new WiredLimitException(
                     "Wired execution exceeded max steps: " + maxSteps + 
-                    " (runId: " + runId + ")");
+                    " (runId: " + runId() + ")");
         }
+        this.budget.step();
+        steps++;
     }
 
     /**
      * Check if we can still execute more steps without throwing.
      * @return true if more steps are allowed
      */
-    public boolean canStep() {
-        return !aborted && steps < maxSteps;
+    public synchronized boolean canStep() {
+        return !aborted && steps < maxSteps && this.budget.canStep();
     }
 
     /**
      * Get remaining steps before hitting the limit.
      * @return number of remaining steps
      */
-    public int remainingSteps() {
-        return Math.max(0, maxSteps - steps);
+    public synchronized int remainingSteps() {
+        return Math.min(Math.max(0, maxSteps - steps), this.budget.remainingSteps());
     }
 
     /**
@@ -139,7 +172,7 @@ public final class WiredState {
      * Subsequent calls to {@link #step()} will throw.
      * @param reason the reason for aborting
      */
-    public void abort(String reason) {
+    public synchronized void abort(String reason) {
         this.aborted = true;
         this.abortReason = reason;
     }
@@ -148,7 +181,7 @@ public final class WiredState {
      * Reset the step counter (use with caution).
      * This is mainly for testing purposes.
      */
-    public void reset() {
+    public synchronized void reset() {
         this.steps = 0;
         this.aborted = false;
         this.abortReason = null;
@@ -158,7 +191,7 @@ public final class WiredState {
     @Override
     public String toString() {
         return "WiredState{" +
-                "runId=" + runId +
+                "runId=" + runId() +
                 ", steps=" + steps + "/" + maxSteps +
                 ", elapsed=" + elapsedMs() + "ms" +
                 (aborted ? ", ABORTED: " + abortReason : "") +

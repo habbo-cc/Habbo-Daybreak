@@ -162,7 +162,7 @@ public final class WiredTickService {
         // Load configuration from emulator settings
         loadConfiguration();
         
-        LOGGER.info("Starting WiredTickService with {}ms tick interval (debug={}, priority={})...", 
+        LOGGER.trace("Wired Tick Service -> Starting (interval={} MS, debug={}, priority={}).",
             tickIntervalMs, debugEnabled, threadPriority);
         
         this.scheduler = Executors.newSingleThreadScheduledExecutor(r -> {
@@ -180,7 +180,7 @@ public final class WiredTickService {
         );
         
         running.set(true);
-        LOGGER.info("WiredTickService started successfully");
+        LOGGER.trace("Wired Tick Service -> Started.");
     }
     
     /**

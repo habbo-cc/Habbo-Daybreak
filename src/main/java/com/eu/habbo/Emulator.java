@@ -36,16 +36,26 @@ public final class Emulator {
     public final static int BUILD = 3;
     public final static String PREVIEW = "beta";
 
-    public static final String version = "Arcturus Morningstar" + " " + MAJOR + "." + MINOR + "." + BUILD + " " + PREVIEW;
-    private static final String logo =
-            "\n" +
-                    "███╗   ███╗ ██████╗ ██████╗ ███╗   ██╗██╗███╗   ██╗ ██████╗ ███████╗████████╗ █████╗ ██████╗ \n" +
-                    "████╗ ████║██╔═══██╗██╔══██╗████╗  ██║██║████╗  ██║██╔════╝ ██╔════╝╚══██╔══╝██╔══██╗██╔══██╗\n" +
-                    "██╔████╔██║██║   ██║██████╔╝██╔██╗ ██║██║██╔██╗ ██║██║  ███╗███████╗   ██║   ███████║██████╔╝\n" +
-                    "██║╚██╔╝██║██║   ██║██╔══██╗██║╚██╗██║██║██║╚██╗██║██║   ██║╚════██║   ██║   ██╔══██║██╔══██╗\n" +
-                    "██║ ╚═╝ ██║╚██████╔╝██║  ██║██║ ╚████║██║██║ ╚████║╚██████╔╝███████║   ██║   ██║  ██║██║  ██║\n" +
-                    "╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝\n" +
-                    "Welcome to 2026.\n";
+    public static final String version = "Habbo Daybreak Developer Preview";
+    private static final String[] LOGO = {
+            "       __            __                    __  ",
+            "  ____/ /___ ___  __/ /_  ________  ____ _/ /__",
+            " / __  / __ `/ / / / __ \\/ ___/ _ \\/ __ `/ //_/",
+            "/ /_/ / /_/ / /_/ / /_/ / /  /  __/ /_/ / ,<   ",
+            "\\__,_/\\__,_/\\__, /_.___/_/   \\___/\\__,_/_/|_|  ",
+            "           /____/                              ",
+            " \\____________________________________________/"
+    };
+
+    private static final String TAGLINE = "Welcome to 2026.";
+
+    // Sunrise gradient stops (violet -> pink -> amber -> pale gold), left to right.
+    private static final int[][] DAWN = {
+            {138, 96, 255},
+            {255, 108, 145},
+            {255, 176, 64},
+            {255, 238, 160}
+    };
 
     public static String build = "";
     public static boolean isReady = false;
@@ -90,15 +100,8 @@ public final class Emulator {
             ConsoleCommand.load();
             Emulator.logging = new Logging();
 
-            System.out.println(logo);
-
-
-            System.out.println("");
-            LOGGER.info("Follow our development at https://git.krews.org/morningstar/Arcturus-Community, ");
-            System.out.println("");
-            LOGGER.info("This project is for educational purposes only. This Emulator is an open-source fork of Arcturus created by TheGeneral.");
-            LOGGER.info("Version: {}", version);
-            LOGGER.info("Build: {}", build);
+            printLogo();
+            printBanner();
 
             long startTime = System.nanoTime();
 
@@ -140,10 +143,6 @@ public final class Emulator {
                 }
             }
 
-            LOGGER.info("Arcturus Morningstar has successfully loaded.");
-            LOGGER.info("System launched in: {}ms. Using {} threads!", (System.nanoTime() - startTime) / 1e6, Runtime.getRuntime().availableProcessors() * 2);
-            LOGGER.info("Memory: {}/{}MB", (runtime.totalMemory() - runtime.freeMemory()) / (1024 * 1024), (runtime.freeMemory()) / (1024 * 1024));
-
             Emulator.debugging = Emulator.getConfig().getBoolean("debug.mode");
 
             if (debugging) {
@@ -156,11 +155,11 @@ public final class Emulator {
             Emulator.isReady = true;
             Emulator.timeStarted = getIntUnixTimestamp();
 
-            if (Emulator.getConfig().getInt("runtime.threads") < (Runtime.getRuntime().availableProcessors() * 2)) {
-                LOGGER.warn("Emulator settings runtime.threads ({}) can be increased to ({}) to possibly increase performance.",
-                        Emulator.getConfig().getInt("runtime.threads"),
-                        Runtime.getRuntime().availableProcessors() * 2);
-            }
+            long usedHeapMb = (runtime.totalMemory() - runtime.freeMemory()) / (1024 * 1024);
+            long maxHeapMb = runtime.maxMemory() / (1024 * 1024);
+            LOGGER.info("Habbo Daybreak -> Loaded! ({} MS, {} worker threads, heap {}/{} MB)",
+                    (System.nanoTime() - startTime) / 1_000_000,
+                    Emulator.getConfig().getInt("runtime.threads"), usedHeapMb, maxHeapMb);
 
             Emulator.getThreading().run(() -> {
             }, 1500);
@@ -188,6 +187,171 @@ public final class Emulator {
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private static void printLogo() {
+        final int rows = LOGO.length;
+        final int width = LOGO[0].length();
+
+        // No real console (redirected to file / piped) or NO_COLOR set -> plain, no ANSI garbage.
+        boolean fancy = System.console() != null && System.getenv("NO_COLOR") == null;
+
+        System.out.println();
+
+        if (!fancy) {
+            for (String row : LOGO) {
+                System.out.println(row);
+            }
+            System.out.println("      " + TAGLINE);
+            System.out.println();
+            return;
+        }
+
+        // Sunrise sweep: reveal the word column-by-column, a bright dawn edge leading the way.
+        System.out.print(logoFrame(0));
+        for (int reveal = 1; reveal <= width; reveal++) {
+            System.out.print("[" + rows + "F");
+            System.out.print(logoFrame(reveal));
+            System.out.flush();
+            sleep(14);
+        }
+
+        // Glint: a single bright highlight slides across the finished word.
+        for (int glint = -3; glint <= width + 3; glint += 2) {
+            System.out.print("[" + rows + "F");
+            System.out.print(logoFrame(width, glint));
+            System.out.flush();
+            sleep(10);
+        }
+        System.out.print("[" + rows + "F");
+        System.out.print(logoFrame(width, Integer.MIN_VALUE));
+
+        // Tagline fades up from ember to gold.
+        String tag = "      " + TAGLINE;
+        for (int step = 0; step <= 6; step++) {
+            int r = 120 + step * 22;
+            int g = 70 + step * 26;
+            int b = 40 + step * 18;
+            System.out.print("\r[38;2;" + clamp(r) + ";" + clamp(g) + ";" + clamp(b) + "m" + tag + "[0m");
+            System.out.flush();
+            sleep(28);
+        }
+        System.out.println();
+        System.out.println();
+    }
+
+    private static void printBanner() {
+        boolean fancy = System.console() != null && System.getenv("NO_COLOR") == null;
+        String shortBuild = (build != null && build.length() >= 8) ? build.substring(0, 8) : build;
+        String tail = "   build " + shortBuild;
+
+        if (!fancy) {
+            System.out.println("   " + version + tail);
+            System.out.println("   open-source fork of Arcturus by TheGeneral");
+            System.out.println("   github.com/habbo-cc/Habbo-Daybreak");
+            System.out.println();
+            return;
+        }
+
+        String dim = "[38;2;120;124;134m";
+        String rst = "[0m";
+        int n = version.length();
+
+        // Version name catches the same sunrise, typed out to echo the logo sweep.
+        for (int reveal = 1; reveal <= n; reveal++) {
+            System.out.print("\r   " + tintText(version, reveal, Integer.MIN_VALUE));
+            System.out.flush();
+            sleep(16);
+        }
+        // Single glint slides across the finished name.
+        for (int glint = -2; glint <= n + 2; glint += 2) {
+            System.out.print("\r   " + tintText(version, n, glint));
+            System.out.flush();
+            sleep(12);
+        }
+        System.out.println("\r   " + tintText(version, n, Integer.MIN_VALUE) + dim + tail + rst);
+        System.out.println("   " + dim + "open-source fork of Arcturus by TheGeneral" + rst);
+        System.out.println("   " + dim + "github.com/habbo-cc/Habbo-Daybreak" + rst);
+        System.out.println();
+    }
+
+    // Same dawn gradient as the logo, mapped across a single line of text.
+    private static String tintText(String s, int reveal, int glint) {
+        int n = s.length();
+        StringBuilder sb = new StringBuilder(n * 12);
+        for (int i = 0; i < n; i++) {
+            char ch = s.charAt(i);
+            if (i >= reveal || ch == ' ') {
+                sb.append(' ');
+                continue;
+            }
+            int[] c = gradient(i, n);
+            if (reveal - i <= 2) {
+                c = new int[]{clamp(c[0] + 70), clamp(c[1] + 70), clamp(c[2] + 70)};
+            } else if (glint != Integer.MIN_VALUE && Math.abs(i - glint) <= 1) {
+                c = new int[]{clamp(c[0] + 90), clamp(c[1] + 90), clamp(c[2] + 90)};
+            }
+            sb.append("[38;2;").append(c[0]).append(';').append(c[1]).append(';').append(c[2]).append('m').append(ch);
+        }
+        sb.append("[0m");
+        return sb.toString();
+    }
+
+    private static String logoFrame(int reveal) {
+        return logoFrame(reveal, Integer.MIN_VALUE);
+    }
+
+    private static String logoFrame(int reveal, int glint) {
+        final int width = LOGO[0].length();
+        StringBuilder sb = new StringBuilder(width * LOGO.length * 12);
+        for (String row : LOGO) {
+            for (int x = 0; x < row.length(); x++) {
+                char ch = row.charAt(x);
+                if (x >= reveal || ch == ' ') {
+                    sb.append(' ');
+                    continue;
+                }
+                int[] c = gradient(x, width);
+                // Leading dawn edge glows white-hot; the passing glint sparks too.
+                if (reveal - x <= 2) {
+                    c = new int[]{clamp(c[0] + 70), clamp(c[1] + 70), clamp(c[2] + 70)};
+                } else if (glint != Integer.MIN_VALUE && Math.abs(x - glint) <= 1) {
+                    c = new int[]{clamp(c[0] + 90), clamp(c[1] + 90), clamp(c[2] + 90)};
+                }
+                sb.append("[38;2;").append(c[0]).append(';').append(c[1]).append(';').append(c[2]).append('m').append(ch);
+            }
+            sb.append("[0m\n");
+        }
+        return sb.toString();
+    }
+
+    private static int[] gradient(int x, int width) {
+        double t = width <= 1 ? 0 : (double) x / (width - 1);
+        double seg = t * (DAWN.length - 1);
+        int i = (int) Math.floor(seg);
+        if (i >= DAWN.length - 1) {
+            i = DAWN.length - 2;
+        }
+        double f = seg - i;
+        int[] a = DAWN[i];
+        int[] b = DAWN[i + 1];
+        return new int[]{
+                (int) Math.round(a[0] + (b[0] - a[0]) * f),
+                (int) Math.round(a[1] + (b[1] - a[1]) * f),
+                (int) Math.round(a[2] + (b[2] - a[2]) * f)
+        };
+    }
+
+    private static int clamp(int v) {
+        return v < 0 ? 0 : Math.min(v, 255);
+    }
+
+    private static void sleep(long ms) {
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -223,7 +387,7 @@ public final class Emulator {
         Emulator.isShuttingDown = true;
         Emulator.isReady = false;
 
-        LOGGER.info("Stopping Arcturus Morningstar {}", version);
+        LOGGER.info("Stopping Habbo Daybreak {}", version);
 
         try {
             if (Emulator.getPluginManager() != null)
@@ -268,7 +432,7 @@ public final class Emulator {
         } catch (Exception e) {
         }
 
-        LOGGER.info("Stopped Arcturus Morningstar {}", version);
+        LOGGER.info("Stopped Habbo Daybreak {}", version);
 
         if (Emulator.database != null) {
             Emulator.getDatabase().dispose();

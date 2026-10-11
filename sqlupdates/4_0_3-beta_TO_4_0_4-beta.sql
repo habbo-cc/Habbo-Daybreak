@@ -68,6 +68,7 @@ INSERT IGNORE INTO `emulator_settings` (`key`, `value`) VALUES
 ('camera.output.path', './camera/output'),
 ('camera.output.thumbnail.path', './camera/output/thumbnails'),
 ('camera.output.url', 'http://localhost/camera/'),
+('camera.wall.colors.path', './camera_wall_colors.properties'),
 ('camera.allowed.image.hosts', ''),
 ('camera.image.fetch.budget.ms', '8000'),
 ('camera.image.fetch.connect.timeout.ms', '2000'),

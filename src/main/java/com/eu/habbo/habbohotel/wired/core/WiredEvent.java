@@ -5,6 +5,7 @@ import com.eu.habbo.habbohotel.rooms.RoomTile;
 import com.eu.habbo.habbohotel.rooms.RoomUnit;
 import com.eu.habbo.habbohotel.users.HabboItem;
 import com.eu.habbo.habbohotel.wired.WiredTriggerType;
+import com.eu.habbo.habbohotel.wired.variables.WiredVariableMutation;
 
 import java.util.Optional;
 
@@ -54,7 +55,10 @@ public final class WiredEvent {
         
         /** Long timer repeat */
         TIMER_REPEAT_LONG(WiredTriggerType.PERIODICALLY_LONG),
-        
+
+        /** Short timer repeat — Wired 2.0 trigger 19 (wf_trg_period_short) */
+        TIMER_REPEAT_SHORT(WiredTriggerType.PERIOD_SHORT),
+
         /** User enters the room */
         USER_ENTERS_ROOM(WiredTriggerType.ENTER_ROOM),
         
@@ -94,6 +98,36 @@ public final class WiredEvent {
         /** Team loses a game */
         TEAM_LOSES(WiredTriggerType.CUSTOM),
         
+        /** User clicks (uses) furniture — Wired 2.0 trigger 18 */
+        USER_CLICKS_FURNI(WiredTriggerType.CLICK_FURNI),
+
+        /** User clicks a wf_trg_click_tile trigger item â€” July trigger 21. */
+        USER_CLICKS_TILE(WiredTriggerType.CLICK_TILE),
+
+        /** User leaves the room — Wired 2.0 trigger 23 */
+        USER_LEAVES_ROOM(WiredTriggerType.LEAVE_ROOM),
+
+        /** User clicks another user — Wired 2.0 trigger 24 */
+        USER_CLICKS_USER(WiredTriggerType.CLICK_USER),
+
+        /** Room wired clock reached a time — Wired 2.0 trigger 15 (score = total seconds) */
+        CLOCK_REACHED(WiredTriggerType.CLOCK_REACH_TIME),
+
+        /** User performs an avatar action - Wired 2.0 trigger 16 (score = action code) */
+        USER_PERFORMS_ACTION(WiredTriggerType.USER_PERFORMS_ACTION),
+
+        /** Receives an immutable furni/user payload through an antenna - July AIR trigger 17 */
+        RECEIVE_SIGNAL(WiredTriggerType.RECEIVE_SIGNAL),
+
+        /** A committed Core Variables mutation - July AIR trigger 22. */
+        VARIABLE_CHANGED(WiredTriggerType.VARIABLE_CHANGED),
+
+        /** A committed chest-contract transaction - July AIR trigger 25. */
+        TRANSACTION_COMPLETED(WiredTriggerType.TRANSACTION_COMPLETED),
+
+        /** A chest-contract transaction that did not commit - July AIR trigger 26. */
+        TRANSACTION_FAILED(WiredTriggerType.TRANSACTION_FAILED),
+
         /** Custom trigger type for plugins */
         CUSTOM(WiredTriggerType.CUSTOM);
 
@@ -137,6 +171,13 @@ public final class WiredEvent {
     private final int scoreAdded;       // amount added for score achieved events
     private final boolean triggeredByEffect; // true if triggered by a wired effect (to prevent loops)
     private final int callStackDepth;   // recursion depth for trigger stacks effect
+    private final WiredSignalPayload signalPayload;
+    private final WiredVariableMutation variableMutation;
+    private final WiredClickUserOutcome clickUserOutcome;
+    private final WiredHeldDownContext heldDownContext;
+    private final WiredTransactionOutcome transactionOutcome;
+    private final int chatType;
+    private final int chatStyle;
     private final long createdAtMs;
 
     private WiredEvent(Builder builder) {
@@ -151,6 +192,13 @@ public final class WiredEvent {
         this.scoreAdded = builder.scoreAdded;
         this.triggeredByEffect = builder.triggeredByEffect;
         this.callStackDepth = builder.callStackDepth;
+        this.signalPayload = builder.signalPayload;
+        this.variableMutation = builder.variableMutation;
+        this.clickUserOutcome = builder.clickUserOutcome;
+        this.heldDownContext = builder.heldDownContext;
+        this.transactionOutcome = builder.transactionOutcome;
+        this.chatType = builder.chatType;
+        this.chatStyle = builder.chatStyle;
         this.createdAtMs = builder.createdAtMs;
     }
 
@@ -249,6 +297,37 @@ public final class WiredEvent {
         return callStackDepth;
     }
 
+    /** Immutable, room-bound payload carried by a RECEIVE_SIGNAL event. */
+    public WiredSignalPayload getSignalPayload() {
+        return this.signalPayload;
+    }
+
+    /** The typed, already-committed Core Variables mutation for trigger 22. */
+    public Optional<WiredVariableMutation> getVariableMutation() {
+        return Optional.ofNullable(this.variableMutation);
+    }
+
+    public Optional<WiredClickUserOutcome> getClickUserOutcome() {
+        return Optional.ofNullable(this.clickUserOutcome);
+    }
+
+    public Optional<WiredHeldDownContext> getHeldDownContext() {
+        return Optional.ofNullable(this.heldDownContext);
+    }
+
+    /** The immutable outcome values exposed by July transaction triggers 25 and 26. */
+    public Optional<WiredTransactionOutcome> getTransactionOutcome() {
+        return Optional.ofNullable(this.transactionOutcome);
+    }
+
+    public int getChatType() {
+        return this.chatType;
+    }
+
+    public int getChatStyle() {
+        return this.chatStyle;
+    }
+
     /**
      * Get the timestamp when this event was created.
      * @return milliseconds since epoch
@@ -303,6 +382,13 @@ public final class WiredEvent {
         private int scoreAdded;
         private boolean triggeredByEffect;
         private int callStackDepth;
+        private WiredSignalPayload signalPayload = WiredSignalPayload.empty();
+        private WiredVariableMutation variableMutation;
+        private WiredClickUserOutcome clickUserOutcome;
+        private WiredHeldDownContext heldDownContext;
+        private WiredTransactionOutcome transactionOutcome;
+        private int chatType = -1;
+        private int chatStyle = -1;
         private long createdAtMs = System.currentTimeMillis();
 
         private Builder(Type type, Room room) {
@@ -399,6 +485,37 @@ public final class WiredEvent {
          */
         public Builder callStackDepth(int callStackDepth) {
             this.callStackDepth = callStackDepth;
+            return this;
+        }
+
+        public Builder signalPayload(WiredSignalPayload signalPayload) {
+            this.signalPayload = signalPayload != null ? signalPayload : WiredSignalPayload.empty();
+            return this;
+        }
+
+        public Builder variableMutation(WiredVariableMutation variableMutation) {
+            this.variableMutation = variableMutation;
+            return this;
+        }
+
+        public Builder clickUserOutcome(WiredClickUserOutcome clickUserOutcome) {
+            this.clickUserOutcome = clickUserOutcome;
+            return this;
+        }
+
+        public Builder heldDownContext(WiredHeldDownContext heldDownContext) {
+            this.heldDownContext = heldDownContext;
+            return this;
+        }
+
+        public Builder transactionOutcome(WiredTransactionOutcome transactionOutcome) {
+            this.transactionOutcome = transactionOutcome;
+            return this;
+        }
+
+        public Builder chat(int chatType, int chatStyle) {
+            this.chatType = chatType;
+            this.chatStyle = chatStyle;
             return this;
         }
 

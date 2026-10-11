@@ -37,18 +37,20 @@ public class WiredEffectLeaveTeam extends InteractionWiredEffect {
     @Override
     public void execute(WiredContext ctx) {
         Room room = ctx.room();
-        Habbo habbo = ctx.actor().map(room::getHabbo).orElse(null);
+        for (RoomUnit unit : resolveUserSource(ctx, this.getWiredUserSourceTypes(), 0)) {
+            Habbo habbo = room.getHabbo(unit);
 
-        if (habbo != null) {
-            if (habbo.getHabboInfo().getCurrentGame() != null) {
-                Game game = room.getGame(habbo.getHabboInfo().getCurrentGame());
+            if (habbo != null) {
+                if (habbo.getHabboInfo().getCurrentGame() != null) {
+                    Game game = room.getGame(habbo.getHabboInfo().getCurrentGame());
 
-                if (game == null) {
-                    game = room.getGameOrCreate(WiredGame.class);
-                }
+                    if (game == null) {
+                        game = room.getGameOrCreate(WiredGame.class);
+                    }
 
-                if (game != null) {
-                    game.removeHabbo(habbo);
+                    if (game != null) {
+                        game.removeHabbo(habbo);
+                    }
                 }
             }
         }
@@ -129,6 +131,16 @@ public class WiredEffectLeaveTeam extends InteractionWiredEffect {
             throw new WiredSaveException("Delay too long");
 
         this.setDelay(delay);
+        return true;
+    }
+
+    @Override
+    public boolean requiresTriggeringUser() {
+        return true;
+    }
+
+    @Override
+    protected boolean supportsUserPicking() {
         return true;
     }
 

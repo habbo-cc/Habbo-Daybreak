@@ -10,8 +10,12 @@ import com.eu.habbo.habbohotel.items.interactions.interfaces.ConditionalGate;
 import com.eu.habbo.habbohotel.pets.Pet;
 import com.eu.habbo.habbohotel.pets.RideablePet;
 import com.eu.habbo.habbohotel.users.DanceType;
+import com.eu.habbo.habbohotel.rooms.infobus.InfobusManager;
+import com.eu.habbo.habbohotel.rooms.walkways.WalkwaysEntrance;
 import com.eu.habbo.habbohotel.users.Habbo;
 import com.eu.habbo.habbohotel.users.HabboItem;
+import com.eu.habbo.habbohotel.wired.WiredUserAction;
+import com.eu.habbo.habbohotel.wired.core.WiredManager;
 import com.eu.habbo.messages.outgoing.rooms.users.UserUpdateMessageComposer;
 import com.eu.habbo.plugin.Event;
 import com.eu.habbo.plugin.events.roomunit.RoomUnitLookAtPointEvent;
@@ -70,6 +74,10 @@ public class RoomUnit {
   private boolean statusUpdate = false;
   private boolean invisible = false;
   private boolean canLeaveRoomByDoor = true;
+  // Debounce for public-room walkway redirects: a walk can cross several walkway tiles in quick
+  // succession (e.g. 28,4 and 28,5), which would schedule multiple room changes and flicker the
+  // target room. Only honour one walkway trigger per short window.
+  private long lastWalkwayTriggerTime = 0;
   private RoomUserRotation bodyRotation = RoomUserRotation.NORTH;
   private RoomUserRotation headRotation = RoomUserRotation.NORTH;
   private DanceType danceType;
@@ -166,14 +174,20 @@ public class RoomUnit {
         }
       }
 
+      boolean stoodUp = false;
       if (this.status.remove(RoomUnitStatus.SIT) != null) {
+        stoodUp = true;
         this.statusUpdate = true;
       }
       if (this.status.remove(RoomUnitStatus.MOVE) != null) {
         this.statusUpdate = true;
       }
       if (this.status.remove(RoomUnitStatus.LAY) != null) {
+        stoodUp = true;
         this.statusUpdate = true;
+      }
+      if (stoodUp && room.getHabbo(this) != null) {
+        WiredManager.triggerUserPerformsAction(room, this, WiredUserAction.STAND, "");
       }
 
       for (Map.Entry<RoomUnitStatus, String> set : this.status.entrySet()) {
@@ -361,16 +375,73 @@ public class RoomUnit {
       this.resetIdleTimer();
 
       if (habbo != null) {
-        HabboItem topItem = room.getTopItemAt(next.x, next.y);
+        // Public-room walkway: stepping on a walkway tile redirects to the linked room (e.g. park
+        // <-> infobus bus). Takes precedence over the door-tile kick, since a walkway tile may also
+        // be the room door (the bus interior's exit square is its door tile).
+        WalkwaysEntrance walkway = room.isPublicRoom()
+            ? Emulator.getGameEnvironment().getRoomManager().getWalkway(room, next.x, next.y)
+            : null;
 
-        boolean isAtDoor =
-            next.x == room.getLayout().getDoorX() && next.y == room.getLayout().getDoorY();
-        boolean publicRoomKicks = !room.isPublicRoom() || Emulator.getConfig()
-            .getBoolean("hotel.room.public.doortile.kick");
-        boolean invalidated = topItem != null && topItem.invalidatesToRoomKick();
+        // Infobus closed: block boarding the bus from the park (leaving the bus is always allowed).
+        boolean infobusBlocked = "park_a".equals(room.getLayout().getName())
+            && !InfobusManager.isDoorOpen();
 
-        if (this.canLeaveRoomByDoor && isAtDoor && publicRoomKicks && !invalidated) {
-          Emulator.getThreading().run(new RoomUnitKick(habbo, room, false), 500);
+        if (walkway != null && !infobusBlocked) {
+          // Debounced so crossing several walkway tiles in one walk only triggers one room change.
+          if ((System.currentTimeMillis() - this.lastWalkwayTriggerTime) > 2000L) {
+            this.lastWalkwayTriggerTime = System.currentTimeMillis();
+            final Habbo walkingHabbo = habbo;
+            final int targetRoomId = walkway.getTargetRoomId();
+            final int[] destination = walkway.getDestination();
+
+            Emulator.getThreading().run(() -> {
+              RoomManager roomManager = Emulator.getGameEnvironment().getRoomManager();
+              RoomTile destinationTile = null;
+              if (destination != null) {
+                // Force a full load (loadData=true): a public room that emptied may have unloaded its
+                // layout, which would leave getTile() null and silently drop the walkway destination
+                // (the player then lands on the model door instead of the linked tile).
+                Room targetRoom = roomManager.loadRoom(targetRoomId, true);
+                if (targetRoom != null && targetRoom.getLayout() != null) {
+                  destinationTile = targetRoom.getLayout().getTile((short) destination[0], (short) destination[1]);
+                }
+              }
+              roomManager.enterRoom(walkingHabbo, targetRoomId, "", true, destinationTile);
+
+              // enterRoom() routes a walkway arrival through openRoom()'s teleport branch, which sets
+              // isTeleporting=true (MoveAvatar then drops every move via getControlledHabbo() -> the
+              // player is stuck), disables door-leaving, and faces a (nonexistent) teleporter item. A
+              // walkway is not a furni-teleport: clear the lock, restore door-leaving, and face the
+              // direction baked into the destination (door_position's 4th value).
+              RoomUnit arrived = walkingHabbo.getRoomUnit();
+              Room arrivedRoom = walkingHabbo.getHabboInfo().getCurrentRoom();
+              if (arrived != null) {
+                arrived.isTeleporting = false;
+                arrived.setCanLeaveRoomByDoor(true);
+                if (destination != null && destination.length > 3
+                    && destination[3] >= 0 && destination[3] < RoomUserRotation.values().length) {
+                  RoomUserRotation rotation = RoomUserRotation.values()[destination[3]];
+                  arrived.setBodyRotation(rotation);
+                  arrived.setHeadRotation(rotation);
+                }
+                if (arrivedRoom != null) {
+                  arrivedRoom.sendComposer(new UserUpdateMessageComposer(arrived).compose());
+                }
+              }
+            }, 250);
+          }
+        } else {
+          HabboItem topItem = room.getTopItemAt(next.x, next.y);
+
+          boolean isAtDoor =
+              next.x == room.getLayout().getDoorX() && next.y == room.getLayout().getDoorY();
+          boolean publicRoomKicks = !room.isPublicRoom() || Emulator.getConfig()
+              .getBoolean("hotel.room.public.doortile.kick");
+          boolean invalidated = topItem != null && topItem.invalidatesToRoomKick();
+
+          if (this.canLeaveRoomByDoor && isAtDoor && publicRoomKicks && !invalidated) {
+            Emulator.getThreading().run(new RoomUnitKick(habbo, room, false), 500);
+          }
         }
       }
 
@@ -548,6 +619,18 @@ public class RoomUnit {
       setCurrentLocation(location);
       this.goalLocation = location;
       this.botStartLocation = location;
+    }
+  }
+
+  /**
+   * Commits a forced runtime movement without changing a bot's configured
+   * spawn/home tile as the general-purpose spawn setter does.
+   */
+  public void setCurrentLocationAndGoal(RoomTile location) {
+    if (location != null) {
+      this.startLocation = location;
+      setCurrentLocation(location);
+      this.goalLocation = location;
     }
   }
 

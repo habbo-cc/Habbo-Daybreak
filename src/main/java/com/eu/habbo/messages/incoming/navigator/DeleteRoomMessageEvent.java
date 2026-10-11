@@ -39,6 +39,17 @@ public class DeleteRoomMessageEvent extends MessageHandler {
                     return;
                 }
 
+                // This is a permanent room deletion, unlike the ordinary
+                // unload below.  Delete the room-scoped variable rows first so
+                // a failed cleanup leaves both the room and its state intact.
+                // The manager's cleanup is transactional and idempotent.
+                if (room.getRoomSpecialTypes() != null
+                        && room.getRoomSpecialTypes().getWiredVariableManager() != null
+                        && !room.getRoomSpecialTypes().getWiredVariableManager().deleteRoomState()) {
+                    LOGGER.error("Aborting deletion of room {} because Wired variable cleanup failed", roomId);
+                    return;
+                }
+
                 Emulator.getGameEnvironment().getNavigatorManager().removeDeletedRoom(room);
 
                 room.ejectAll();

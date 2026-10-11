@@ -34,6 +34,10 @@ public class ShoutMessageEvent extends MessageHandler {
                 if (RoomChatMessage.SAVE_ROOM_CHATS) {
                     Emulator.getThreading().run(message);
                 }
+
+                if (Emulator.getGameEnvironment().getRewardTrackManager() != null) {
+                    Emulator.getGameEnvironment().getRewardTrackManager().progress(this.client.getHabbo(), "chat_with_someone");
+                }
             }
         } else {
             String reportMessage = Emulator.getTexts().getValue("scripter.warning.chat.length").replace("%username%", this.client.getHabbo().getHabboInfo().getUsername()).replace("%length%", message.getMessage().length() + "");

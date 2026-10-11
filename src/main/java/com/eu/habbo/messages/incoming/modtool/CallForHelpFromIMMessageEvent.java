@@ -24,7 +24,7 @@ public class CallForHelpFromIMMessageEvent extends MessageHandler {
         String message = this.packet.readString();
         int category = this.packet.readInt();
         int userId = this.packet.readInt();
-        int count = this.packet.readInt();
+        int count = this.packet.readBoundedCount(1000, Integer.BYTES * 2 + Short.BYTES);
         ArrayList<ModToolChatLog> chatLogs = new ArrayList<>();
 
         HabboInfo info;
@@ -37,10 +37,10 @@ public class CallForHelpFromIMMessageEvent extends MessageHandler {
 
         if (info != null) {
             for (int i = 0; i < count; i++) {
-                int chatUserId = this.packet.readInt();
-                String username = this.packet.readInt() == info.getId() ? info.getUsername() : this.client.getHabbo().getHabboInfo().getUsername();
+                int chatUserId = this.packet.readRequiredInt();
+                String username = this.packet.readRequiredInt() == info.getId() ? info.getUsername() : this.client.getHabbo().getHabboInfo().getUsername();
 
-                chatLogs.add(new ModToolChatLog(0, chatUserId, username, this.packet.readString()));
+                chatLogs.add(new ModToolChatLog(0, chatUserId, username, this.packet.readBoundedString(32000)));
             }
         }
 

@@ -112,6 +112,7 @@ public class RoomTrashing implements Runnable {
                     for (ServerMessage message : messages) {
                         INSTANCE.room.sendComposer(message);
                     }
+                    INSTANCE.room.refreshAreaHideVisibility();
                 } else {
                     INSTANCE.habbo = null;
                     INSTANCE.room = null;

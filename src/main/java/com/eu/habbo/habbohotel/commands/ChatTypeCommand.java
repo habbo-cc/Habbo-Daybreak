@@ -23,11 +23,11 @@ public class ChatTypeCommand extends Command {
                 return true;
             }
 
-            if (RoomChatMessageBubbles.values().length < chatColor) {
-                chatColor = 0;
-            }
-
-            if (chatColor < 0) {
+            // Resolve by real bubble id. Ids are sparse (0-45, 120-133, 200-252, ...), so an unknown
+            // or out-of-range id resolves to NORMAL via getBubble's fallback — reject any non-zero id
+            // that does not map to a real style instead of inferring validity from values().length.
+            RoomChatMessageBubbles bubble = RoomChatMessageBubbles.getBubble(chatColor);
+            if (chatColor != RoomChatMessageBubbles.NORMAL.getType() && bubble == RoomChatMessageBubbles.NORMAL) {
                 gameClient.getHabbo().whisper(Emulator.getTexts().getValue("commands.error.cmd_chatcolor.numbers"), RoomChatMessageBubbles.ALERT);
                 return true;
             }
@@ -39,14 +39,28 @@ public class ChatTypeCommand extends Command {
                         return true;
                     }
                 }
+
+                // When commands.cmd_chatcolor.require_ownership = 1, catalog chat bubbles must be owned
+                // (a users_chat_styles row); acc_allchatbubbles lets staff bypass that. Set the config
+                // to 0 to restore the legacy behaviour where anyone can :chat any bubble for free.
+                if (Emulator.getConfig().getBoolean("commands.cmd_chatcolor.require_ownership", true)
+                        && !gameClient.getHabbo().hasPermission(Permission.ACC_ALLCHATBUBBLES)
+                        && Emulator.getGameEnvironment().getCatalogManager().isPurchasableChatStyle(chatColor)
+                        && !Emulator.getGameEnvironment().getCatalogManager().habboOwnsChatStyle(gameClient.getHabbo(), chatColor)) {
+                    gameClient.getHabbo().whisper(Emulator.getTexts().getValue("commands.error.cmd_chatcolor.not_owned"), RoomChatMessageBubbles.ALERT);
+                    return true;
+                }
             }
 
-            gameClient.getHabbo().getHabboStats().chatColor = RoomChatMessageBubbles.getBubble(chatColor);
+            gameClient.getHabbo().getHabboStats().chatColor = bubble;
+            gameClient.getHabbo().getHabboStats().run();
             gameClient.sendResponse(new AccountPreferencesMessageComposer(gameClient.getHabbo()));
-            gameClient.getHabbo().whisper(Emulator.getTexts().getValue("commands.succes.cmd_chatcolor.set").replace("%chat%", RoomChatMessageBubbles.values()[chatColor].name().replace("_", " ").toLowerCase()), RoomChatMessageBubbles.ALERT);
+            gameClient.getHabbo().whisper(Emulator.getTexts().getValue("commands.succes.cmd_chatcolor.set").replace("%chat%", bubble.name().replace("_", " ").toLowerCase()), RoomChatMessageBubbles.ALERT);
             return true;
         } else {
             gameClient.getHabbo().getHabboStats().chatColor = RoomChatMessageBubbles.NORMAL;
+            gameClient.getHabbo().getHabboStats().run();
+            gameClient.sendResponse(new AccountPreferencesMessageComposer(gameClient.getHabbo()));
             gameClient.getHabbo().whisper(Emulator.getTexts().getValue("commands.succes.cmd_chatcolor.reset"), RoomChatMessageBubbles.ALERT);
             return true;
         }

@@ -3,6 +3,8 @@ package com.eu.habbo.messages.incoming.rooms.users;
 import com.eu.habbo.Emulator;
 import com.eu.habbo.habbohotel.users.DanceType;
 import com.eu.habbo.habbohotel.users.Habbo;
+import com.eu.habbo.habbohotel.wired.WiredUserAction;
+import com.eu.habbo.habbohotel.wired.core.WiredManager;
 import com.eu.habbo.messages.incoming.MessageHandler;
 import com.eu.habbo.messages.outgoing.rooms.users.DanceMessageComposer;
 import com.eu.habbo.plugin.events.users.UserDanceEvent;
@@ -45,6 +47,12 @@ public class DanceMessageEvent extends MessageHandler {
                 }
 
                 this.client.getHabbo().getHabboInfo().getCurrentRoom().sendComposer(new DanceMessageComposer(habbo.getRoomUnit()).compose());
+                if (danceId > 0) {
+                    WiredManager.triggerUserPerformsAction(this.client.getHabbo().getHabboInfo().getCurrentRoom(), habbo.getRoomUnit(), WiredUserAction.DANCE, WiredUserAction.danceExtra(danceId));
+                    if (Emulator.getGameEnvironment().getRewardTrackManager() != null) {
+                        Emulator.getGameEnvironment().getRewardTrackManager().progress(this.client.getHabbo(), "dance");
+                    }
+                }
             }
         }
     }

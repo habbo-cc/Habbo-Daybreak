@@ -1,5 +1,6 @@
 package com.eu.habbo.messages.incoming.rooms.items;
 
+import com.eu.habbo.Emulator;
 import com.eu.habbo.habbohotel.permissions.Permission;
 import com.eu.habbo.habbohotel.rooms.FurnitureMovementError;
 import com.eu.habbo.habbohotel.rooms.Room;
@@ -33,8 +34,14 @@ public class MoveWallItemMessageEvent extends MessageHandler {
         if (item == null)
             return;
 
+        String oldWallPosition = item.getWallPosition();
         item.setWallPosition(wallPosition);
         item.needsUpdate(true);
+        room.refreshAreaHideVisibility();
         room.updateItem(item);
+
+        if (!wallPosition.equals(oldWallPosition) && Emulator.getGameEnvironment().getRewardTrackManager() != null) {
+            Emulator.getGameEnvironment().getRewardTrackManager().progress(this.client.getHabbo(), "move_item");
+        }
     }
 }

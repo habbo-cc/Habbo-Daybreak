@@ -107,6 +107,7 @@ public class CleanerThread implements Runnable {
 
 
     void databaseCleanup() {
+        long millis = System.currentTimeMillis();
         this.refillDailyRespects();
 
         int time = Emulator.getIntUnixTimestamp();
@@ -129,9 +130,10 @@ public class CleanerThread implements Runnable {
             }
         } catch (SQLException e) {
             LOGGER.error("Caught SQL exception", e);
+            return;
         }
 
-        LOGGER.info("Database -> Cleaned!");
+        LOGGER.info("Database Cleaner -> Completed! ({} MS)", System.currentTimeMillis() - millis);
     }
 
     public void refillDailyRespects() {

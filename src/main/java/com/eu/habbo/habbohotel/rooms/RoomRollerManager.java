@@ -205,6 +205,7 @@ public class RoomRollerManager {
                 this.room.sendComposer(message.compose());
             }
             messages.clear();
+            this.room.refreshAreaHideVisibility();
         }
     }
 

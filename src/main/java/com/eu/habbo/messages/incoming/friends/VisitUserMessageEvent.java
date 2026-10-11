@@ -43,6 +43,9 @@ public class VisitUserMessageEvent extends MessageHandler {
         if (habbo.getHabboInfo().getCurrentRoom() != this.client.getHabbo().getHabboInfo().getCurrentRoom()) {
             this.client.sendResponse(new RoomForwardMessageComposer(habbo.getHabboInfo().getCurrentRoom().getId()));
             Emulator.getPluginManager().fireEvent(new UserFollowFriendEvent(this.client.getHabbo(), buddy));
+            if (Emulator.getGameEnvironment().getRewardTrackManager() != null) {
+                Emulator.getGameEnvironment().getRewardTrackManager().progress(this.client.getHabbo(), "follow_friend");
+            }
         } else {
             this.client.sendResponse(new WhisperMessageComposer(new RoomChatMessage(Emulator.getTexts().getValue("stalk.failed.same.room").replace("%user%", habbo.getHabboInfo().getUsername()), this.client.getHabbo(), this.client.getHabbo(), RoomChatMessageBubbles.ALERT)));
         }

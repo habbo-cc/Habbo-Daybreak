@@ -17,9 +17,9 @@ public class RemoveFriendMessageEvent extends MessageHandler {
 
     @Override
     public void handle() throws Exception {
-        int count = this.packet.readInt();
+        int count = this.packet.readBoundedCount(500, Integer.BYTES);
         for (int i = 0; i < count; i++) {
-            int habboId = this.packet.readInt();
+            int habboId = this.packet.readRequiredInt();
             this.removedFriends.add(habboId);
 
             Messenger.unfriend(this.client.getHabbo().getHabboInfo().getId(), habboId);

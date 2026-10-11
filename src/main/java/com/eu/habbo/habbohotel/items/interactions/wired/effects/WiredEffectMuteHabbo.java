@@ -12,6 +12,7 @@ import com.eu.habbo.habbohotel.rooms.RoomUnit;
 import com.eu.habbo.habbohotel.users.Habbo;
 import com.eu.habbo.habbohotel.wired.WiredEffectType;
 import com.eu.habbo.habbohotel.wired.core.WiredContext;
+import com.eu.habbo.habbohotel.wired.core.WiredTextTransform;
 import com.eu.habbo.habbohotel.wired.core.WiredManager;
 import com.eu.habbo.messages.ServerMessage;
 import com.eu.habbo.messages.incoming.wired.WiredSaveException;
@@ -33,6 +34,12 @@ public class WiredEffectMuteHabbo extends InteractionWiredEffect {
     public WiredEffectMuteHabbo(int id, int userId, Item item, String extradata, int limitedStack, int limitedSells) {
         super(id, userId, item, extradata, limitedStack, limitedSells);
     }
+
+    // Wired 2.0 getters
+    @Override
+    protected String getWiredStringParam() { return this.message; }
+    @Override
+    protected int[] getWiredIntParams() { return new int[]{ this.length }; }
 
     @Override
     public void serializeWiredData(ServerMessage message, Room room) {
@@ -64,20 +71,19 @@ public class WiredEffectMuteHabbo extends InteractionWiredEffect {
 
     @Override
     public void execute(WiredContext ctx) {
-        RoomUnit roomUnit = ctx.actor().orElse(null);
-        if (roomUnit == null)
-            return;
-
         Room room = ctx.room();
-        Habbo habbo = room.getHabbo(roomUnit);
+        for (RoomUnit roomUnit : resolveUserSource(ctx, this.getWiredUserSourceTypes(), 0)) {
+            Habbo habbo = room.getHabbo(roomUnit);
 
-        if (habbo != null) {
-            if (room.hasRights(habbo))
-                return;
+            if (habbo != null) {
+                if (room.hasRights(habbo))
+                    continue;
 
-            room.muteHabbo(habbo, 60);
+                room.muteHabbo(habbo, this.length);
 
-            habbo.getClient().sendResponse(new WhisperMessageComposer(new RoomChatMessage(this.message.replace("%user%", habbo.getHabboInfo().getUsername()).replace("%online_count%", Emulator.getGameEnvironment().getHabboManager().getOnlineCount() + "").replace("%room_count%", Emulator.getGameEnvironment().getRoomManager().getActiveRooms().size() + ""), habbo, habbo, RoomChatMessageBubbles.WIRED)));
+                String text = this.message.replace("%user%", habbo.getHabboInfo().getUsername()).replace("%online_count%", Emulator.getGameEnvironment().getHabboManager().getOnlineCount() + "").replace("%room_count%", Emulator.getGameEnvironment().getRoomManager().getActiveRooms().size() + "");
+                habbo.getClient().sendResponse(new WhisperMessageComposer(new RoomChatMessage(WiredTextTransform.apply(ctx, text), habbo, habbo, RoomChatMessageBubbles.WIRED)));
+            }
         }
     }
 
@@ -133,6 +139,11 @@ public class WiredEffectMuteHabbo extends InteractionWiredEffect {
 
     @Override
     public boolean requiresTriggeringUser() {
+        return true;
+    }
+
+    @Override
+    protected boolean supportsUserPicking() {
         return true;
     }
 

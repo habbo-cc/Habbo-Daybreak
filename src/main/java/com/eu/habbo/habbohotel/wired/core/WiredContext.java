@@ -49,9 +49,13 @@ public final class WiredContext {
     private final WiredServices services;
     private final WiredState state;
     private final WiredTargets targets;
+    private WiredContextVariableStore contextVariables;
+    private RoomUnit actor;
     
     /** The wired trigger furniture item executing this stack */
-    private final HabboItem triggerItem;
+    private HabboItem triggerItem;
+    private HabboItem delayedSourceItem;
+    private boolean delayedIdentityBound;
     
     /** The wired stack being executed (for conditions to access effects) */
     private final WiredStack stack;
@@ -106,9 +110,13 @@ public final class WiredContext {
         this.state = state;
         this.legacySettings = legacySettings;
         this.targets = new WiredTargets();
+        this.contextVariables = new WiredContextVariableStore();
+        this.actor = event.getActor().orElse(null);
         
         // Default targets: include actor and trigger item for backwards compatibility
-        event.getActor().ifPresent(targets::addUser);
+        if (this.actor != null) {
+            targets.addUser(this.actor);
+        }
         if (triggerItem != null) {
             targets.addItem(triggerItem);
         }
@@ -147,7 +155,7 @@ public final class WiredContext {
      * @return optional containing the actor
      */
     public Optional<RoomUnit> actor() {
-        return event.getActor();
+        return Optional.ofNullable(this.actor);
     }
 
     /**
@@ -155,7 +163,9 @@ public final class WiredContext {
      * @return optional containing the source item
      */
     public Optional<HabboItem> sourceItem() {
-        return event.getSourceItem();
+        return this.delayedIdentityBound
+                ? Optional.ofNullable(this.delayedSourceItem)
+                : event.getSourceItem();
     }
 
     /**
@@ -245,6 +255,51 @@ public final class WiredContext {
         return state;
     }
 
+    public WiredSafetyBudget budget() {
+        return this.state.budget();
+    }
+
+    public WiredContextVariableStore contextVariables() { return this.contextVariables; }
+
+    /** Context values are copied for delayed branches and remain isolated from later root mutations. */
+    public void copyContextVariablesFrom(WiredContext source) {
+        this.contextVariables = source == null ? new WiredContextVariableStore() : source.contextVariables.snapshot();
+    }
+
+    void useContextVariables(WiredContextVariableStore store) {
+        this.contextVariables = store == null ? new WiredContextVariableStore() : store;
+    }
+
+    public void clearContextVariables() { this.contextVariables.clear(); }
+
+    /**
+     * Snapshot mutable targets for delayed or asynchronously scheduled work.
+     * Aggregate limits and ancestry are retained through a forked state, while
+     * later selector mutations cannot alter the scheduled effect's targets.
+     */
+    public WiredContext forkForDelayedExecution() {
+        Object[] settingsCopy = this.legacySettings != null ? this.legacySettings.clone() : null;
+        WiredContext copy = new WiredContext(
+                this.event,
+                this.triggerItem,
+                this.stack,
+                this.services,
+                this.state.fork(),
+                settingsCopy);
+        copy.targets().setUsers(this.targets.users());
+        copy.targets().setItems(this.targets.items());
+        copy.actor = this.actor;
+        copy.copyContextVariablesFrom(this);
+        return copy;
+    }
+
+    void bindDelayedIdentity(RoomUnit actor, HabboItem triggerItem, HabboItem sourceItem) {
+        this.actor = actor;
+        this.triggerItem = triggerItem;
+        this.delayedSourceItem = sourceItem;
+        this.delayedIdentityBound = true;
+    }
+
     // ========== Legacy Support ==========
 
     /**
@@ -263,7 +318,7 @@ public final class WiredContext {
      * @return true if an actor is present
      */
     public boolean hasActor() {
-        return event.getActor().isPresent();
+        return this.actor != null;
     }
 
     /**
@@ -271,7 +326,7 @@ public final class WiredContext {
      * @return true if a source item is present
      */
     public boolean hasSourceItem() {
-        return event.getSourceItem().isPresent();
+        return sourceItem().isPresent();
     }
 
     /**

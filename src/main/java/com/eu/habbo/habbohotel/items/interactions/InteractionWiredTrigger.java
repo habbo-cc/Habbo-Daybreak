@@ -3,13 +3,17 @@ package com.eu.habbo.habbohotel.items.interactions;
 import com.eu.habbo.habbohotel.gameclients.GameClient;
 import com.eu.habbo.habbohotel.items.Item;
 import com.eu.habbo.habbohotel.items.interactions.wired.WiredSettings;
+import com.eu.habbo.habbohotel.items.interactions.wired.WiredCategoryType;
 import com.eu.habbo.habbohotel.rooms.Room;
 import com.eu.habbo.habbohotel.rooms.RoomUnit;
 import com.eu.habbo.habbohotel.users.HabboItem;
 import com.eu.habbo.habbohotel.wired.WiredTriggerType;
 import com.eu.habbo.habbohotel.wired.api.IWiredTrigger;
 import com.eu.habbo.habbohotel.wired.core.WiredEvent;
+import com.eu.habbo.habbohotel.wired.core.WiredAuthorizationService;
+import com.eu.habbo.habbohotel.wired.core.WiredFeatureCapabilityGuard;
 import com.eu.habbo.messages.outgoing.wired.WiredTriggerDataMessageComposer;
+import com.eu.habbo.messages.outgoing.wired.OpenMessageComposer;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -44,17 +48,40 @@ public abstract class InteractionWiredTrigger extends InteractionWired implement
 
     @Override
     public void onClick(GameClient client, Room room, Object[] objects) throws Exception {
-        if (client != null) {
-            if (room.hasRights(client.getHabbo())) {
-                client.sendResponse(new WiredTriggerDataMessageComposer(this, room));
-                this.activateBox(room);
-            }
+        if (WiredFeatureCapabilityGuard.isEditorReady(client, room, this)
+                && WiredAuthorizationService.isAuthorized(
+                WiredAuthorizationService.Operation.VIEW_EDITOR,
+                client,
+                room,
+                this,
+                WiredCategoryType.TRIGGER)) {
+            client.sendResponse(new OpenMessageComposer(this));
+            this.activateBox(room);
         }
     }
 
     public abstract WiredTriggerType getType();
 
+    @Override
+    protected WiredCategoryType getWiredCategory() { return WiredCategoryType.TRIGGER; }
+
+    @Override
+    protected int getWiredTypeCode() { return this.getType().code; }
+
+    @Override
+    protected boolean isWiredAdvancedMode() {
+        return getFurniSourceSlotCount() > 0 || getUserSourceSlotCount() > 0;
+    }
+
     public abstract boolean saveData(WiredSettings settings);
+
+    /**
+     * Optional July localization key describing the most recent save failure.
+     * Returning {@code null} keeps the legacy generic validation message.
+     */
+    public String getSaveErrorLocalizationKey() {
+        return null;
+    }
 
     protected int getDelay() {
         return this.delay;

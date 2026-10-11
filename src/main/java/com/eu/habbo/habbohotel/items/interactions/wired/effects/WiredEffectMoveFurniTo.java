@@ -5,6 +5,7 @@ import com.eu.habbo.habbohotel.gameclients.GameClient;
 import com.eu.habbo.habbohotel.items.Item;
 import com.eu.habbo.habbohotel.items.interactions.InteractionWiredEffect;
 import com.eu.habbo.habbohotel.items.interactions.wired.WiredSettings;
+import com.eu.habbo.habbohotel.rooms.FurnitureMovementError;
 import com.eu.habbo.habbohotel.rooms.Room;
 import com.eu.habbo.habbohotel.rooms.RoomTile;
 import com.eu.habbo.habbohotel.rooms.RoomUnit;
@@ -13,9 +14,10 @@ import com.eu.habbo.habbohotel.wired.WiredEffectType;
 import com.eu.habbo.habbohotel.wired.core.WiredManager;
 import com.eu.habbo.habbohotel.wired.core.WiredContext;
 import com.eu.habbo.habbohotel.wired.core.WiredSimulation;
+import com.eu.habbo.habbohotel.wired.core.WiredMovementAddonRuntime;
 import com.eu.habbo.messages.ServerMessage;
 import com.eu.habbo.messages.incoming.wired.WiredSaveException;
-import com.eu.habbo.messages.outgoing.rooms.items.FloorItemOnRollerComposer;
+import com.eu.habbo.messages.outgoing.rooms.items.WiredMovementsMessageComposer;
 import gnu.trove.set.hash.THashSet;
 
 import java.sql.ResultSet;
@@ -89,14 +91,16 @@ public class WiredEffectMoveFurniTo extends InteractionWiredEffect {
             this.items.remove(item);
         }
 
-        if (this.items.isEmpty())
+        List<HabboItem> targets = new ArrayList<>(WiredMovementAddonRuntime.furniTargets(ctx,
+                resolveFurniSource(ctx, this.getWiredFurniSourceTypes(), 0, this.items, null)));
+        if (targets.isEmpty())
             return;
 
         Object[] stuff = ctx.legacySettings();
         if (stuff != null && stuff.length > 0) {
             for (Object object : stuff) {
                 if (object instanceof HabboItem) {
-                    HabboItem targetItem = this.items.get(Emulator.getRandom().nextInt(this.items.size()));
+                    HabboItem targetItem = targets.get(Emulator.getRandom().nextInt(targets.size()));
 
                     if (targetItem != null) {
                         int indexOffset = 0;
@@ -128,8 +132,13 @@ public class WiredEffectMoveFurniTo extends InteractionWiredEffect {
                                 continue;
                             }
 
-                            room.sendComposer(new FloorItemOnRollerComposer((HabboItem) object, null, tile,
-                                    tile.getStackHeight() - ((HabboItem) object).getZ(), room).compose());
+                            HabboItem moved = (HabboItem) object;
+                            double oldZ = moved.getZ();
+                            // Wired 2.0: move silently (sendUpdates=false emits no packet) then stream a smooth
+                            // WiredMovements slide instead of the legacy side-effecting roller composer.
+                            if (WiredMovementAddonRuntime.move(ctx, room, moved, tile, moved.getRotation(), false) == FurnitureMovementError.NONE) {
+                                WiredMovementAddonRuntime.moved(ctx, room, moved, sourceTile, oldZ, tile);
+                            }
 
                             RoomTile newSourceTile = room.getLayout().getTile(((HabboItem) object).getX(),
                                     ((HabboItem) object).getY());
@@ -217,6 +226,14 @@ public class WiredEffectMoveFurniTo extends InteractionWiredEffect {
                 this.items.stream().map(HabboItem::getId).collect(Collectors.toList())));
     }
 
+    // Wired 2.0 getters
+    @Override
+    protected java.util.Collection<HabboItem> getSelectedItems() { return this.items; }
+    @Override
+    protected boolean supportsFurniPicking() { return true; }
+    @Override
+    protected int[] getWiredIntParams() { return new int[]{ this.direction, this.spacing }; }
+
     @Override
     public void serializeWiredData(ServerMessage message, Room room) {
         THashSet<HabboItem> items = new THashSet<>();
@@ -298,6 +315,11 @@ public class WiredEffectMoveFurniTo extends InteractionWiredEffect {
     @Override
     protected long requiredCooldown() {
         return 495;
+    }
+
+    @Override
+    public boolean bypassExecutionCooldown() {
+        return true; // movement runs every tick (Habbo parity); not gated by the cooldown
     }
 
     static class JsonData {

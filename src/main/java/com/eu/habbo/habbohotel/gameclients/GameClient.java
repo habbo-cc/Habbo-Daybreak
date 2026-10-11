@@ -3,8 +3,9 @@ package com.eu.habbo.habbohotel.gameclients;
 import com.eu.habbo.Emulator;
 import com.eu.habbo.crypto.HabboEncryption;
 import com.eu.habbo.habbohotel.users.Habbo;
+import com.eu.habbo.habbohotel.items.chests.ChestTradeSession;
+import com.eu.habbo.habbohotel.wired.core.WiredCapabilityState;
 import com.eu.habbo.messages.ServerMessage;
-import com.eu.habbo.messages.incoming.MessageHandler;
 import com.eu.habbo.messages.outgoing.MessageComposer;
 import com.eu.habbo.plugin.events.emulator.OutgoingPacketEvent;
 import io.netty.channel.Channel;
@@ -24,9 +25,12 @@ public class GameClient {
     private Habbo habbo;
     private boolean handshakeFinished;
     private String machineId = "";
+    private volatile WiredCapabilityState wiredCapabilityState = WiredCapabilityState.unsupported();
+    private volatile long activeChestKey;
+    private volatile ChestTradeSession chestTradeSession;
 
     public final ConcurrentHashMap<Integer, Integer> incomingPacketCounter = new ConcurrentHashMap<>(25);
-    public final ConcurrentHashMap<Class<? extends MessageHandler>, Long> messageTimestamps = new ConcurrentHashMap<>();
+    public final ConcurrentHashMap<Object, Long> messageTimestamps = new ConcurrentHashMap<>();
     public long lastPacketCounterCleared = Emulator.getIntUnixTimestamp();
 
     public GameClient(Channel channel) {
@@ -73,6 +77,76 @@ public class GameClient {
         }
 
         this.machineId = machineId;
+    }
+
+    public WiredCapabilityState getWiredCapabilityState() {
+        return this.wiredCapabilityState;
+    }
+
+    public void setWiredCapabilityState(WiredCapabilityState wiredCapabilityState) {
+        WiredCapabilityState next = wiredCapabilityState == null
+                ? WiredCapabilityState.unsupported()
+                : wiredCapabilityState;
+        if (this.wiredCapabilityState.roomId() != next.roomId()) {
+            if (this.chestTradeSession != null && this.habbo != null) {
+                Emulator.getGameEnvironment().getChestManager()
+                        .abortTrade(this, false, 3);
+            }
+            Emulator.getGameEnvironment().getChestManager().closeActiveViewer(this);
+        }
+        this.wiredCapabilityState = next;
+    }
+
+    public synchronized long setActiveChest(int roomId, int chestId) {
+        int safeRoomId = Math.max(0, roomId);
+        int safeChestId = Math.max(0, chestId);
+        long previous = this.activeChestKey;
+        this.activeChestKey = ((long) safeRoomId << 32) | (safeChestId & 0xffffffffL);
+        return previous;
+    }
+
+    public boolean isActiveChest(int roomId, int chestId) {
+        return roomId > 0 && chestId > 0
+                && this.activeChestKey == (((long) roomId << 32) | (chestId & 0xffffffffL));
+    }
+
+    public long getActiveChestKey() {
+        return this.activeChestKey;
+    }
+
+    public synchronized boolean clearActiveChest(long expectedKey) {
+        if (this.activeChestKey != expectedKey) {
+            return false;
+        }
+        this.activeChestKey = 0L;
+        return true;
+    }
+
+    public ChestTradeSession getChestTradeSession() {
+        return this.chestTradeSession;
+    }
+
+    public synchronized boolean beginChestTradeSession(ChestTradeSession session) {
+        if (session == null || this.chestTradeSession != null) {
+            return false;
+        }
+        this.chestTradeSession = session;
+        return true;
+    }
+
+    public synchronized ChestTradeSession clearChestTradeSession() {
+        ChestTradeSession previous = this.chestTradeSession;
+        this.chestTradeSession = null;
+        return previous;
+    }
+
+    /** Clears only the session that scheduled the caller, preserving any replacement session. */
+    public synchronized ChestTradeSession clearChestTradeSession(ChestTradeSession expected) {
+        if (expected == null || this.chestTradeSession != expected) {
+            return null;
+        }
+        this.chestTradeSession = null;
+        return expected;
     }
 
     public void sendResponse(MessageComposer composer) {
@@ -128,9 +202,19 @@ public class GameClient {
 
     public void dispose() {
         try {
+            if (this.chestTradeSession != null && this.habbo != null) {
+                Emulator.getGameEnvironment().getChestManager()
+                        .abortTrade(this, false, 3);
+            }
+            this.wiredCapabilityState = WiredCapabilityState.unsupported();
+            Emulator.getGameEnvironment().getChestManager().closeActiveViewer(this);
             this.channel.close();
 
             if (this.habbo != null) {
+                if (this.habbo.getHabboInfo() != null) {
+                    com.eu.habbo.habbohotel.wired.menu.WiredMenuPreferences.evict(
+                            this.habbo.getHabboInfo().getId());
+                }
                 if (this.habbo.isOnline()) {
                     this.habbo.getHabboInfo().setOnline(false);
                     this.habbo.disconnect();

@@ -1,0 +1,1350 @@
+-- Original SnowStorm public lounge for Arcturus-Community.
+--
+-- Idempotent and portable between hotel databases: model names identify the
+-- lounge while owner, category and room IDs are resolved at install time.
+-- No fixed rooms.id or navigator_publics.room_id value is used.
+
+INSERT INTO `room_models`
+  (`name`, `door_x`, `door_y`, `door_dir`, `heightmap`, `public_items`, `club_only`)
+VALUES
+  ('snowwar_lobby_1', 41, 36, 0, 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx11111xx1xxxxxxxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx11111xx1111xxxxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxx111111xxxxxxxxxxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxx1111111111111111xxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxx1111111111111111xxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxx1111111111111111xxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxx1111111111111111xxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxx1111111111111111xxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxx1111111111111111xxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxx1111111111111111xxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxx1111111111111111xxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxx1111111111111111xxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxx1111111111111111xxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxx1111111111111111xxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxx111111111111111xxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxx1111111111111111xxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxx1111111111111111xxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxx1111111111111111xxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxx111111111111111xxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxx1111x1111111111xxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', '', '0')
+ON DUPLICATE KEY UPDATE
+  `door_x` = VALUES(`door_x`),
+  `door_y` = VALUES(`door_y`),
+  `door_dir` = VALUES(`door_dir`),
+  `heightmap` = VALUES(`heightmap`),
+  `club_only` = VALUES(`club_only`);
+
+-- The layout is authoritative and contains no player/runtime data. public_items
+-- is InnoDB on the supported schema, so replacement is atomic.
+START TRANSACTION;
+
+DELETE FROM `public_items`
+WHERE `room_model` = 'snowwar_lobby_1';
+
+INSERT INTO `public_items`
+  (`room_model`, `sprite`, `x`, `y`, `z`, `rotation`, `length`,
+   `width`, `behaviour`, `top_height`, `has_dimensions`)
+VALUES
+  ('snowwar_lobby_1','sw_barrellchair',31,18,1,6,1,1,'can_sit_on_top',1,0),
+  ('snowwar_lobby_1','sw_barrellchair',31,19,1,6,1,1,'can_sit_on_top',1,0),
+  ('snowwar_lobby_1','sw_barrellchair',30,20,1,0,1,1,'can_sit_on_top',1,0),
+  ('snowwar_lobby_1','sw_barrellchair',37,20,1,0,1,1,'can_sit_on_top',1,0),
+  ('snowwar_lobby_1','sw_barrellchair',39,20,1,0,1,1,'can_sit_on_top',1,0),
+  ('snowwar_lobby_1','sw_barrellchair',41,20,1,0,1,1,'can_sit_on_top',1,0),
+  ('snowwar_lobby_1','sw_chair1',30,24,1,4,1,1,'can_sit_on_top',1,0),
+  ('snowwar_lobby_1','sw_chair2',31,24,1,4,1,1,'can_sit_on_top',1,0),
+  ('snowwar_lobby_1','sw_chair2',32,24,1,4,1,1,'can_sit_on_top',1,0),
+  ('snowwar_lobby_1','sw_chair2',33,24,1,4,1,1,'can_sit_on_top',1,0),
+  ('snowwar_lobby_1','sw_chair3',34,24,1,4,1,1,'can_sit_on_top',1,0),
+  ('snowwar_lobby_1','sw_table1',30,25,1,0,1,1,'solid',0.001,0),
+  ('snowwar_lobby_1','sw_table2',31,25,1,0,1,1,'solid',0.001,0),
+  ('snowwar_lobby_1','sw_table3',32,25,1,0,1,1,'solid',0.001,0),
+  ('snowwar_lobby_1','sw_table4',33,25,1,0,1,1,'solid',0.001,0),
+  ('snowwar_lobby_1','sw_table5',34,25,1,0,1,1,'solid',0.001,0),
+  ('snowwar_lobby_1','sw_chair1',30,26,1,0,1,1,'can_sit_on_top',1,0),
+  ('snowwar_lobby_1','sw_chair2',31,26,1,0,1,1,'can_sit_on_top',1,0),
+  ('snowwar_lobby_1','sw_chair2',32,26,1,0,1,1,'can_sit_on_top',1,0),
+  ('snowwar_lobby_1','sw_chair2',33,26,1,0,1,1,'can_sit_on_top',1,0),
+  ('snowwar_lobby_1','sw_chair3',34,26,1,0,1,1,'can_sit_on_top',1,0),
+  ('snowwar_lobby_1','sw_chair1',30,29,1,4,1,1,'can_sit_on_top',1,0),
+  ('snowwar_lobby_1','sw_chair2',31,29,1,4,1,1,'can_sit_on_top',1,0),
+  ('snowwar_lobby_1','sw_chair2',32,29,1,4,1,1,'can_sit_on_top',1,0),
+  ('snowwar_lobby_1','sw_chair2',33,29,1,4,1,1,'can_sit_on_top',1,0),
+  ('snowwar_lobby_1','sw_chair3',34,29,1,4,1,1,'can_sit_on_top',1,0),
+  ('snowwar_lobby_1','sw_table1',30,30,1,0,1,1,'solid',0.001,0),
+  ('snowwar_lobby_1','sw_table2',31,30,1,0,1,1,'solid',0.001,0),
+  ('snowwar_lobby_1','sw_table3',32,30,1,0,1,1,'solid',0.001,0),
+  ('snowwar_lobby_1','sw_table4',33,30,1,0,1,1,'solid',0.001,0),
+  ('snowwar_lobby_1','sw_table5',34,30,1,0,1,1,'solid',0.001,0),
+  ('snowwar_lobby_1','sw_chair1',30,31,1,0,1,1,'can_sit_on_top',1,0),
+  ('snowwar_lobby_1','sw_chair2',31,31,1,0,1,1,'can_sit_on_top',1,0),
+  ('snowwar_lobby_1','sw_chair2',32,31,1,0,1,1,'can_sit_on_top',1,0),
+  ('snowwar_lobby_1','sw_chair2',33,31,1,0,1,1,'can_sit_on_top',1,0),
+  ('snowwar_lobby_1','sw_chair3',34,31,1,0,1,1,'can_sit_on_top',1,0),
+  ('snowwar_lobby_1','invisichair',27,32,1,2,1,1,'can_sit_on_top',1,0),
+  ('snowwar_lobby_1','invisichair',27,33,1,2,1,1,'can_sit_on_top',1,0),
+  ('snowwar_lobby_1','invisichair',27,34,1,2,1,1,'can_sit_on_top',1,0),
+  ('snowwar_lobby_1','invisichair',28,36,1,0,1,1,'can_sit_on_top',1,0),
+  ('snowwar_lobby_1','invisichair',29,36,1,0,1,1,'can_sit_on_top',1,0),
+  ('snowwar_lobby_1','invisichair',30,36,1,0,1,1,'can_sit_on_top',1,0),
+  ('snowwar_lobby_1','invisichair',31,36,1,0,1,1,'can_sit_on_top',1,0);
+
+COMMIT;
+
+-- Resolve the official public-room category. Prefer the configured category,
+-- then an existing category named Public Rooms, creating it only when absent.
+SET @snowstorm_public_cat_id := (
+  SELECT CAST(`value` AS UNSIGNED)
+  FROM `emulator_settings`
+  WHERE `key` = 'hotel.navigator.officialroot.categoryid'
+  LIMIT 1
+);
+SET @snowstorm_public_cat_id := (
+  SELECT `id`
+  FROM `navigator_publiccats`
+  WHERE `id` = @snowstorm_public_cat_id
+  LIMIT 1
+);
+SET @snowstorm_public_cat_id := IFNULL(@snowstorm_public_cat_id, (
+  SELECT `id`
+  FROM `navigator_publiccats`
+  WHERE `name` = 'Public Rooms'
+  ORDER BY `id` DESC
+  LIMIT 1
+));
+
+INSERT INTO `navigator_publiccats`
+  (`name`, `image`, `image_url`, `visible`, `order_num`)
+SELECT 'Public Rooms', '1', 'navigator/navi1.png', '1', 1
+FROM DUAL
+WHERE @snowstorm_public_cat_id IS NULL
+  AND NOT EXISTS (
+    SELECT 1 FROM `navigator_publiccats` WHERE `name` = 'Public Rooms'
+  );
+
+SET @snowstorm_public_cat_id := IFNULL(@snowstorm_public_cat_id, (
+  SELECT `id`
+  FROM `navigator_publiccats`
+  WHERE `name` = 'Public Rooms'
+  ORDER BY `id` DESC
+  LIMIT 1
+));
+
+INSERT INTO `emulator_settings` (`key`, `value`)
+SELECT
+  'hotel.navigator.officialroot.categoryid',
+  CAST(@snowstorm_public_cat_id AS CHAR)
+FROM DUAL
+WHERE @snowstorm_public_cat_id IS NOT NULL
+ON DUPLICATE KEY UPDATE `value` = VALUES(`value`);
+
+-- Preserve an existing SnowStorm owner. Otherwise use the configured public
+-- owner, then the BattleBall lounge owner, then the first valid hotel user.
+SET @snowstorm_owner_candidate := (
+  SELECT NULLIF(`owner_id`, 0)
+  FROM `rooms`
+  WHERE `model` = 'snowwar_lobby_1'
+  ORDER BY `id`
+  LIMIT 1
+);
+SET @snowstorm_owner_candidate := IFNULL(@snowstorm_owner_candidate, (
+  SELECT NULLIF(CAST(`value` AS UNSIGNED), 0)
+  FROM `emulator_settings`
+  WHERE `key` = 'hotel.publicroom.ownerid'
+  LIMIT 1
+));
+SET @snowstorm_owner_candidate := IFNULL(@snowstorm_owner_candidate, (
+  SELECT NULLIF(`owner_id`, 0)
+  FROM `rooms`
+  WHERE `model` = 'bb_lobby_1'
+  ORDER BY `id`
+  LIMIT 1
+));
+SET @snowstorm_owner_id := (
+  SELECT `id`
+  FROM `users`
+  WHERE `id` = @snowstorm_owner_candidate
+  LIMIT 1
+);
+SET @snowstorm_owner_id := IFNULL(@snowstorm_owner_id, (
+  SELECT `id` FROM `users` ORDER BY `id` LIMIT 1
+));
+SET @snowstorm_owner_id := IFNULL(@snowstorm_owner_id, 0);
+SET @snowstorm_owner_name := IFNULL((
+  SELECT `username`
+  FROM `users`
+  WHERE `id` = @snowstorm_owner_id
+  LIMIT 1
+), 'Hotel');
+
+-- rooms.category is the legacy flat-category field, separate from the public
+-- navigator category above.
+SET @snowstorm_room_category_id := (
+  SELECT `id` FROM `navigator_flatcats` WHERE `id` = 15 LIMIT 1
+);
+SET @snowstorm_room_category_id := IFNULL(@snowstorm_room_category_id, (
+  SELECT `id`
+  FROM `navigator_flatcats`
+  WHERE `caption_save` = 'caption_save_personal'
+  ORDER BY `id`
+  LIMIT 1
+));
+SET @snowstorm_room_category_id := IFNULL(@snowstorm_room_category_id, (
+  SELECT `id` FROM `navigator_flatcats` ORDER BY `id` LIMIT 1
+));
+SET @snowstorm_room_category_id := IFNULL(@snowstorm_room_category_id, 1);
+
+INSERT INTO `rooms`
+  (`owner_id`, `owner_name`, `name`, `description`, `model`, `state`,
+   `users_max`, `category`, `override_model`, `allow_walkthrough`,
+   `roller_speed`, `trade_mode`)
+SELECT
+  @snowstorm_owner_id,
+  @snowstorm_owner_name,
+  'SnowStorm Lobby',
+  'The original SnowStorm lounge',
+  'snowwar_lobby_1',
+  'open',
+  200,
+  @snowstorm_room_category_id,
+  '0',
+  '0',
+  4,
+  2
+FROM DUAL
+WHERE NOT EXISTS (
+  SELECT 1 FROM `rooms` WHERE `model` = 'snowwar_lobby_1'
+);
+
+-- Resolve the generated room ID by model; never assume rooms.id is the same
+-- between localhost, staging and production databases.
+SET @snowstorm_room_id := (
+  SELECT `id`
+  FROM `rooms`
+  WHERE `model` = 'snowwar_lobby_1'
+  ORDER BY `id`
+  LIMIT 1
+);
+
+INSERT INTO `navigator_publics`
+  (`public_cat_id`, `room_id`, `visible`)
+SELECT
+  @snowstorm_public_cat_id,
+  @snowstorm_room_id,
+  '1'
+FROM DUAL
+WHERE @snowstorm_public_cat_id IS NOT NULL
+  AND @snowstorm_room_id IS NOT NULL
+  AND NOT EXISTS (
+    SELECT 1
+    FROM `navigator_publics`
+    WHERE `public_cat_id` = @snowstorm_public_cat_id
+      AND `room_id` = @snowstorm_room_id
+  );
+
+-- Postflight report.
+SELECT
+  r.`id` AS `room_id`,
+  r.`name`,
+  r.`model`,
+  r.`owner_id`,
+  r.`owner_name`,
+  r.`users_max`,
+  np.`public_cat_id`,
+  np.`visible`
+FROM `rooms` r
+LEFT JOIN `navigator_publics` np ON np.`room_id` = r.`id`
+WHERE r.`model` = 'snowwar_lobby_1'
+ORDER BY r.`id`
+LIMIT 1;
+
+SELECT COUNT(*) AS `snowstorm_public_items`
+FROM `public_items`
+WHERE `room_model` = 'snowwar_lobby_1';
+
+-- Deterministic SnowStorm arena data. All mutable gameplay state is kept out of
+-- these immutable revisioned definitions.
+CREATE TABLE IF NOT EXISTS `snowstorm_maps` (
+  `map_id` TINYINT UNSIGNED NOT NULL,
+  `revision` INT NOT NULL,
+  `width` SMALLINT UNSIGNED NOT NULL,
+  `height` SMALLINT UNSIGNED NOT NULL,
+  `world_units_per_tile` SMALLINT UNSIGNED NOT NULL DEFAULT 3200,
+  `floor_map` MEDIUMTEXT NOT NULL,
+  `collision_map` MEDIUMTEXT NOT NULL,
+  `checksum` INT NOT NULL,
+  `sha256` CHAR(64) NOT NULL,
+  `enabled` TINYINT(1) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`map_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `snowstorm_map_items` (
+  `map_id` TINYINT UNSIGNED NOT NULL,
+  `item_id` VARCHAR(32) NOT NULL,
+  `member_name` VARCHAR(96) NOT NULL,
+  `asset_name` VARCHAR(160) NOT NULL,
+  `resource_id` INT NOT NULL,
+  `cast_id` INT NOT NULL,
+  `tile_x` SMALLINT NOT NULL,
+  `tile_y` SMALLINT NOT NULL,
+  `world_x` INT NOT NULL,
+  `world_y` INT NOT NULL,
+  `world_z` INT NOT NULL DEFAULT 0,
+  `direction` SMALLINT NOT NULL DEFAULT 0,
+  `flip_x` TINYINT(1) NOT NULL DEFAULT 0,
+  `source_loc_z` INT NOT NULL DEFAULT 0,
+  `draw_order` SMALLINT UNSIGNED NOT NULL,
+  `walking_height` SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+  `projectile_height` SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+  `footprint_json` TEXT NOT NULL,
+  `palette_id` INT NOT NULL DEFAULT 0,
+  `palette_name` VARCHAR(64) NOT NULL DEFAULT '',
+  `registration_x` SMALLINT NOT NULL DEFAULT 0,
+  `registration_y` SMALLINT NOT NULL DEFAULT 0,
+  PRIMARY KEY (`map_id`, `item_id`),
+  KEY `idx_snowstorm_items_draw` (`map_id`, `draw_order`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `snowstorm_map_machines` (
+  `map_id` TINYINT UNSIGNED NOT NULL,
+  `machine_id` SMALLINT UNSIGNED NOT NULL,
+  `tile_x` SMALLINT NOT NULL,
+  `tile_y` SMALLINT NOT NULL,
+  `world_x` INT NOT NULL,
+  `world_y` INT NOT NULL,
+  `world_z` INT NOT NULL DEFAULT 0,
+  `collection_tile_x` SMALLINT NOT NULL,
+  `collection_tile_y` SMALLINT NOT NULL,
+  `direction` TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  `collision_tiles_json` TEXT NOT NULL,
+  `collision_radius` SMALLINT UNSIGNED NOT NULL,
+  `collision_height` SMALLINT UNSIGNED NOT NULL,
+  `initial_stock` TINYINT UNSIGNED NOT NULL,
+  `maximum_stock` TINYINT UNSIGNED NOT NULL,
+  `refill_interval_ms` SMALLINT UNSIGNED NOT NULL,
+  `transfer_interval_ms` SMALLINT UNSIGNED NOT NULL,
+  PRIMARY KEY (`map_id`, `machine_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `snowstorm_map_spawns` (
+  `map_id` TINYINT UNSIGNED NOT NULL,
+  `spawn_id` SMALLINT UNSIGNED NOT NULL,
+  `center_x` SMALLINT NOT NULL,
+  `center_y` SMALLINT NOT NULL,
+  `radius` SMALLINT UNSIGNED NOT NULL,
+  `minimum_separation` SMALLINT UNSIGNED NOT NULL,
+  `team_count_mask` TINYINT UNSIGNED NOT NULL DEFAULT 15,
+  `fallback_rule` VARCHAR(96) NOT NULL,
+  PRIMARY KEY (`map_id`, `spawn_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- BEGIN GENERATED SNOWSTORM MAP SEED
+-- DO NOT EDIT: generated from tools/snowstorm/maps/snowstorm_maps.json.
+-- canonical revision=1 checksum=19544273 sha256=9B3F4ADF235BF0AF1B400381936E2FFE4BAFD0EC1D16F94BEEBAD7788C721F54 maps=7 items=828 machines=5 spawns=23
+START TRANSACTION;
+
+INSERT INTO `snowstorm_maps`
+  (`map_id`,`revision`,`width`,`height`,`world_units_per_tile`,`floor_map`,`collision_map`,`checksum`,`sha256`,`enabled`)
+VALUES
+  (1,1,50,50,3200,'xxxxxxxxxxxxxxxxxxx00000xxxxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxx0000000xxxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxx000000000xxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxx00000000000xxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxx0000000000000xxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxx000000000000000xxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxx00000000000000000xxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxx0000000000000000000xxxxxxxxxxxxxxxxxxx|xxxxxxxxxxx000000000000000000000xxxxxxxxxxxxxxxxxx|xxxxxxxxxx00000000000000000000000xxxxxxxxxxxxxxxxx|xxxxxxxxx0000000000000000000000000xxxxxxxxxxxxxxxx|xxxxxxxx000000000000000000000000000xxxxxxxxxxxxxxx|xxxxxxx00000000000000000000000000000xxxxxxxxxxxxxx|xxxxxx0000000000000000000000000000000xxxxxxxxxxxxx|xxxxx000000000000000000000000000000000xxxxxxxxxxxx|xxxx00000000000000000000000000000000000xxxxxxxxxxx|xxx0000000000000000000000000000000000000xxxxxxxxxx|xx000000000000000000000000000000000000000xxxxxxxxx|x00000000000000000000000000000000000000000xxxxxxxx|00000000000000000000xxxx0xxxxxx000000000000xxxxxxx|00000000000000000000xxxx0xxxxxxx000000000000xxxxxx|00000000000000000000xxxx0xxxxxxx0000000000000xxxxx|00000000000000000000xxx000000xxx00000000000000xxxx|x0000000000000000000xxx000000xxx000000000000000xxx|xx000000000000000000xxx0000000000000000000000000xx|xxx00000000000000000xxx000000xxx00000000000000000x|xxxx0000000000000000000000000xxx000000000000000000|xxxxx000000000000000xxx000000xxx000000000000000000|xxxxxx00000000000000xxxxxxx0xxxx000000000000000000|xxxxxxx0000000000000xxxxxxx0xxxx000000000000000000|xxxxxxxx0000000000000xxxxxx0xxx0000000000000000000|xxxxxxxxx00000000000000000000000000000000000000000|xxxxxxxxxx000000000000000000000000000000000000000x|xxxxxxxxxxx0000000000000000000000000000000000000xx|xxxxxxxxxxxx00000000000000000000000000000000000xxx|xxxxxxxxxxxxx000000000000000000000000000000000xxxx|xxxxxxxxxxxxxx0000000000000000000000000000000xxxxx|xxxxxxxxxxxxxxx00000000000000000000000000000xxxxxx|xxxxxxxxxxxxxxxx000000000000000000000000000xxxxxxx|xxxxxxxxxxxxxxxxx0000000000000000000000000xxxxxxxx|xxxxxxxxxxxxxxxxxx00000000000000000000000xxxxxxxxx|xxxxxxxxxxxxxxxxxxx000000000000000000000xxxxxxxxxx|xxxxxxxxxxxxxxxxxxxx0000000000000000000xxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxx00000000000000000xxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxx000000000000000xxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxx0000000000000xxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx00000000000xxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxx000000000xxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxxx0000000xxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxxxx00000xxxxxxxxxxxxxxxxxx','xxxxxxxxxxxxxxxxxxx00000xxxxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxx0000000xxxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxx000000000xxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxx000000x0000xxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxx0000000000000xxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxx0000000000000xxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxx000000000000000x0xxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxx0000000000x00000x00xxxxxxxxxxxxxxxxxxx|xxxxxxxxxxx00000000000000000x000xxxxxxxxxxxxxxxxxx|xxxxxxxxxx000000000000000000x0000xxxxxxxxxxxxxxxxx|xxxxxxxxx0000000x00000000000x00000xxxxxxxxxxxxxxxx|xxxxxxxx000000000000000000000000000xxxxxxxxxxxxxxx|xxxxxxx00000000000000000000000000000xxxxxxxxxxxxxx|xxxxxx0000000000000000000000000000x00xxxxxxxxxxxxx|xxxxx00000000xxxxxxxxxx000000000000000xxxxxxxxxxxx|xxxx000000000x0000000000000000000000000xxxxxxxxxxx|xxx0000000000000000000000000000000000000xxxxxxxxxx|xx000000000000000000000000000000000000000xxxxxxxxx|x0xxxxxxxxxxx00000000000000000000000000000xxxxxxxx|00x00000000000000000xxxx0xxxxxx000000000000xxxxxxx|00x000x0000000000000xxxx0xxxxxxx000000xxxxxxxxxxxx|00x00000000000000000xxxx0xxxxxxx000000x000000xxxxx|00x00000000000000000xxx000000xxx000000x0000000xxxx|x0000000000000000000xxx000000xxx000000x00000000xxx|xx000x00000000000000xxx00xxx0000000000x000000000xx|xxx00000000000000000xxx000000xxx0000000000000x000x|xxxx000000x000000000000000000xxx000000000000000000|xxxxx000000000000000xxx000000xxx000000000000000000|xxxxxx00000000000000xxxxxxx0xxxx00000000000000000x|xxxxxxx0000000000000xxxxxxx0xxxx000000000000000000|xxxxxxxx0000000000000xxxxxx0xxx0000000000000000000|xxxxxxxxx00000000000000000000000000000000000000000|xxxxxxxxxx0000000000000000000000000000000000000x0x|xxxxxxxxxxx0000000000000000000000000000000000000xx|xxxxxxxxxxxx000x0000000000000000000000000000000xxx|xxxxxxxxxxxxx000000000000000000000000000000000xxxx|xxxxxxxxxxxxxx0000000000000000000000000000000xxxxx|xxxxxxxxxxxxxxx0000000000000000000000xxxxxx0xxxxxx|xxxxxxxxxxxxxxxx0000000xxx00000000000000000xxxxxxx|xxxxxxxxxxxxxxxxx000000xx00000000000000000xxxxxxxx|xxxxxxxxxxxxxxxxxx00000xx0000000000000000xxxxxxxxx|xxxxxxxxxxxxxxxxxxxx000xx000000000000000xxxxxxxxxx|xxxxxxxxxxxxxxxxxxxx000xx00000000000000xxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxx00xx0000000000000xxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxx0xx000000000000xxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxx00000000000xxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxx0000000000xxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxx000x00000xxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxxx0000000xxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxxxx00000xxxxxxxxxxxxxxxxxx',2027769529,'FE107DF74E1B2C0F2D08B45163FF93EF52D3758F0DA7213A67A4764172B8FF21',1),
+  (2,1,50,50,3200,'xxxxxxxxxxxxxxxxxxx00000xxxxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxx0000000xxxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxx000000000xxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxx00000000000xxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxx0000000000000xxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxx000000000000000xxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxx00000000000000000xxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxx0000000000000000000xxxxxxxxxxxxxxxxxxx|xxxxxxxxxxx000000000000000000000xxxxxxxxxxxxxxxxxx|xxxxxxxxxx00000000000000000000000xxxxxxxxxxxxxxxxx|xxxxxxxxx0000000000000000000000000xxxxxxxxxxxxxxxx|xxxxxxxx000000000000000000000000000xxxxxxxxxxxxxxx|xxxxxxx00000000000000000000000000000xxxxxxxxxxxxxx|xxxxxx0000000000000000000000000000000xxxxxxxxxxxxx|xxxxx000000000000000000000000000000000xxxxxxxxxxxx|xxxx00000000000000000000000000000000000xxxxxxxxxxx|xxx0000000000000000000000000000000000000xxxxxxxxxx|xx000000000000000000000000000000000000000xxxxxxxxx|x00000000000000000000000000000000000000000xxxxxxxx|0000000000000000000000000000000000000000000xxxxxxx|0000000000000000000xxxxxxxxxx0xxxxxx00000000xxxxxx|0000000000000000000xxxxxxxxxx0xxxxxxx00000000xxxxx|0000000000000000000xxxxxxxxxx0xxxxxxx000000000xxxx|x000000000000000000xxx000000000000xxx0000000000xxx|xx00000000000000000xxx000000000000xxx00000000000xx|xxx0000000000000000xxx000000000000xxx000000000000x|xxxx000000000000000xxx000000000000xxx0000000000000|xxxxx00000000000000000000000000000xxx0000000000000|xxxxxx0000000000000xxx000000000000xxxx000000000000|xxxxxxx000000000000xxx000000000000xxxxxxxxxx0xxxxx|xxxxxxxx00000000000xxx000000000000xxxxxxxxxx0xxxxx|xxxxxxxxx0000000000xxx0000000000000xxxxxxxxx0xxxxx|xxxxxxxxxx000000000xxxxxxxx0000000000000000000000x|xxxxxxxxxxx00000000xxxxxxxxx00000000000000000000xx|xxxxxxxxxxxx00000000xxxxxxxx0000000000000000000xxx|xxxxxxxxxxxxx000000000000xxx000000000000000000xxxx|xxxxxxxxxxxxxx00000000000xxx00000000000000000xxxxx|xxxxxxxxxxxxxxx0000000000xxx0000000000000000xxxxxx|xxxxxxxxxxxxxxxx000000000xxx000000000000000xxxxxxx|xxxxxxxxxxxxxxxxx00000000xxx00000000000000xxxxxxxx|xxxxxxxxxxxxxxxxxx0000000xxx0000000000000xxxxxxxxx|xxxxxxxxxxxxxxxxxxx000000xxx000000000000xxxxxxxxxx|xxxxxxxxxxxxxxxxxxxx00000xxx00000000000xxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxx0000xxx0000000000xxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxx000xxx000000000xxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxx00xxx00000000xxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx0xxx0000000xxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxxxxx000000xxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxxxxx00000xxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxxxxx0000xxxxxxxxxxxxxxxxxx','xxxxxxxxxxxxxxxxxxx00000xxxxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxx0000000xxxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxx000000000xxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxx0000000x000xxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxx0000000000000xxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxx00000000000000xxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxx000000000000000x0xxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxx0000000000000000xx0xxxxxxxxxxxxxxxxxxx|xxxxxxxxxxx00000000x00000000x000xxxxxxxxxxxxxxxxxx|xxxxxxxxxx000000000000000000x0000xxxxxxxxxxxxxxxxx|xxxxxxxxx0000000000000000000xx0000xxxxxxxxxxxxxxxx|xxxxxxxx00000000000000000000x000000xxxxxxxxxxxxxxx|xxxxxxx000000000000000000000x0000000xxxxxxxxxxxxxx|xxxxxx0000000000000000000000x00000000xxxxxxxxxxxxx|xxxxx00000000000000000000000x000000000xxxxxxxxxxxx|xxxx000000000000000000000000x0000000000xxxxxxxxxxx|xxx0000000000000000000000000x00000000000xxxxxxxxxx|xx00000000000000000000000000x000000000000xxxxxxxxx|x000000000000000000000000000000000000000x0xxxxxxxx|000x000xxxxxxxxxxx0000000000000000000000000xxxxxxx|000000x000000000000xxxxxxxxxx0xxxxxx00000000xxxxxx|0000000000000000000xxxxxxxxxx0xxxxxxx00000000xxxxx|0000000000000000000xxxxxxxxxx0xxxxxxx000000000xxxx|x000000000000000000xxx000000000000xxx0000000000xxx|xx00000000000000000xxx00x000000000xxx00000000000xx|xxx0000000000000000xxx000000000000xxx000000000000x|xxxx00000x000000000xxx0000xxx00000xxx00x0000000000|xxxxx00000000000000000000000000000xxx000000000x000|xxxxxx0000000000000xxx000000000000xxxx000000000000|xxxxxxx000000000000xxx0x000000000xxxxxxxxxxx0xxxxx|xxxxxxxx00000000000xxx00000000000xxxxxxxxxxx0xxxxx|xxxxxxxxx0000000000xxx00000000000x0xxxxxxxxx0xxxxx|xxxxxxxxxx000000000xxxxxxxx0xxx000000000000000000x|xxxxxxxxxxx00000000xxxxxxxxx00000000000000000000xx|xxxxxxxxxxxx00000000xxxxxxxx0000000000000000000xxx|xxxxxxxxxxxxx000000000000xxx000000000000000000xxxx|xxxxxxxxxxxxxx00000000000xxx00000000000000000xxxxx|xxxxxxxxxxxxxxx000x000000xxx0000000000000000xxxxxx|xxxxxxxxxxxxxxxx000000000xxx00000000000000xxxxxxxx|xxxxxxxxxxxxxxxxx00000000xxx00000000000000xxxxxxxx|xxxxxxxxxxxxxxxxxx0000000xxx0000000000000xxxxxxxxx|xxxxxxxxxxxxxxxxxxx000000xxx000000000000xxxxxxxxxx|xxxxxxxxxxxxxxxxxxxx00000xxx00000000000xxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxx0000xxx0000000000xxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxx000xxx000000000xxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxx00xxx00000000xxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx0xxx0000000xxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxxxxx000000xxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxxxxx00000xxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxxxxx0000xxxxxxxxxxxxxxxxxx',-1392748076,'72C0974E40860236E8BBD3E5C2BB5CA0E7E7C1AB2532B7A46313EF92C50DD0F7',1),
+  (3,1,50,50,3200,'xxxxxxxxxxxxxxxxxxx00000xxxxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxx0000000xxxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxx000000000xxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxx00000000000xxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxx000000000000xxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxx0000000000000xxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxx00000000000xxxxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxx00000000000000xxxx0xxxxxxxxxxxxxxxxxxx|xxxxxxxxxxx0000000000000000xxx00xxxxxxxxxxxxxxxxxx|xxxxxxxxxx00000000000000000xxx0000xxxxxxxxxxxxxxxx|xxxxxxxxx000000000000000000xxx00000xxxxxxxxxxxxxxx|xxxxxxxx0000000000000000000xxx00000xxxxxxxxxxxxxxx|xxxxxxx00000000000000000000xxx000000xxxxxxxxxxxxxx|xxxxxx000000000000000000000xxx0000000xxxxxxxxxxxxx|xxxxx0000000000000000000000xxx00000000xxxxxxxxxxxx|xxxx00000000000000000000000xxx000000000xxxxxxxxxxx|xxx000000000000000000000000xxx0000000000xxxxxxxxxx|xx0000000000000000000000000xxx00000000000xxxxxxxxx|x00000000000000000000000000xxx000000000000xxxxxxxx|000000000000000000000000000xxx0000000000000xxxxxxx|000000000000000000000000000xxx00000000000000xxxxxx|000000000000000000000000000xxx000000000000000xxxxx|0000000000000000000000000000000000000000000000xxxx|x0000000000000000000000000000000000000000000000xxx|xx00000000000000000000000000x0000000000000000000xx|xxx000000000000000000000000xxx0000000000000000000x|xxxx00000000000000000000000x0000000000000000000000|xxxxx000000000000000000000000000000000000000000000|xxxxxx00000000000000000000000000000000000000000000|xxxxxxx00000000000000000000xxx00000000000000000000|xxxxxxxx0000000000000000000xxx00000000000000000000|xxxxxxxxx000000000000000000xxx00000000000000000000|xxxxxxxxxx00000000000000000xxx0000000000000000000x|xxxxxxxxxxx0000000000000000xxx000000000000000000xx|xxxxxxxxxxxx000000000000000xxx00000000000000000xxx|xxxxxxxxxxxxx00000000000000xxx0000000000000000xxxx|xxxxxxxxxxxxxx0000000000000xxx000000000000000xxxxx|xxxxxxxxxxxxxxx000000000000xxx00000000000000xxxxxx|xxxxxxxxxxxxxxxx00000000000xxx0000000000000xxxxxxx|xxxxxxxxxxxxxxxxx0000000000xxx000000000000xxxxxxxx|xxxxxxxxxxxxxxxxxx000000000xxx00000000000xxxxxxxxx|xxxxxxxxxxxxxxxxxxx00000000xxx0000000000xxxxxxxxxx|xxxxxxxxxxxxxxxxxxxx0000000xxx000000000xxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxx000000xxx00000000xxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxx00000xxx0000000xxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxx0000xxx000000xxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx000xxx00000xxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxx00xxx0000xxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxxx0xxx000xxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx','xxxxxxxxxxxxxxxxxxx0000xxxxxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxx00000x0xxxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxx000000x00xxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxx0000000x000xxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxx000x0x00x00xxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxx000000000x0x0xxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxx00000x000xxxxxxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxx00000000000x00xxxx0xxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx00xxxx00xxxxxxxxxxxxxxxxxx|xxxxxxxxxx0x000000000000000xxx0000xxxxxxxxxxxxxxxx|xxxxxxxxx00x00000000000x000xxx00000xxxxxxxxxxxxxxx|xxxxxxxxxxxx00xxxxxxx0xx000xxx00000xxxxxxxxxxxxxxx|xxxxxxx0x0000000000x000x000xxx000000xxxxxxxxxxxxxx|xxxxxx00x0000000000x000x000xxx0000000xxxxxxxxxxxxx|xxxxx000x000x000000x000x000xxx00000000xxxxxxxxxxxx|xxxx0000x000x0000000000x000xxx0000x0000xxxxxxxxxxx|xxx00000x000x000000x000x000xxx0000x00000xxxxxxxxxx|xx000000x000x000000x0000000xxx0000x0xxx00xxxxxxxxx|x000x000x0x0x0xxxxxxx000000xxx0000x0000000xxxxxxxx|00000000x0000000000x0000000xxx0000x00000000xxxxxxx|00000000x0000000000x0000000xxx00000000000000xxxxxx|00000000x000000000000000000xxx000000000000000xxxxx|000000x0x0000000000x00000000000000000000000000xxxx|x000x000x0000000000x000000000000000000000000000xxx|xx000000x0000000000x00000000x0000000000000000000xx|xxx0x000xxx00xxxxxxxxx00000xxx0000000000000000000x|xxxx0000x0000000000x0000000x000000000000x000000000|xxxxx000x0000000000x00000000000000000000x000000000|xxxxxx00x0000000000x00000000000000000000x0xxx00000|xxxxxxx0x000000000000000000xxx0000000000x000000000|xxxxxxxxx0000000000x0000000xxx0000000000x000000000|xxxxxxxxx0000000000x0000000xxx00000000000000000000|xxxxxxxxxxx0x0xxxxxxx000000xxx0000000000000000000x|xxxxxxxxxxx0x000000x0000000xxx000000000000000000xx|xxxxxxxxxxxxx000000x0000000xxx00000000000000000xxx|xxxxxxxxxxxxx0000000000x000xxx0000x00000000000xxxx|xxxxxxxxxxxxxx00000x000x000xxx0000x0000000000xxxxx|xxxxxxxxxxxxxxx0000x000x000xxx0000x0xxx00000xxxxxx|xxxxxxxxxxxxxxxx000x000x000xxx0000x00000000xxxxxxx|xxxxxxxxxxxxxxxxxxxxx0xx000xxx0000x0000000xxxxxxxx|xxxxxxxxxxxxxxxxxx00000x000xxx00000000000xxxxxxxxx|xxxxxxxxxxxxxxxxxxx0000x000xxx0000000000xxxxxxxxxx|xxxxxxxxxxxxxxxxxxxx0000000xxx000000000xxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxx0x000xxx00000000xxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxx0x000xxx0x00000xxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx000xxx000000xxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx000xxxx0x00xxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxx00xxx0000xxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxxx0xxx0x0xxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',-721703495,'F1CDA79E707236849E779ECC6887155257F5376F2A55CAF069914D4B3C586324',1),
+  (4,1,50,50,3200,'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx0xxxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx00xxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx000xxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx0000xxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxx0xxxxxxx00000xxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxx00xxxxxxx000000xxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxx000xxxxxxx0000000xxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxx0000xxxxxxx00000000xxxxxxxxxxxxxxxxxx|xxxxxxxxxxxx00000xxxxxxx000000000xxxxxxxxxxxxxxxxx|xxxxxxxxxxx000000xxxxxxx0000000000xxxxxxxxxxxxxxxx|xxxxxxxxxx0000000xxxxxxx00000000000xxxxxxxxxxxxxxx|xxxxxxxxx00000000xxxxxxx00000000000xxxxxxxxxxxxxxx|xxxxxxxx000000000xxxxxxx00000000000xxxxxxxxxxxxxxx|xxxxxxx0000000000xxxxxxx00000000000xxxxxxxxxxxxxxx|xxxxxx00000000000xxxxxxx00000000000xxx0xxxxxxxxxxx|xxxxx000000000000xxxxxxx00000000000xxx00xxxxxxxxxx|xxxx0000000000000xxxxxxx00000000000xxx000xxxxxxxxx|xxx00000000000000000000000000000000xxx0000xxxxxxxx|0x00000000000000000000000000000000000000000xxxxxxx|x0000000000000000xxx0xxx00000000000xxx000000xxxxxx|00000000000000000xx000xx00000000000xxx0000000xxxxx|00000000000000000000x00000000000000xxx00000000xxxx|x000000000000000000xxx0000000000000xxx000000000xxx|xx000000000000000000000000000000000xxx0000000000xx|xxx00000000000000000000000000000000xxx00000000000x|xxxx000000000000000x0x0000000000000xxx000000000000|xxxxx00000000000000xxx0000000000000xxx000000000000|xxxxxx0000000000000xxx0000000xxx0xxxxx000000000000|xxxxxxx000000000000xxx000000xxxx0xxxxx000000000000|xxxxxxxx00000000000xxx000000xxxx0xxxx0000000000000|xxxxxxxxx0000000000xxx000000xxx0000000000000000000|xxxxxxxxxx000000000xxx000000xxx000000000000000000x|xxxxxxxxxxx00000000xxx000000xxx00000000000000000xx|xxxxxxxxxxxx0000000xxx000000xxx0000000000000000xxx|xxxxxxxxxxxxx000000xxxxxxxxxxxx000000000000000xxxx|xxxxxxxxxxxxxx00000xxxxxxxxxxxx00000000000000xxxxx|xxxxxxxxxxxxxxx00000xxxxxxxxxxx0000000000000xxxxxx|xxxxxxxxxxxxxxxx000000000000xxx000000000000xxxxxxx|xxxxxxxxxxxxxxxxx0000000000000000000000000xxxxxxxx|xxxxxxxxxxxxxxxxxx00000000000000000000000xxxxxxxxx|xxxxxxxxxxxxxxxxxxx0000000000x0000000000xxxxxxxxxx|xxxxxxxxxxxxxxxxxxxx00000000xxx00000000xxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxx0000000xxx0000000xxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxx000000x00000000xxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxx0000000000000xxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx00000000000xxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxx000xx0000xxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxxx00xxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxxxx0xxxxxxxxxxxxxxxxxxxxxx','xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx0xxxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx00xxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx000xxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxx000xxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxx0xxxxxxx000x0xxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxx00xxxxxxxx00000xxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxx000xxxxxxx0000000xxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxx0000xxxxxxx000x0000xxxxxxxxxxxxxxxxxx|xxxxxxxxxxxx00000xxxxxxx0000000x0xxxxxxxxxxxxxxxxx|xxxxxxxxxxx00000xxxxxxxx0000000000xxxxxxxxxxxxxxxx|xxxxxxxxxx0000000xxxxxxx00000000000xxxxxxxxxxxxxxx|xxxxxxxxx00000000xxxxxxx00000000000xxxxxxxxxxxxxxx|xxxxxxxx00x000000xxxxxxx000x0000000xxxxxxxxxxxxxxx|xxxxxxx0000000000xxxxxxx00000000000xxxxxxxxxxxxxxx|xxxxxx00000000000xxxxxxx00000000000xxx0xxxxxxxxxxx|xxxxx000000000000xxxxxxx00000000000xxx0xxxxxxxxxxx|xxxx000000x000000xxxxxxx0x000000000xxx000xxxxxxxxx|xxx0x00x000000000000000000000000000xxx0000xxxxxxxx|0x0000000000000x000000000000000000000000000xxxxxxx|x0000000000000000xxx0xxx00000000000xxx000000xxxxxx|0x000000000x00000xx000xx00000000000xxx0000000xxxxx|00000x0x000000000000x00000000000000xxx00000000xxxx|x000000000000000000xxxx000000000000xxx00000x000xxx|xx000000000000000000000000000000000xxx0000000000xx|xxx0x000000000000000000000000000000xxx000000000x0x|xxxx000000000000000x0x0000000000000xxx000000000000|xxxxx00x00000000000xxx0000000000000xxx000000000000|xxxxxx0000000000000xxx0000000xxx0xxxxx000000000000|xxxxxxx000000000000xxx000000xxxx0xxxxx000000000000|xxxxxxxx00000000000xxx000000xxxx0xxxx0000000000000|xxxxxxxxx0000000000xxx000000xxx00000000x0000000000|xxxxxxxxxx000000000xxx000000xxx000000000000000000x|xxxxxxxxxxxx0000000xxx000000xxx00000000000000000xx|xxxxxxxxxxxx0000000xxx000000xxx0000000000000000xxx|xxxxxxxxxxxxx000000xxxxxxxxxxxx000000000000000xxxx|xxxxxxxxxxxxxx00x00xxxxxxxxxxxx00000000000000xxxxx|xxxxxxxxxxxxxxx00000xxxxxxxxxxx0000000000000xxxxxx|xxxxxxxxxxxxxxxx000000000000xxx000000000000xxxxxxx|xxxxxxxxxxxxxxxxx00000x0000000000000000000xxxxxxxx|xxxxxxxxxxxxxxxxxx00000000000000000000000xxxxxxxxx|xxxxxxxxxxxxxxxxxxx0000000000x0000000000xxxxxxxxxx|xxxxxxxxxxxxxxxxxxxx00000000xxx00000000xxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxx0000000xxx0000000xxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxx000000x00000000xxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxx0x00000000000xxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx00000000000xxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxx000xx0000xxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxxx00xxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',216755197,'C61E1D4E3B4BEB2AB84F392E4BA8AE790E2021712CEE7D1FCC8602B75A39F487',1),
+  (5,1,50,50,3200,'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx0xxxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx00xxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx000xxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx0000xxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxx0xxxxxxx00000xxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxx00xxxxxxx000000xxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxx000xxxxxxx0000000xxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxx0000xxxxxxx00000000xxxxxxxxxxxxxxxxxx|xxxxxxxxxxxx00000xxxxxxx000000000xxxxxxxxxxxxxxxxx|xxxxxxxxxxx000000xxxxxxx0000000000xxxxxxxxxxxxxxxx|xxxxxxxxxx0000000xxxxxxx00000000000xxxxxxxxxxxxxxx|xxxxxxxxx00000000xxxxxxx00000000000xxxxxxxxxxxxxxx|xxxxxxxx000000000xxxxxxx00000000000xxxxxxxxxxxxxxx|xxxxxxx0000000000xxxxxxx00000000000xxxxxxxxxxxxxxx|xxxxxx00000000000xxxxxxx00000000000xxx0xxxxxxxxxxx|xxxxx000000000000xxxxxxx00000000000xxx00xxxxxxxxxx|xxxx0000000000000xxxxxxx00000000000xxx000xxxxxxxxx|xxx00000000000000000000000000000000xxx0000xxxxxxxx|0x00000000000000000000000000000000000000000xxxxxxx|x0000000000000000xxx0xxx00000000000xxx000000xxxxxx|00000000000000000xx000xx00000000000xxx0000000xxxxx|00000000000000000000x00000000000000xxx00000000xxxx|x000000000000000000xxx0000000000000xxx000000000xxx|xx000000000000000000000000000000000xxx0000000000xx|xxx00000000000000000000000000000000xxx00000000000x|xxxx000000000000000x0x0000000000000xxx000000000000|xxxxx00000000000000xxx0000000000000xxx000000000000|xxxxxx0000000000000xxx0000000xxx0xxxxx000000000000|xxxxxxx000000000000xxx000000xxxx0xxxxx000000000000|xxxxxxxx00000000000xxx000000xxxx0xxxx0000000000000|xxxxxxxxx0000000000xxx000000xxx0000000000000000000|xxxxxxxxxx000000000xxx000000xxx000000000000000000x|xxxxxxxxxxx00000000xxx000000xxx00000000000000000xx|xxxxxxxxxxxx0000000xxx000000xxx0000000000000000xxx|xxxxxxxxxxxxx000000xxxxxxxxxxxx000000000000000xxxx|xxxxxxxxxxxxxx00000xxxxxxxxxxxx00000000000000xxxxx|xxxxxxxxxxxxxxx00000xxxxxxxxxxx0000000000000xxxxxx|xxxxxxxxxxxxxxxx000000000000xxx000000000000xxxxxxx|xxxxxxxxxxxxxxxxx0000000000000000000000000xxxxxxxx|xxxxxxxxxxxxxxxxxx00000000000000000000000xxxxxxxxx|xxxxxxxxxxxxxxxxxxx0000000000x0000000000xxxxxxxxxx|xxxxxxxxxxxxxxxxxxxx00000000xxx00000000xxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxx0000000xxx0000000xxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxx000000x00000000xxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxx0000000000000xxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx00000000000xxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxx000xx0000xxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxxx00xxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxxxx0xxxxxxxxxxxxxxxxxxxxxx','xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx0xxxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx00xxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx000xxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx0x00xxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxx0xxxxxxx00000xxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxx00xxxxxxx000000xxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxx000xxxxxxx0000000xxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxx0000xxxxxxx00000xxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxx00000xxxxxxx000000000xxxxxxxxxxxxxxxxx|xxxxxxxxxxx000000xxxxxxxxx00000000xxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx0x00xxxxx00xxxxxxxxxxxxxxx|xxxxxxxxx0x000000xxxxxxx0x00x000x00xxxxxxxxxxxxxxx|xxxxxxxx00x000000xxxxxxxxx00x000x00xxxxxxxxxxxxxxx|xxxxxxx000x00xxxxxxxxxxx0000xxxxx00xxxxxxxxxxxxxxx|xxxxxx0000x00x000xxxxxxx00000000000xxx0xxxxxxxxxxx|xxxxx00x00x00x000xxxxxxx0x000000000xxx00xxxxxxxxxx|xxxx000000x00x00xxxxxxxx0x00xxxxx00xxxxxxxxxxxxxxx|xxx0000000x00000000000x00x00x000000xxx0000xxxxxxxx|0x00x000xxx00000000000x00x00x0000000000000xxxxxxxx|x000000000000x00xxxx0xxxxx00xxxxxx0xxxxx00x0xxxxxx|0000000000000x00xxxx00xx000000000x0xxx0000x00xxxxx|00000000xxx00x00000xx000000000000x0xxx0000x000xxxx|x000000000x00x00000xxx00000000000x0xxx0xxxx0000xxx|xx0x000000x00x00xxxx0000000000000x0xxx0xxxx00000xx|xxx00000xxx000000000000000000000000xxx00000000000x|xxxx000000000000000x0x0000000000000xxx00000000000x|xxxxx00000000x00xxxxxx00000000000xxxxx0xxxxxx00000|xxxxxx00xxx00x00000xxx0000000xxx0xxxxx000000000000|xxxxxxx000x00x00000xxx000000xxxx0xxxxx000000000000|xxxxxxxx00x00x00x00xxx000000xxxx0xxxx00xxxxxx00000|xxxxxxxxx0x00x00x00xxx000000xxx0000000000000000000|xxxxxxxxxxx00x00x00xxx000000xxx000000000000000000x|xxxxxxxxxxx00xxxx00xxxxxxxx0xxxxxxxx00xxxxxx0000xx|xxxxxxxxxxxx0000000xxxx000x0xxx0000000x0000x000xxx|xxxxxxxxxxxxx000000xxxxxxxxxxxx0000000xxxxxx00xxxx|xxxxxxxxxxxxxx00xxxxxxxxxxxxxxx0xxxx000000000xxxxx|xxxxxxxxxxxxxxx00000xxxxxxxxxxx0xxxx00000000xxxxxx|xxxxxxxxxxxxxxxx000000000000xxx0000000xxxx0xxxxxxx|xxxxxxxxxxxxxxxxxxxx000000000000000000x00xxxxxxxxx|xxxxxxxxxxxxxxxxxx0x00xxxxx00xxxx00xxxx00xxxxxxxxx|xxxxxxxxxxxxxxxxxxxx00x000x00x00x0000000xxxxxxxxxx|xxxxxxxxxxxxxxxxxxxx00xxxxx0xxx0x000000xxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxx0000000xxx0x00xxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxx000000xx00x00x0xxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxx000000xxxx00xxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx00000000000xxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxx000xx0000xxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxxx00xxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxxxx0xxxxxxxxxxxxxxxxxxxxxx',-1002442617,'A0EB709542618863A613A0C39478FFB44B5337B9426C402C7D1D0FD8D904CE41',1),
+  (6,1,50,50,3200,'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx0xxxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx00xxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx000xxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx0000xxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxx0xxxxxxx00000xxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxx00xxxxxxx000000xxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxx000xxxxxxx0000000xxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxx0000xxxxxxx00000000xxxxxxxxxxxxxxxxxx|xxxxxxxxxxxx00000xxxxxxx000000000xxxxxxxxxxxxxxxxx|xxxxxxxxxxx000000xxxxxxx0000000000xxxxxxxxxxxxxxxx|xxxxxxxxxx0000000xxxxxxx00000000000xxxxxxxxxxxxxxx|xxxxxxxxx00000000xxxxxxx00000000000xxxxxxxxxxxxxxx|xxxxxxxx000000000xxxxxxx00000000000xxxxxxxxxxxxxxx|xxxxxxx0000000000xxxxxxx00000000000xxxxxxxxxxxxxxx|xxxxxx00000000000xxxxxxx00000000000xxx0xxxxxxxxxxx|xxxxx000000000000xxxxxxx00000000000xxx00xxxxxxxxxx|xxxx0000000000000xxxxxxx00000000000xxx000xxxxxxxxx|xxx00000000000000000000000000000000xxx0000xxxxxxxx|0x00000000000000000000000000000000000000000xxxxxxx|x0000000000000000xxx0xxx00000000000xxx000000xxxxxx|00000000000000000xx000xx00000000000xxx0000000xxxxx|00000000000000000000x00000000000000xxx00000000xxxx|x000000000000000000xxx0000000000000xxx000000000xxx|xx000000000000000000000000000000000xxx0000000000xx|xxx00000000000000000000000000000000xxx00000000000x|xxxx000000000000000x0x0000000000000xxx000000000000|xxxxx00000000000000xxx0000000000000xxx000000000000|xxxxxx0000000000000xxx0000000xxx0xxxxx000000000000|xxxxxxx000000000000xxx000000xxxx0xxxxx000000000000|xxxxxxxx00000000000xxx000000xxxx0xxxx0000000000000|xxxxxxxxx0000000000xxx000000xxx0000000000000000000|xxxxxxxxxx000000000xxx000000xxx000000000000000000x|xxxxxxxxxxx00000000xxx000000xxx00000000000000000xx|xxxxxxxxxxxx0000000xxx000000xxx0000000000000000xxx|xxxxxxxxxxxxx000000xxxxxxxxxxxx000000000000000xxxx|xxxxxxxxxxxxxx00000xxxxxxxxxxxx00000000000000xxxxx|xxxxxxxxxxxxxxx00000xxxxxxxxxxx0000000000000xxxxxx|xxxxxxxxxxxxxxxx000000000000xxx000000000000xxxxxxx|xxxxxxxxxxxxxxxxx0000000000000000000000000xxxxxxxx|xxxxxxxxxxxxxxxxxx00000000000000000000000xxxxxxxxx|xxxxxxxxxxxxxxxxxxx0000000000x0000000000xxxxxxxxxx|xxxxxxxxxxxxxxxxxxxx00000000xxx00000000xxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxx0000000xxx0000000xxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxx000000x00000000xxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxx0000000000000xxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx00000000000xxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxx000xx0000xxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxxx00xxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxxxx0xxxxxxxxxxxxxxxxxxxxxx','xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx0xxxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx00xxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx000xxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx00x0xxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxx0xxxxxxx00000xxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxx00xxxxxxx000000xxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxx0x0xxxxxxx0000000xxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxx0000xxxxxxx00000x00xxxxxxxxxxxxxxxxxx|xxxxxxxxxxxx00000xxxxxxx00000x000xxxxxxxxxxxxxxxxx|xxxxxxxxxxx000000xxxxxxx00000x0000xxxxxxxxxxxxxxxx|xxxxxxxxxx00000x0xxxxxxx00000x00000xxxxxxxxxxxxxxx|xxxxxxxxx00000000xxxxxxx00xxxx000x0xxxxxxxxxxxxxxx|xxxxxxxx000000000xxxxxxx00x00000000xxxxxxxxxxxxxxx|xxxxxxx0000000000xxxxxxx00000000000xxxxxxxxxxxxxxx|xxxxxx00000000000xxxxxxx00000000000xxx0xxxxxxxxxxx|xxxxx000000000000xxxxxxx00000000000xxx00xxxxxxxxxx|xxxx00000000x0000xxxxxxx00000000000xxx000xxxxxxxxx|xxx000000000x0000000000000000000000xxx0000xxxxxxxx|0x0000000000x000000000000000000000000000000xxxxxxx|x00000000000x0000xxx0xxx00000000000xxx000000xxxxxx|000000000000x0000xx000xx00000000000xxx0000000xxxxx|000000x00000xxx00000x00000000000000xxx000xxx00xxxx|x000000000000000000xxx0000000000000xxx000x00000xxx|xx0x00000000xxx000000000xxxxx000000xxx000x000000xx|xxx000000000x00000000000x000x000000xxx000x0000000x|xxxx00000000x000000x0x00x0x0x000000xxx000x00000000|xxxxxx000000x000000xxx00x000x000000xxx000xxx000000|xxxxxx000000x000000xxx00xxxxxxxx0xxxxx000000000000|xxxxxxx00000x000000xxx000000xxxx0xxxxx000000000000|xxxxxxxx0000x00x000xxx000000xxxx0xxxx0000xxx000000|xxxxxxxxx0000000000xxx000000xxx0000000000x00000000|xxxxxxxxxx000000000xxx000000xxx0000000000x0000000x|xxxxxxxxxxx00000000xxx000000xxx0000000000x000000xx|xxxxxxxxxxxx0000000xxx000000xxx0000000000x00000xxx|xxxxxxxxxxxxx000000xxxxxxxxxxxx0000000000xxx00xxxx|xxxxxxxxxxxxxx00000xxxxxxxxxxxx00000000000000xxxxx|xxxxxxxxxxxxxxx00000xxxxxxxxxxx0000000000000xxxxxx|xxxxxxxxxxxxxxxxx00000000000xxx000000000000xxxxxxx|xxxxxxxxxxxxxxxxx0000000000000000000000000xxxxxxxx|xxxxxxxxxxxxxxxxxx00x00000000000000000000xxxxxxxxx|xxxxxxxxxxxxxxxxxxx00000xxxxxxxxxxx00000xxxxxxxxxx|xxxxxxxxxxxxxxxxxxxx0000x000xxx000x000xxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxx000x000xxx000x000xxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxx00x000x00000x00xxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxx00000000000x0xxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx00000000000xxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxx000xx0000xxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxxx00xxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxxxx0xxxxxxxxxxxxxxxxxxxxxx',-365320896,'41FF32701805D1C7AD960F56E12F9FDA5C73EB202C461666A960FDC2A66B26DB',1),
+  (7,1,50,50,3200,'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx0xxxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx00xxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx000xxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx0000xxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxx0xxxxxxx00000xxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxx00xxxxxxx000000xxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxx000xxxxxxx0000000xxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxx0000xxxxxxx00000000xxxxxxxxxxxxxxxxxx|xxxxxxxxxxxx00000xxxxxxx000000000xxxxxxxxxxxxxxxxx|xxxxxxxxxxx000000xxxxxxx0000000000xxxxxxxxxxxxxxxx|xxxxxxxxxx0000000xxxxxxx00000000000xxxxxxxxxxxxxxx|xxxxxxxxx00000000xxxxxxx00000000000xxxxxxxxxxxxxxx|xxxxxxxx000000000xxxxxxx00000000000xxxxxxxxxxxxxxx|xxxxxxx0000000000xxxxxxx00000000000xxxxxxxxxxxxxxx|xxxxxx00000000000xxxxxxx00000000000xxx0xxxxxxxxxxx|xxxxx000000000000xxxxxxx00000000000xxx00xxxxxxxxxx|xxxx0000000000000xxxxxxx00000000000xxx000xxxxxxxxx|xxx00000000000000000000000000000000xxx0000xxxxxxxx|0x00000000000000000000000000000000000000000xxxxxxx|x0000000000000000xxx0xxx00000000000xxx000000xxxxxx|00000000000000000xx000xx00000000000xxx0000000xxxxx|00000000000000000000x00000000000000xxx00000000xxxx|x000000000000000000xxx0000000000000xxx000000000xxx|xx000000000000000000000000000000000xxx0000000000xx|xxx00000000000000000000000000000000xxx00000000000x|xxxx000000000000000x0x0000000000000xxx000000000000|xxxxx00000000000000xxx0000000000000xxx000000000000|xxxxxx0000000000000xxx0000000xxx0xxxxx000000000000|xxxxxxx000000000000xxx000000xxxx0xxxxx000000000000|xxxxxxxx00000000000xxx000000xxxx0xxxx0000000000000|xxxxxxxxx0000000000xxx000000xxx0000000000000000000|xxxxxxxxxx000000000xxx000000xxx000000000000000000x|xxxxxxxxxxx00000000xxx000000xxx00000000000000000xx|xxxxxxxxxxxx0000000xxx000000xxx0000000000000000xxx|xxxxxxxxxxxxx000000xxxxxxxxxxxx000000000000000xxxx|xxxxxxxxxxxxxx00000xxxxxxxxxxxx00000000000000xxxxx|xxxxxxxxxxxxxxx00000xxxxxxxxxxx0000000000000xxxxxx|xxxxxxxxxxxxxxxx000000000000xxx000000000000xxxxxxx|xxxxxxxxxxxxxxxxx0000000000000000000000000xxxxxxxx|xxxxxxxxxxxxxxxxxx00000000000000000000000xxxxxxxxx|xxxxxxxxxxxxxxxxxxx0000000000x0000000000xxxxxxxxxx|xxxxxxxxxxxxxxxxxxxx00000000xxx00000000xxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxx0000000xxx0000000xxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxx000000x00000000xxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxx0000000000000xxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx00000000000xxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxx000xx0000xxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxxx00xxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxxxx0xxxxxxxxxxxxxxxxxxxxxx','xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx0xxxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx00xxxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx000xxxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx0000xxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxx0xxxxxxx00000xxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxx00xxxxxxx000000xxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxx000xxxxxxx0000000xxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxx0000xxxxxxx00000000xxxxxxxxxxxxxxxxxx|xxxxxxxxxxxx00000xxxxxxx00000x000xxxxxxxxxxxxxxxxx|xxxxxxxxxxx000x00xxxxxxx0000000000xxxxxxxxxxxxxxxx|xxxxxxxxxx0000000xxxxxxx00000000000xxxxxxxxxxxxxxx|xxxxxxxxx00000000xxxxxxx00000000000xxxxxxxxxxxxxxx|xxxxxxxx000000000xxxxxxx00000000000xxxxxxxxxxxxxxx|xxxxxxx00000x0000xxxxxxx00000000000xxxxxxxxxxxxxxx|xxxxxx000000000x0xxxxxxx00000000000xxx0xxxxxxxxxxx|xxxxx000000000000xxxxxxx00000000000xxx00xxxxxxxxxx|xxxx0000000000000xxxxxxx00000000000xxx000xxxxxxxxx|xxx00000000000000000000000000000000xxx0000xxxxxxxx|0x0000000000000000000000000000000000000000xxxxxxxx|x0000000000000000xxx0xxx00000000000xxx0000x0xxxxxx|00000000000000000xx000xx00000000000xxx0000x00xxxxx|00000000000000000000x00000000x00000xxx0000x000xxxx|x000000000000000000xxx0000000000x00xxx000000000xxx|xx000000000000000000000000000000000xxx0000000000xx|xxx00000000000000000000000000000000xxx0000xx00xxxx|xxxx000000000000000x0x0000000x00000xxx0000x0000000|xxxxx00000000000000xxx0000000000000xxx0000x0000000|xxxxxx0000000000000xxx0000000xxx0xxxxx0000x00xx000|xxxxxxx000000000000xxx000000xxxx0xxxxx0000x00x0000|xxxxxxxx00000x00000xxx000000xxxx0xxxx00000x0000000|xxxxxxxxx0000000000xxx000000xxx0000000000000000000|xxxxxxxxxx000000x00xxx000000xxx000000000000000000x|xxxxxxxxxxx0x000000xxx000000xxx000000x0000x00000xx|xxxxxxxxxxxx0000000xxx000000xxx000000x0000x0000xxx|xxxxxxxxxxxxx000000xxxxxxxxxxxx000000x0000x000xxxx|xxxxxxxxxxxxxx00000xxxxxxxxxxxx000000x0000xxxxxxxx|xxxxxxxxxxxxxxx00000xxxxxxxxxxx000000x000000xxxxxx|xxxxxxxxxxxxxxxx000000000000xxx0000xxx00000xxxxxxx|xxxxxxxxxxxxxxxxx0000000000000000000000000xxxxxxxx|xxxxxxxxxxxxxxxxxx0000000x000000000xxx000xxxxxxxxx|xxxxxxxxxxxxxxxxxxx0000000000x0000000x00xxxxxxxxxx|xxxxxxxxxxxxxxxxxxxx00000000xxx000000x0xxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxx00000x0xxx000000xxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxx000000x00000000xxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxx0000000000000xxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxx00000000000xxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxx000xx0000xxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxxx00xxxxxxxxxxxxxxxxxxxxxx|xxxxxxxxxxxxxxxxxxxxxxxxxxx0xxxxxxxxxxxxxxxxxxxxxx',-983747876,'35DA97A51DB4577339AAA839F3323762855370CBFD6FFCB5DD4B60939519E99F',1)
+ON DUPLICATE KEY UPDATE
+  `revision`=VALUES(`revision`), `width`=VALUES(`width`), `height`=VALUES(`height`),
+  `world_units_per_tile`=VALUES(`world_units_per_tile`), `floor_map`=VALUES(`floor_map`),
+  `collision_map`=VALUES(`collision_map`), `checksum`=VALUES(`checksum`),
+  `sha256`=VALUES(`sha256`), `enabled`=1;
+
+DELETE FROM `snowstorm_map_items` WHERE `map_id` BETWEEN 1 AND 7;
+DELETE FROM `snowstorm_map_machines` WHERE `map_id` BETWEEN 1 AND 7;
+DELETE FROM `snowstorm_map_spawns` WHERE `map_id` BETWEEN 1 AND 7;
+
+INSERT INTO `snowstorm_map_items`
+  (`map_id`,`item_id`,`member_name`,`asset_name`,`resource_id`,`cast_id`,`tile_x`,`tile_y`,`world_x`,`world_y`,`world_z`,`direction`,`flip_x`,`source_loc_z`,`draw_order`,`walking_height`,`projectile_height`,`footprint_json`,`palette_id`,`palette_name`,`registration_x`,`registration_y`)
+VALUES
+  (1,'n280','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,28,0,89600,0,0,2,0,100000,20,1,2500,'[[28,0]]',11,'snow_war2 Palette',-10,23),
+  (1,'n281','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,28,1,89600,3200,0,2,0,100000,25,1,2500,'[[28,1]]',11,'snow_war2 Palette',-10,23),
+  (1,'n282','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,28,2,89600,6400,0,2,0,100000,28,1,2500,'[[28,2]]',11,'snow_war2 Palette',-10,23),
+  (1,'g223','sw_tree1','hh_room_snowwar_arena_sw_tree1_32_a_0_0',3604,2343,22,3,70400,9600,0,1,0,0,11,3,4600,'[[22,3]]',201,'snow_war Palette',4,100),
+  (1,'n283','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,28,3,89600,9600,0,2,0,100000,30,1,2500,'[[28,3]]',11,'snow_war2 Palette',-10,23),
+  (1,'n284','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,28,4,89600,12800,0,2,0,100000,33,1,2500,'[[28,4]]',11,'snow_war2 Palette',-10,23),
+  (1,'j275','sw_tree4','hh_room_snowwar_arena_sw_tree4_32_a_0_0',3610,2340,27,5,86400,16000,0,1,0,0,32,3,4600,'[[27,5]]',201,'snow_war Palette',4,94),
+  (1,'n285','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,28,5,89600,16000,0,2,0,0,35,1,2500,'[[28,5]]',11,'snow_war2 Palette',-10,23),
+  (1,'n286','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,28,6,89600,19200,0,2,0,0,37,1,2500,'[[28,6]]',11,'snow_war2 Palette',-10,23),
+  (1,'h227','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,22,7,70400,22400,0,1,0,0,24,3,4600,'[[22,7]]',201,'snow_war Palette',3,91),
+  (1,'n287','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,28,7,89600,22400,0,2,0,0,39,1,2500,'[[28,7]]',11,'snow_war2 Palette',-10,23),
+  (1,'n288','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,28,8,89600,25600,0,2,0,0,42,1,2500,'[[28,8]]',11,'snow_war2 Palette',-10,23),
+  (1,'n289','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,28,9,89600,28800,0,2,0,0,43,1,2500,'[[28,9]]',11,'snow_war2 Palette',-10,23),
+  (1,'g1610','sw_tree1','hh_room_snowwar_arena_sw_tree1_32_a_0_0',3604,2343,16,10,51200,32000,0,1,0,0,14,3,4600,'[[16,10]]',201,'snow_war Palette',4,100),
+  (1,'n2810','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,28,10,89600,32000,0,2,0,0,44,1,2500,'[[28,10]]',11,'snow_war2 Palette',-10,23),
+  (1,'j3413','sw_tree4','hh_room_snowwar_arena_sw_tree4_32_a_0_0',3610,2340,34,13,108800,41600,0,1,0,0,45,3,4600,'[[34,13]]',201,'snow_war Palette',4,94),
+  (1,'n1314','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_4_0',3640,1979,13,14,41600,44800,0,4,0,0,16,1,2500,'[[13,14]]',11,'snow_war2 Palette',-6,24),
+  (1,'n1414','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_4_0',3640,1979,14,14,44800,44800,0,4,0,0,19,1,2500,'[[14,14]]',11,'snow_war2 Palette',-6,24),
+  (1,'n1514','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_4_0',3640,1979,15,14,48000,44800,0,4,0,0,23,1,2500,'[[15,14]]',11,'snow_war2 Palette',-6,24),
+  (1,'n1614','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_4_0',3640,1979,16,14,51200,44800,0,4,0,0,27,1,2500,'[[16,14]]',11,'snow_war2 Palette',-6,24),
+  (1,'n1714','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_4_0',3640,1979,17,14,54400,44800,0,4,0,0,29,1,2500,'[[17,14]]',11,'snow_war2 Palette',-6,24),
+  (1,'n1814','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_4_0',3640,1979,18,14,57600,44800,0,4,0,0,31,1,2500,'[[18,14]]',11,'snow_war2 Palette',-6,24),
+  (1,'n1914','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_4_0',3640,1979,19,14,60800,44800,0,4,0,0,34,1,2500,'[[19,14]]',11,'snow_war2 Palette',-6,24),
+  (1,'n2014','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_4_0',3640,1979,20,14,64000,44800,0,4,0,0,36,1,2500,'[[20,14]]',11,'snow_war2 Palette',-6,24),
+  (1,'n2114','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_4_0',3640,1979,21,14,67200,44800,0,4,0,0,38,1,2500,'[[21,14]]',11,'snow_war2 Palette',-6,24),
+  (1,'n2214','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_4_0',3640,1979,22,14,70400,44800,0,4,0,0,41,1,2500,'[[22,14]]',11,'snow_war2 Palette',-6,24),
+  (1,'h1315','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,13,15,41600,48000,0,1,0,0,18,3,4600,'[[13,15]]',201,'snow_war Palette',3,91),
+  (1,'b218','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,2,18,6400,57600,0,1,0,0,1,2,4600,'[[2,18]]',201,'snow_war Palette',0,38),
+  (1,'b318','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,3,18,9600,57600,0,1,0,0,3,2,4600,'[[3,18]]',201,'snow_war Palette',0,38),
+  (1,'b418','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,4,18,12800,57600,0,1,0,0,5,2,4600,'[[4,18]]',201,'snow_war Palette',0,38),
+  (1,'b518','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,5,18,16000,57600,0,1,0,0,7,2,4600,'[[5,18]]',201,'snow_war Palette',0,38),
+  (1,'b618','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,6,18,19200,57600,0,1,0,0,9,2,4600,'[[6,18]]',201,'snow_war Palette',0,38),
+  (1,'b718','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,7,18,22400,57600,0,1,0,0,10,2,4600,'[[7,18]]',201,'snow_war Palette',0,38),
+  (1,'b818','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,8,18,25600,57600,0,1,0,0,13,2,4600,'[[8,18]]',201,'snow_war Palette',0,38),
+  (1,'b918','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,9,18,28800,57600,0,1,0,0,15,2,4600,'[[9,18]]',201,'snow_war Palette',0,38),
+  (1,'b1018','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,10,18,32000,57600,0,1,0,0,17,2,4600,'[[10,18]]',201,'snow_war Palette',0,38),
+  (1,'b1118','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,11,18,35200,57600,0,1,0,0,22,2,4600,'[[11,18]]',201,'snow_war Palette',0,38),
+  (1,'a1218','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,12,18,38400,57600,0,1,0,0,26,1,2300,'[[12,18]]',201,'snow_war Palette',0,22),
+  (1,'b219','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,2,19,6400,60800,0,1,0,0,2,2,4600,'[[2,19]]',201,'snow_war Palette',0,38),
+  (1,'v020','sw_backround2','hh_room_snowwar_arena_sw_backround2_32_a_0_0',3636,1856,0,20,0,64000,0,0,0,0,0,0,0,'[[0,20]]',230,'backround2 Palette',-155,-125),
+  (1,'b220','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,2,20,6400,64000,0,1,0,0,4,2,4600,'[[2,20]]',201,'snow_war Palette',0,38),
+  (1,'g620','sw_tree1','hh_room_snowwar_arena_sw_tree1_32_a_0_0',3604,2343,6,20,19200,64000,0,1,0,0,12,3,4600,'[[6,20]]',201,'snow_war Palette',4,100),
+  (1,'b3820','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,38,20,121600,64000,0,1,0,0,47,2,4600,'[[38,20]]',201,'snow_war Palette',0,38),
+  (1,'b3920','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,39,20,124800,64000,0,1,0,0,49,2,4600,'[[39,20]]',201,'snow_war Palette',0,38),
+  (1,'b4020','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,40,20,128000,64000,0,1,0,0,52,2,4600,'[[40,20]]',201,'snow_war Palette',0,38),
+  (1,'b4120','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,41,20,131200,64000,0,1,0,0,55,2,4600,'[[41,20]]',201,'snow_war Palette',0,38),
+  (1,'b4220','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,42,20,134400,64000,0,1,0,0,59,2,4600,'[[42,20]]',201,'snow_war Palette',0,38),
+  (1,'b4320','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,43,20,137600,64000,0,1,0,0,63,2,4600,'[[43,20]]',201,'snow_war Palette',0,38),
+  (1,'b221','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,2,21,6400,67200,0,1,0,0,6,2,4600,'[[2,21]]',201,'snow_war Palette',0,38),
+  (1,'b3821','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,38,21,121600,67200,0,1,0,0,48,2,4600,'[[38,21]]',201,'snow_war Palette',0,38),
+  (1,'b222','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,2,22,6400,70400,0,1,0,0,8,2,4600,'[[2,22]]',201,'snow_war Palette',0,38),
+  (1,'b3822','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,38,22,121600,70400,0,1,0,0,51,2,4600,'[[38,22]]',201,'snow_war Palette',0,38),
+  (1,'b3823','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,38,23,121600,73600,0,1,0,0,54,2,4600,'[[38,23]]',201,'snow_war Palette',0,38),
+  (1,'h524','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,5,24,16000,76800,0,1,0,0,21,3,4600,'[[5,24]]',201,'snow_war Palette',3,91),
+  (1,'b3824','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,38,24,121600,76800,0,1,0,0,58,2,4600,'[[38,24]]',201,'snow_war Palette',0,38),
+  (1,'g4525','sw_tree1','hh_room_snowwar_arena_sw_tree1_32_a_0_0',3604,2343,45,25,144000,80000,0,1,0,0,77,3,4600,'[[45,25]]',201,'snow_war Palette',4,100),
+  (1,'i1026','sw_tree3','hh_room_snowwar_arena_sw_tree3_32_a_0_0',3608,2341,10,26,32000,83200,0,1,0,0,40,3,4600,'[[10,26]]',201,'snow_war Palette',4,95),
+  (1,'h4928','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,49,28,156800,89600,0,1,0,0,83,3,4600,'[[49,28]]',201,'snow_war Palette',3,91),
+  (1,'i4732','sw_tree3','hh_room_snowwar_arena_sw_tree3_32_a_0_0',3608,2341,47,32,150400,102400,0,1,0,0,86,3,4600,'[[47,32]]',201,'snow_war Palette',4,95),
+  (1,'j1534','sw_tree4','hh_room_snowwar_arena_sw_tree4_32_a_0_0',3610,2340,15,34,48000,108800,0,1,0,0,46,3,4600,'[[15,34]]',201,'snow_war Palette',4,94),
+  (1,'a3737','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,37,37,118400,118400,0,1,0,0,78,1,2300,'[[37,37]]',201,'snow_war Palette',0,22),
+  (1,'b3837','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,38,37,121600,118400,0,1,0,0,80,2,4600,'[[38,37]]',201,'snow_war Palette',0,38),
+  (1,'b3937','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,39,37,124800,118400,0,1,0,0,81,2,4600,'[[39,37]]',201,'snow_war Palette',0,38),
+  (1,'b4037','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,40,37,128000,118400,0,1,0,0,82,2,4600,'[[40,37]]',201,'snow_war Palette',0,38),
+  (1,'b4137','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,41,37,131200,118400,0,1,0,0,84,2,4600,'[[41,37]]',201,'snow_war Palette',0,38),
+  (1,'a4237','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,42,37,134400,118400,0,1,0,0,85,1,2300,'[[42,37]]',201,'snow_war Palette',0,22),
+  (1,'b2338','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,23,38,73600,121600,0,1,0,0,53,2,4600,'[[23,38]]',201,'snow_war Palette',0,38),
+  (1,'n2438','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,24,38,76800,121600,0,2,0,0,57,1,2500,'[[24,38]]',11,'snow_war2 Palette',-10,23),
+  (1,'g2538','sw_tree1','hh_room_snowwar_arena_sw_tree1_32_a_0_0',3604,2343,25,38,80000,121600,0,1,0,0,62,3,4600,'[[25,38]]',201,'snow_war Palette',4,100),
+  (1,'a2339','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,23,39,73600,124800,0,1,0,0,56,1,2300,'[[23,39]]',201,'snow_war Palette',0,22),
+  (1,'n2439','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,24,39,76800,124800,0,2,0,0,61,1,2500,'[[24,39]]',11,'snow_war2 Palette',-10,23),
+  (1,'b2340','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,23,40,73600,128000,0,1,0,0,60,2,4600,'[[23,40]]',201,'snow_war Palette',0,38),
+  (1,'n2440','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,24,40,76800,128000,0,2,0,0,65,1,2500,'[[24,40]]',11,'snow_war2 Palette',-10,23),
+  (1,'h1941','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,19,41,60800,131200,0,1,0,0,50,3,4600,'[[19,41]]',201,'snow_war Palette',3,91),
+  (1,'a2341','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,23,41,73600,131200,0,1,0,0,64,1,2300,'[[23,41]]',201,'snow_war Palette',0,22),
+  (1,'n2441','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,24,41,76800,131200,0,2,0,0,67,1,2500,'[[24,41]]',11,'snow_war2 Palette',-10,23),
+  (1,'b2342','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,23,42,73600,134400,0,1,0,0,66,2,4600,'[[23,42]]',201,'snow_war Palette',0,38),
+  (1,'n2442','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,24,42,76800,134400,0,2,0,0,69,1,2500,'[[24,42]]',11,'snow_war2 Palette',-10,23),
+  (1,'a2343','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,23,43,73600,137600,0,1,0,0,68,1,2300,'[[23,43]]',201,'snow_war Palette',0,22),
+  (1,'n2443','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,24,43,76800,137600,0,2,0,0,71,1,2500,'[[24,43]]',11,'snow_war2 Palette',-10,23),
+  (1,'b2344','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,23,44,73600,140800,0,1,0,0,70,2,4600,'[[23,44]]',201,'snow_war Palette',0,38),
+  (1,'n2444','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,24,44,76800,140800,0,2,0,0,73,1,2500,'[[24,44]]',11,'snow_war2 Palette',-10,23),
+  (1,'a2345','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,23,45,73600,144000,0,1,0,0,72,1,2300,'[[23,45]]',201,'snow_war Palette',0,22),
+  (1,'n2445','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,24,45,76800,144000,0,2,0,0,74,1,2500,'[[24,45]]',11,'snow_war2 Palette',-10,23),
+  (1,'b2346','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,23,46,73600,147200,0,1,0,100000,75,2,4600,'[[23,46]]',201,'snow_war Palette',0,38),
+  (1,'n2446','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,24,46,76800,147200,0,2,0,0,76,1,2500,'[[24,46]]',11,'snow_war2 Palette',-10,23),
+  (1,'i2847','sw_tree3','hh_room_snowwar_arena_sw_tree3_32_a_0_0',3608,2341,28,47,89600,150400,0,1,0,0,79,3,4600,'[[28,47]]',201,'snow_war Palette',4,95),
+  (1,'h3447','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,34,47,108800,150400,0,1,0,100000,87,3,4600,'[[34,47]]',201,'snow_war Palette',3,91),
+  (2,'j233','sw_tree4','hh_room_snowwar_arena_sw_tree4_32_a_0_0',3610,2340,23,3,73600,9600,0,1,0,0,4,3,4600,'[[23,3]]',201,'snow_war Palette',4,94),
+  (2,'n283','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,28,3,89600,9600,0,2,0,100000,11,1,2500,'[[28,3]]',11,'snow_war2 Palette',-10,23),
+  (2,'n284','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,28,4,89600,12800,0,2,0,100000,13,1,2500,'[[28,4]]',11,'snow_war2 Palette',-10,23),
+  (2,'n285','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,28,5,89600,16000,0,2,0,0,15,1,2500,'[[28,5]]',11,'snow_war2 Palette',-10,23),
+  (2,'n286','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,28,6,89600,19200,0,2,0,0,17,1,2500,'[[28,6]]',11,'snow_war2 Palette',-10,23),
+  (2,'n287','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,28,7,89600,22400,0,2,0,0,20,1,2500,'[[28,7]]',11,'snow_war2 Palette',-10,23),
+  (2,'h297','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,29,7,92800,22400,0,1,0,0,23,3,4600,'[[29,7]]',201,'snow_war Palette',3,91),
+  (2,'i198','sw_tree3','hh_room_snowwar_arena_sw_tree3_32_a_0_0',3608,2341,19,8,60800,25600,0,1,0,0,6,3,4600,'[[19,8]]',201,'snow_war Palette',4,95),
+  (2,'n288','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,28,8,89600,25600,0,2,0,0,22,1,2500,'[[28,8]]',11,'snow_war2 Palette',-10,23),
+  (2,'n289','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,28,9,89600,28800,0,2,0,0,24,1,2500,'[[28,9]]',11,'snow_war2 Palette',-10,23),
+  (2,'n2810','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,28,10,89600,32000,0,2,0,0,25,1,2500,'[[28,10]]',11,'snow_war2 Palette',-10,23),
+  (2,'g2910','sw_tree1','hh_room_snowwar_arena_sw_tree1_32_a_0_0',3604,2343,29,10,92800,32000,0,1,0,0,27,3,4600,'[[29,10]]',201,'snow_war Palette',4,100),
+  (2,'n2811','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,28,11,89600,35200,0,2,0,0,26,1,2500,'[[28,11]]',11,'snow_war2 Palette',-10,23),
+  (2,'n2812','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,28,12,89600,38400,0,2,0,0,28,1,2500,'[[28,12]]',11,'snow_war2 Palette',-10,23),
+  (2,'n2813','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,28,13,89600,41600,0,2,0,0,29,1,2500,'[[28,13]]',11,'snow_war2 Palette',-10,23),
+  (2,'n2814','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,28,14,89600,44800,0,2,0,0,30,1,2500,'[[28,14]]',11,'snow_war2 Palette',-10,23),
+  (2,'n2815','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,28,15,89600,48000,0,2,0,0,31,1,2500,'[[28,15]]',11,'snow_war2 Palette',-10,23),
+  (2,'n2816','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,28,16,89600,51200,0,2,0,0,32,1,2500,'[[28,16]]',11,'snow_war2 Palette',-10,23),
+  (2,'n2817','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_2_0',3632,1889,28,17,89600,54400,0,2,0,0,33,1,2500,'[[28,17]]',11,'snow_war2 Palette',-10,23),
+  (2,'g4018','sw_tree1','hh_room_snowwar_arena_sw_tree1_32_a_0_0',3604,2343,40,18,128000,57600,0,1,0,0,37,3,4600,'[[40,18]]',201,'snow_war Palette',4,100),
+  (2,'j319','sw_tree4','hh_room_snowwar_arena_sw_tree4_32_a_0_0',3610,2340,3,19,9600,60800,0,1,0,0,1,3,4600,'[[3,19]]',201,'snow_war Palette',4,94),
+  (2,'n719','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_4_0',3640,1979,7,19,22400,60800,0,4,0,0,3,1,2500,'[[7,19]]',11,'snow_war2 Palette',-6,24),
+  (2,'n819','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_4_0',3640,1979,8,19,25600,60800,0,4,0,0,5,1,2500,'[[8,19]]',11,'snow_war2 Palette',-6,24),
+  (2,'n919','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_4_0',3640,1979,9,19,28800,60800,0,4,0,0,7,1,2500,'[[9,19]]',11,'snow_war2 Palette',-6,24),
+  (2,'n1019','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_4_0',3640,1979,10,19,32000,60800,0,4,0,0,8,1,2500,'[[10,19]]',11,'snow_war2 Palette',-6,24),
+  (2,'n1119','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_4_0',3640,1979,11,19,35200,60800,0,4,0,0,9,1,2500,'[[11,19]]',11,'snow_war2 Palette',-6,24),
+  (2,'n1219','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_4_0',3640,1979,12,19,38400,60800,0,4,0,0,10,1,2500,'[[12,19]]',11,'snow_war2 Palette',-6,24),
+  (2,'n1319','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_4_0',3640,1979,13,19,41600,60800,0,4,0,0,12,1,2500,'[[13,19]]',11,'snow_war2 Palette',-6,24),
+  (2,'n1419','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_4_0',3640,1979,14,19,44800,60800,0,4,0,0,14,1,2500,'[[14,19]]',11,'snow_war2 Palette',-6,24),
+  (2,'n1519','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_4_0',3640,1979,15,19,48000,60800,0,4,0,0,16,1,2500,'[[15,19]]',11,'snow_war2 Palette',-6,24),
+  (2,'n1619','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_4_0',3640,1979,16,19,51200,60800,0,4,0,0,19,1,2500,'[[16,19]]',11,'snow_war2 Palette',-6,24),
+  (2,'n1719','sw_fence','hh_room_snowwar_arena_sw_fence_32_a_4_0',3640,1979,17,19,54400,60800,0,4,0,0,21,1,2500,'[[17,19]]',11,'snow_war2 Palette',-6,24),
+  (2,'w020','sw_backround3','hh_room_snowwar_arena_sw_backround3_32_a_0_0',3638,1384,0,20,0,64000,0,0,0,0,0,0,0,'[[0,20]]',230,'backround2 Palette',16,-119),
+  (2,'h620','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,6,20,19200,64000,0,1,0,0,2,3,4600,'[[6,20]]',201,'snow_war Palette',3,91),
+  (2,'h2424','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,24,24,76800,76800,0,1,0,0,34,3,4600,'[[24,24]]',201,'snow_war Palette',3,91),
+  (2,'i926','sw_tree3','hh_room_snowwar_arena_sw_tree3_32_a_0_0',3608,2341,9,26,28800,83200,0,1,0,0,18,3,4600,'[[9,26]]',201,'snow_war Palette',4,95),
+  (2,'i3926','sw_tree3','hh_room_snowwar_arena_sw_tree3_32_a_0_0',3608,2341,39,26,124800,83200,0,1,0,0,44,3,4600,'[[39,26]]',201,'snow_war Palette',4,95),
+  (2,'j4627','sw_tree4','hh_room_snowwar_arena_sw_tree4_32_a_0_0',3610,2340,46,27,147200,86400,0,1,0,0,45,3,4600,'[[46,27]]',201,'snow_war Palette',4,94),
+  (2,'g2329','sw_tree1','hh_room_snowwar_arena_sw_tree1_32_a_0_0',3604,2343,23,29,73600,92800,0,1,0,0,35,3,4600,'[[23,29]]',201,'snow_war Palette',4,100),
+  (2,'a3329','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,33,29,105600,92800,0,1,0,0,41,1,2300,'[[33,29]]',201,'snow_war Palette',0,22),
+  (2,'a3330','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,33,30,105600,96000,0,1,0,0,42,1,2300,'[[33,30]]',201,'snow_war Palette',0,22),
+  (2,'a3331','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,33,31,105600,99200,0,1,0,0,43,1,2300,'[[33,31]]',201,'snow_war Palette',0,22),
+  (2,'a2832','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,28,32,89600,102400,0,1,0,0,38,1,2300,'[[28,32]]',201,'snow_war Palette',0,22),
+  (2,'a2932','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,29,32,92800,102400,0,1,0,0,39,1,2300,'[[29,32]]',201,'snow_war Palette',0,22),
+  (2,'a3032','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,30,32,96000,102400,0,1,0,0,40,1,2300,'[[30,32]]',201,'snow_war Palette',0,22),
+  (2,'h1837','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,18,37,57600,118400,0,1,0,0,36,3,4600,'[[18,37]]',201,'snow_war Palette',3,91),
+  (2,'i4238','sw_tree3','hh_room_snowwar_arena_sw_tree3_32_a_0_0',3608,2341,42,38,134400,121600,0,1,0,0,46,3,4600,'[[42,38]]',201,'snow_war Palette',4,95),
+  (2,'j3249','sw_tree4','hh_room_snowwar_arena_sw_tree4_32_a_0_0',3610,2340,32,49,102400,156800,0,1,0,100000,47,3,4600,'[[32,49]]',201,'snow_war Palette',4,94),
+  (3,'c230','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,23,0,73600,0,0,1,0,0,18,3,6900,'[[23,0]]',201,'snow_war Palette',0,54),
+  (3,'b231','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,23,1,73600,3200,0,1,0,0,23,2,4600,'[[23,1]]',201,'snow_war Palette',0,38),
+  (3,'c232','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,23,2,73600,6400,0,1,0,0,27,3,6900,'[[23,2]]',201,'snow_war Palette',0,54),
+  (3,'b233','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,23,3,73600,9600,0,1,0,0,32,2,4600,'[[23,3]]',201,'snow_war Palette',0,38),
+  (3,'g184','sw_tree1','hh_room_snowwar_arena_sw_tree1_32_a_0_0',3604,2343,18,4,57600,12800,0,1,0,0,15,3,4600,'[[18,4]]',201,'snow_war Palette',4,100),
+  (3,'j204','sw_tree4','hh_room_snowwar_arena_sw_tree4_32_a_0_0',3610,2340,20,4,64000,12800,0,1,0,0,22,3,4600,'[[20,4]]',201,'snow_war Palette',4,94),
+  (3,'c234','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,23,4,73600,12800,0,1,0,0,38,3,6900,'[[23,4]]',201,'snow_war Palette',0,54),
+  (3,'h264','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,26,4,83200,12800,0,1,0,0,59,3,4600,'[[26,4]]',201,'snow_war Palette',3,91),
+  (3,'b235','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,23,5,73600,16000,0,1,0,0,46,2,4600,'[[23,5]]',201,'snow_war Palette',0,38),
+  (3,'j255','sw_tree4','hh_room_snowwar_arena_sw_tree4_32_a_0_0',3610,2340,25,5,80000,16000,0,1,0,0,58,3,4600,'[[25,5]]',201,'snow_war Palette',4,94),
+  (3,'h186','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,18,6,57600,19200,0,1,0,0,21,3,4600,'[[18,6]]',201,'snow_war Palette',3,91),
+  (3,'i226','sw_tree3','hh_room_snowwar_arena_sw_tree3_32_a_0_0',3608,2341,22,6,70400,19200,0,1,0,0,45,3,4600,'[[22,6]]',201,'snow_war Palette',4,95),
+  (3,'c236','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,23,6,73600,19200,0,1,0,0,52,3,6900,'[[23,6]]',201,'snow_war Palette',0,54),
+  (3,'b237','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,23,7,73600,22400,0,1,0,0,57,2,4600,'[[23,7]]',201,'snow_war Palette',0,38),
+  (3,'c118','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,11,8,35200,25600,0,1,0,0,2,3,6900,'[[11,8]]',201,'snow_war Palette',0,54),
+  (3,'b128','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,12,8,38400,25600,0,1,0,0,6,2,4600,'[[12,8]]',201,'snow_war Palette',0,38),
+  (3,'c138','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,13,8,41600,25600,0,1,0,0,10,3,6900,'[[13,8]]',201,'snow_war Palette',0,54),
+  (3,'b148','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,14,8,44800,25600,0,1,0,0,14,2,4600,'[[14,8]]',201,'snow_war Palette',0,38),
+  (3,'c158','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,15,8,48000,25600,0,1,0,0,17,3,6900,'[[15,8]]',201,'snow_war Palette',0,54),
+  (3,'b168','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,16,8,51200,25600,0,1,0,0,20,2,4600,'[[16,8]]',201,'snow_war Palette',0,38),
+  (3,'c178','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,17,8,54400,25600,0,1,0,0,26,3,6900,'[[17,8]]',201,'snow_war Palette',0,54),
+  (3,'b188','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,18,8,57600,25600,0,1,0,0,31,2,4600,'[[18,8]]',201,'snow_war Palette',0,38),
+  (3,'c198','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,19,8,60800,25600,0,1,0,0,37,3,6900,'[[19,8]]',201,'snow_war Palette',0,54),
+  (3,'b208','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,20,8,64000,25600,0,1,0,0,44,2,4600,'[[20,8]]',201,'snow_war Palette',0,38),
+  (3,'c218','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,21,8,67200,25600,0,1,0,0,51,3,6900,'[[21,8]]',201,'snow_war Palette',0,54),
+  (3,'b228','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,22,8,70400,25600,0,1,0,0,56,2,4600,'[[22,8]]',201,'snow_war Palette',0,38),
+  (3,'o238','block_arch1b','hh_room_snowwar_arena_block_arch1b_32_a_0_0',3661,2831,23,8,73600,25600,0,1,0,0,63,3,6900,'[[23,8]]',201,'snow_war Palette',0,53),
+  (3,'g268','sw_tree1','hh_room_snowwar_arena_sw_tree1_32_a_0_0',3604,2343,26,8,83200,25600,0,1,0,0,76,3,4600,'[[26,8]]',201,'snow_war Palette',4,100),
+  (3,'c119','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,11,9,35200,28800,0,1,0,0,5,3,6900,'[[11,9]]',201,'snow_war Palette',0,54),
+  (3,'b1110','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,11,10,35200,32000,0,1,0,0,9,2,4600,'[[11,10]]',201,'snow_war Palette',0,38),
+  (3,'u2310','block_arch3b','hh_room_snowwar_arena_block_arch3b_32_a_0_0',3663,2830,23,10,73600,32000,0,1,0,0,71,3,6900,'[[23,10]]',201,'snow_war Palette',0,63),
+  (3,'c811','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,8,11,25600,35200,0,1,0,0,1,3,6900,'[[8,11]]',201,'snow_war Palette',0,54),
+  (3,'b911','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,9,11,28800,35200,0,1,0,0,4,2,4600,'[[9,11]]',201,'snow_war Palette',0,38),
+  (3,'b1011','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,10,11,32000,35200,0,1,0,0,8,2,4600,'[[10,11]]',201,'snow_war Palette',0,38),
+  (3,'a1111','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,11,11,35200,35200,0,1,0,0,13,1,2300,'[[11,11]]',201,'snow_war Palette',0,22),
+  (3,'a1411','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,14,11,44800,35200,0,1,0,0,25,1,2300,'[[14,11]]',201,'snow_war Palette',0,22),
+  (3,'b1511','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,15,11,48000,35200,0,1,0,0,30,2,4600,'[[15,11]]',201,'snow_war Palette',0,38),
+  (3,'a1611','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,16,11,51200,35200,0,1,0,0,36,1,2300,'[[16,11]]',201,'snow_war Palette',0,22),
+  (3,'b1711','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,17,11,54400,35200,0,1,0,0,43,2,4600,'[[17,11]]',201,'snow_war Palette',0,38),
+  (3,'a1811','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,18,11,57600,35200,0,1,0,0,50,1,2300,'[[18,11]]',201,'snow_war Palette',0,22),
+  (3,'q1911','block_ice2','hh_room_snowwar_arena_block_ice2_32_a_0_0',3655,1793,19,11,60800,35200,0,1,0,0,55,2,4600,'[[19,11]]',242,'sw_v2 Palette',0,38),
+  (3,'p2011','block_ice','hh_room_snowwar_arena_block_ice_32_a_0_0',3653,2747,20,11,64000,35200,0,1,0,0,62,1,2300,'[[20,11]]',242,'sw_v2 Palette',0,22),
+  (3,'a2211','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,22,11,70400,35200,0,1,0,0,70,1,2300,'[[22,11]]',201,'snow_war Palette',0,22),
+  (3,'b2311','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,23,11,73600,35200,0,1,0,0,75,2,4600,'[[23,11]]',201,'snow_war Palette',0,38),
+  (3,'b812','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,8,12,25600,38400,0,1,0,0,3,2,4600,'[[8,12]]',201,'snow_war Palette',0,38),
+  (3,'b1912','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,19,12,60800,38400,0,1,0,0,61,2,4600,'[[19,12]]',201,'snow_war Palette',0,38),
+  (3,'a2312','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,23,12,73600,38400,0,1,0,0,81,1,2300,'[[23,12]]',201,'snow_war Palette',0,22),
+  (3,'c813','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,8,13,25600,41600,0,1,0,0,7,3,6900,'[[8,13]]',201,'snow_war Palette',0,54),
+  (3,'b1913','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,19,13,60800,41600,0,1,0,0,66,2,4600,'[[19,13]]',201,'snow_war Palette',0,38),
+  (3,'b2313','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,23,13,73600,41600,0,1,0,0,85,2,4600,'[[23,13]]',201,'snow_war Palette',0,38),
+  (3,'b814','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,8,14,25600,44800,0,1,0,0,12,2,4600,'[[8,14]]',201,'snow_war Palette',0,38),
+  (3,'a1214','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,12,14,38400,44800,0,1,0,0,29,1,2300,'[[12,14]]',201,'snow_war Palette',0,22),
+  (3,'o1914','block_arch1b','hh_room_snowwar_arena_block_arch1b_32_a_0_0',3661,2831,19,14,60800,44800,0,1,0,0,69,3,6900,'[[19,14]]',201,'snow_war Palette',0,53),
+  (3,'a2314','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,23,14,73600,44800,0,1,0,0,88,1,2300,'[[23,14]]',201,'snow_war Palette',0,22),
+  (3,'c815','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,8,15,25600,48000,0,1,0,0,16,3,6900,'[[8,15]]',201,'snow_war Palette',0,54),
+  (3,'b1215','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,12,15,38400,48000,0,1,0,0,35,2,4600,'[[12,15]]',201,'snow_war Palette',0,38),
+  (3,'b2315','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,23,15,73600,48000,0,1,0,0,93,2,4600,'[[23,15]]',201,'snow_war Palette',0,38),
+  (3,'p3415','block_ice','hh_room_snowwar_arena_block_ice_32_a_0_0',3653,2747,34,15,108800,48000,0,1,0,0,119,1,2300,'[[34,15]]',242,'sw_v2 Palette',0,22),
+  (3,'b816','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,8,16,25600,51200,0,1,0,0,19,2,4600,'[[8,16]]',201,'snow_war Palette',0,38),
+  (3,'b1216','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,12,16,38400,51200,0,1,0,0,42,2,4600,'[[12,16]]',201,'snow_war Palette',0,38),
+  (3,'u1916','block_arch3b','hh_room_snowwar_arena_block_arch3b_32_a_0_0',3663,2830,19,16,60800,51200,0,1,0,0,80,3,6900,'[[19,16]]',201,'snow_war Palette',0,63),
+  (3,'a2316','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,23,16,73600,51200,0,1,0,0,96,1,2300,'[[23,16]]',201,'snow_war Palette',0,22),
+  (3,'q3416','block_ice2','hh_room_snowwar_arena_block_ice2_32_a_0_0',3655,1793,34,16,108800,51200,0,1,0,0,122,2,4600,'[[34,16]]',242,'sw_v2 Palette',0,38),
+  (3,'c817','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,8,17,25600,54400,0,1,0,0,24,3,6900,'[[8,17]]',201,'snow_war Palette',0,54),
+  (3,'b1217','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,12,17,38400,54400,0,1,0,0,49,2,4600,'[[12,17]]',201,'snow_war Palette',0,38),
+  (3,'b1917','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,19,17,60800,54400,0,1,0,0,84,2,4600,'[[19,17]]',201,'snow_war Palette',0,38),
+  (3,'p3417','block_ice','hh_room_snowwar_arena_block_ice_32_a_0_0',3653,2747,34,17,108800,54400,0,1,0,0,124,1,2300,'[[34,17]]',242,'sw_v2 Palette',0,22),
+  (3,'i418','sw_tree3','hh_room_snowwar_arena_sw_tree3_32_a_0_0',3608,2341,4,18,12800,57600,0,1,0,0,11,3,4600,'[[4,18]]',201,'snow_war Palette',4,95),
+  (3,'b818','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,8,18,25600,57600,0,1,0,0,28,2,4600,'[[8,18]]',201,'snow_war Palette',0,38),
+  (3,'a1018','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,10,18,32000,57600,0,1,0,0,41,1,2300,'[[10,18]]',201,'snow_war Palette',0,22),
+  (3,'a1218','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,12,18,38400,57600,0,1,0,0,54,1,2300,'[[12,18]]',201,'snow_war Palette',0,22),
+  (3,'a1418','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,14,18,44800,57600,0,1,0,0,65,1,2300,'[[14,18]]',201,'snow_war Palette',0,22),
+  (3,'b1518','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,15,18,48000,57600,0,1,0,0,68,2,4600,'[[15,18]]',201,'snow_war Palette',0,38),
+  (3,'a1618','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,16,18,51200,57600,0,1,0,0,74,1,2300,'[[16,18]]',201,'snow_war Palette',0,22),
+  (3,'b1718','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,17,18,54400,57600,0,1,0,0,79,2,4600,'[[17,18]]',201,'snow_war Palette',0,38),
+  (3,'a1818','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,18,18,57600,57600,0,1,0,0,83,1,2300,'[[18,18]]',201,'snow_war Palette',0,22),
+  (3,'q1918','block_ice2','hh_room_snowwar_arena_block_ice2_32_a_0_0',3655,1793,19,18,60800,57600,0,1,0,0,87,2,4600,'[[19,18]]',242,'sw_v2 Palette',0,38),
+  (3,'p2018','block_ice','hh_room_snowwar_arena_block_ice_32_a_0_0',3653,2747,20,18,64000,57600,0,1,0,0,92,1,2300,'[[20,18]]',242,'sw_v2 Palette',0,22),
+  (3,'q3418','block_ice2','hh_room_snowwar_arena_block_ice2_32_a_0_0',3655,1793,34,18,108800,57600,0,1,0,0,127,2,4600,'[[34,18]]',242,'sw_v2 Palette',0,38),
+  (3,'r019','sw_backround6','hh_room_snowwar_arena_sw_backround6_32_a_0_0',3649,2546,0,19,0,60800,0,0,0,0,0,0,0,'[[0,19]]',242,'sw_v2 Palette',32,-88),
+  (3,'c819','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,8,19,25600,60800,0,1,0,0,34,3,6900,'[[8,19]]',201,'snow_war Palette',0,54),
+  (3,'b1919','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,19,19,60800,60800,0,1,0,0,91,2,4600,'[[19,19]]',201,'snow_war Palette',0,38),
+  (3,'p3419','block_ice','hh_room_snowwar_arena_block_ice_32_a_0_0',3653,2747,34,19,108800,60800,0,1,0,0,129,1,2300,'[[34,19]]',242,'sw_v2 Palette',0,22),
+  (3,'b820','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,8,20,25600,64000,0,1,0,0,40,2,4600,'[[8,20]]',201,'snow_war Palette',0,38),
+  (3,'o1920','block_arch1b','hh_room_snowwar_arena_block_arch1b_32_a_0_0',3661,2831,19,20,60800,64000,0,1,0,0,95,3,6900,'[[19,20]]',201,'snow_war Palette',0,53),
+  (3,'c821','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,8,21,25600,67200,0,1,0,0,48,3,6900,'[[8,21]]',201,'snow_war Palette',0,54),
+  (3,'h622','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,6,22,19200,70400,0,1,0,0,39,3,4600,'[[6,22]]',201,'snow_war Palette',3,91),
+  (3,'b822','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,8,22,25600,70400,0,1,0,0,53,2,4600,'[[8,22]]',201,'snow_war Palette',0,38),
+  (3,'u1922','block_arch3b','hh_room_snowwar_arena_block_arch3b_32_a_0_0',3663,2830,19,22,60800,70400,0,1,0,0,99,3,6900,'[[19,22]]',201,'snow_war Palette',0,63),
+  (3,'g423','sw_tree1','hh_room_snowwar_arena_sw_tree1_32_a_0_0',3604,2343,4,23,12800,73600,0,1,0,0,33,3,4600,'[[4,23]]',201,'snow_war Palette',4,100),
+  (3,'c823','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,8,23,25600,73600,0,1,0,0,60,3,6900,'[[8,23]]',201,'snow_war Palette',0,54),
+  (3,'b1923','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,19,23,60800,73600,0,1,0,0,102,2,4600,'[[19,23]]',201,'snow_war Palette',0,38),
+  (3,'b824','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,8,24,25600,76800,0,1,0,0,64,2,4600,'[[8,24]]',201,'snow_war Palette',0,38),
+  (3,'b1924','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,19,24,60800,76800,0,1,0,0,104,2,4600,'[[19,24]]',201,'snow_war Palette',0,38),
+  (3,'j425','sw_tree4','hh_room_snowwar_arena_sw_tree4_32_a_0_0',3610,2340,4,25,12800,80000,0,1,0,0,47,3,4600,'[[4,25]]',201,'snow_war Palette',4,94),
+  (3,'c825','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,8,25,25600,80000,0,1,0,0,67,3,6900,'[[8,25]]',201,'snow_war Palette',0,54),
+  (3,'q925','block_ice2','hh_room_snowwar_arena_block_ice2_32_a_0_0',3655,1793,9,25,28800,80000,0,1,0,0,73,2,4600,'[[9,25]]',242,'sw_v2 Palette',0,38),
+  (3,'p1025','block_ice','hh_room_snowwar_arena_block_ice_32_a_0_0',3653,2747,10,25,32000,80000,0,1,0,0,78,1,2300,'[[10,25]]',242,'sw_v2 Palette',0,22),
+  (3,'p1325','block_ice','hh_room_snowwar_arena_block_ice_32_a_0_0',3653,2747,13,25,41600,80000,0,1,0,0,90,1,2300,'[[13,25]]',242,'sw_v2 Palette',0,22),
+  (3,'q1425','block_ice2','hh_room_snowwar_arena_block_ice2_32_a_0_0',3655,1793,14,25,44800,80000,0,1,0,0,94,2,4600,'[[14,25]]',242,'sw_v2 Palette',0,38),
+  (3,'a1525','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,15,25,48000,80000,0,1,0,0,97,1,2300,'[[15,25]]',201,'snow_war Palette',0,22),
+  (3,'b1625','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,16,25,51200,80000,0,1,0,0,98,2,4600,'[[16,25]]',201,'snow_war Palette',0,38),
+  (3,'a1725','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,17,25,54400,80000,0,1,0,0,101,1,2300,'[[17,25]]',201,'snow_war Palette',0,22),
+  (3,'b1825','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,18,25,57600,80000,0,1,0,0,103,2,4600,'[[18,25]]',201,'snow_war Palette',0,38),
+  (3,'c1925','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,19,25,60800,80000,0,1,0,0,106,3,6900,'[[19,25]]',201,'snow_war Palette',0,54),
+  (3,'q2025','block_ice2','hh_room_snowwar_arena_block_ice2_32_a_0_0',3655,1793,20,25,64000,80000,0,1,0,0,109,2,4600,'[[20,25]]',242,'sw_v2 Palette',0,38),
+  (3,'p2125','block_ice','hh_room_snowwar_arena_block_ice_32_a_0_0',3653,2747,21,25,67200,80000,0,1,0,0,113,1,2300,'[[21,25]]',242,'sw_v2 Palette',0,22),
+  (3,'b826','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,8,26,25600,83200,0,1,0,0,72,2,4600,'[[8,26]]',201,'snow_war Palette',0,38),
+  (3,'b1926','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,19,26,60800,83200,0,1,0,0,108,2,4600,'[[19,26]]',201,'snow_war Palette',0,38),
+  (3,'p4026','block_ice','hh_room_snowwar_arena_block_ice_32_a_0_0',3653,2747,40,26,128000,83200,0,1,0,0,147,1,2300,'[[40,26]]',242,'sw_v2 Palette',0,22),
+  (3,'c827','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,8,27,25600,86400,0,1,0,0,77,3,6900,'[[8,27]]',201,'snow_war Palette',0,54),
+  (3,'b1927','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,19,27,60800,86400,0,1,0,0,112,2,4600,'[[19,27]]',201,'snow_war Palette',0,38),
+  (3,'q4027','block_ice2','hh_room_snowwar_arena_block_ice2_32_a_0_0',3655,1793,40,27,128000,86400,0,1,0,0,149,2,4600,'[[40,27]]',242,'sw_v2 Palette',0,38),
+  (3,'b828','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,8,28,25600,89600,0,1,0,0,82,2,4600,'[[8,28]]',201,'snow_war Palette',0,38),
+  (3,'o1928','block_arch1b','hh_room_snowwar_arena_block_arch1b_32_a_0_0',3661,2831,19,28,60800,89600,0,1,0,0,115,3,6900,'[[19,28]]',201,'snow_war Palette',0,53),
+  (3,'p4028','block_ice','hh_room_snowwar_arena_block_ice_32_a_0_0',3653,2747,40,28,128000,89600,0,1,0,0,151,1,2300,'[[40,28]]',242,'sw_v2 Palette',0,22),
+  (3,'c829','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,8,29,25600,92800,0,1,0,0,86,3,6900,'[[8,29]]',201,'snow_war Palette',0,54),
+  (3,'q4029','block_ice2','hh_room_snowwar_arena_block_ice2_32_a_0_0',3655,1793,40,29,128000,92800,0,1,0,0,153,2,4600,'[[40,29]]',242,'sw_v2 Palette',0,38),
+  (3,'b830','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,8,30,25600,96000,0,1,0,0,89,2,4600,'[[8,30]]',201,'snow_war Palette',0,38),
+  (3,'u1930','block_arch3b','hh_room_snowwar_arena_block_arch3b_32_a_0_0',3663,2830,19,30,60800,96000,0,1,0,0,118,3,6900,'[[19,30]]',201,'snow_war Palette',0,63),
+  (3,'p4030','block_ice','hh_room_snowwar_arena_block_ice_32_a_0_0',3653,2747,40,30,128000,96000,0,1,0,0,155,1,2300,'[[40,30]]',242,'sw_v2 Palette',0,22),
+  (3,'b1931','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,19,31,60800,99200,0,1,0,0,121,2,4600,'[[19,31]]',201,'snow_war Palette',0,38),
+  (3,'a1032','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,10,32,32000,102400,0,1,0,0,100,1,2300,'[[10,32]]',201,'snow_war Palette',0,22),
+  (3,'a1232','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,12,32,38400,102400,0,1,0,0,105,1,2300,'[[12,32]]',201,'snow_war Palette',0,22),
+  (3,'a1432','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,14,32,44800,102400,0,1,0,0,111,1,2300,'[[14,32]]',201,'snow_war Palette',0,22),
+  (3,'b1532','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,15,32,48000,102400,0,1,0,0,114,2,4600,'[[15,32]]',201,'snow_war Palette',0,38),
+  (3,'a1632','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,16,32,51200,102400,0,1,0,0,116,1,2300,'[[16,32]]',201,'snow_war Palette',0,22),
+  (3,'b1732','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,17,32,54400,102400,0,1,0,0,117,2,4600,'[[17,32]]',201,'snow_war Palette',0,38),
+  (3,'a1832','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,18,32,57600,102400,0,1,0,0,120,1,2300,'[[18,32]]',201,'snow_war Palette',0,22),
+  (3,'q1932','block_ice2','hh_room_snowwar_arena_block_ice2_32_a_0_0',3655,1793,19,32,60800,102400,0,1,0,0,123,2,4600,'[[19,32]]',242,'sw_v2 Palette',0,38),
+  (3,'p2032','block_ice','hh_room_snowwar_arena_block_ice_32_a_0_0',3653,2747,20,32,64000,102400,0,1,0,0,126,1,2300,'[[20,32]]',242,'sw_v2 Palette',0,22),
+  (3,'b1233','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,12,33,38400,105600,0,1,0,0,107,2,4600,'[[12,33]]',201,'snow_war Palette',0,38),
+  (3,'b1933','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,19,33,60800,105600,0,1,0,0,125,2,4600,'[[19,33]]',201,'snow_war Palette',0,38),
+  (3,'b1234','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,12,34,38400,108800,0,1,0,0,110,2,4600,'[[12,34]]',201,'snow_war Palette',0,38),
+  (3,'o1934','block_arch1b','hh_room_snowwar_arena_block_arch1b_32_a_0_0',3661,2831,19,34,60800,108800,0,1,0,0,128,3,6900,'[[19,34]]',201,'snow_war Palette',0,53),
+  (3,'a2335','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,23,35,73600,112000,0,1,0,0,136,1,2300,'[[23,35]]',201,'snow_war Palette',0,22),
+  (3,'p3435','block_ice','hh_room_snowwar_arena_block_ice_32_a_0_0',3653,2747,34,35,108800,112000,0,1,0,0,152,1,2300,'[[34,35]]',242,'sw_v2 Palette',0,22),
+  (3,'u1936','block_arch3b','hh_room_snowwar_arena_block_arch3b_32_a_0_0',3663,2830,19,36,60800,115200,0,1,0,0,130,3,6900,'[[19,36]]',201,'snow_war Palette',0,63),
+  (3,'b2336','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,23,36,73600,115200,0,1,0,0,138,2,4600,'[[23,36]]',201,'snow_war Palette',0,38),
+  (3,'q3436','block_ice2','hh_room_snowwar_arena_block_ice2_32_a_0_0',3655,1793,34,36,108800,115200,0,1,0,0,154,2,4600,'[[34,36]]',242,'sw_v2 Palette',0,38),
+  (3,'b1937','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,19,37,60800,118400,0,1,0,0,132,2,4600,'[[19,37]]',201,'snow_war Palette',0,38),
+  (3,'a2337','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,23,37,73600,118400,0,1,0,0,139,1,2300,'[[23,37]]',201,'snow_war Palette',0,22),
+  (3,'p3437','block_ice','hh_room_snowwar_arena_block_ice_32_a_0_0',3653,2747,34,37,108800,118400,0,1,0,0,156,1,2300,'[[34,37]]',242,'sw_v2 Palette',0,22),
+  (3,'b1938','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,19,38,60800,121600,0,1,0,0,134,2,4600,'[[19,38]]',201,'snow_war Palette',0,38),
+  (3,'b2338','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,23,38,73600,121600,0,1,0,0,141,2,4600,'[[23,38]]',201,'snow_war Palette',0,38),
+  (3,'q3438','block_ice2','hh_room_snowwar_arena_block_ice2_32_a_0_0',3655,1793,34,38,108800,121600,0,1,0,0,157,2,4600,'[[34,38]]',242,'sw_v2 Palette',0,38),
+  (3,'b1739','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,17,39,54400,124800,0,1,0,0,131,2,4600,'[[17,39]]',201,'snow_war Palette',0,38),
+  (3,'a1839','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,18,39,57600,124800,0,1,0,0,133,1,2300,'[[18,39]]',201,'snow_war Palette',0,22),
+  (3,'q1939','block_ice2','hh_room_snowwar_arena_block_ice2_32_a_0_0',3655,1793,19,39,60800,124800,0,1,0,0,135,2,4600,'[[19,39]]',242,'sw_v2 Palette',0,38),
+  (3,'p2039','block_ice','hh_room_snowwar_arena_block_ice_32_a_0_0',3653,2747,20,39,64000,124800,0,1,0,0,137,1,2300,'[[20,39]]',242,'sw_v2 Palette',0,22),
+  (3,'a2239','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,22,39,70400,124800,0,1,0,0,140,1,2300,'[[22,39]]',201,'snow_war Palette',0,22),
+  (3,'a2339','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,23,39,73600,124800,0,1,0,0,142,1,2300,'[[23,39]]',201,'snow_war Palette',0,22),
+  (3,'p3439','block_ice','hh_room_snowwar_arena_block_ice_32_a_0_0',3653,2747,34,39,108800,124800,0,1,0,0,158,1,2300,'[[34,39]]',242,'sw_v2 Palette',0,22),
+  (3,'a2340','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,23,40,73600,128000,0,1,0,0,143,1,2300,'[[23,40]]',201,'snow_war Palette',0,22),
+  (3,'a2341','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,23,41,73600,131200,0,1,0,0,145,1,2300,'[[23,41]]',201,'snow_war Palette',0,22),
+  (3,'g2143','sw_tree1','hh_room_snowwar_arena_sw_tree1_32_a_0_0',3604,2343,21,43,67200,137600,0,1,0,0,144,3,4600,'[[21,43]]',201,'snow_war Palette',4,100),
+  (3,'a2343','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,23,43,73600,137600,0,1,0,0,146,1,2300,'[[23,43]]',201,'snow_war Palette',0,22),
+  (3,'b2344','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,23,44,73600,140800,0,1,0,0,148,2,4600,'[[23,44]]',201,'snow_war Palette',0,38),
+  (3,'i3144','sw_tree3','hh_room_snowwar_arena_sw_tree3_32_a_0_0',3608,2341,31,44,99200,140800,0,1,0,0,159,3,4600,'[[31,44]]',201,'snow_war Palette',4,95),
+  (3,'c2345','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,23,45,73600,144000,0,1,0,0,150,3,6900,'[[23,45]]',201,'snow_war Palette',0,54),
+  (3,'g3046','sw_tree1','hh_room_snowwar_arena_sw_tree1_32_a_0_0',3604,2343,30,46,96000,147200,0,1,0,0,160,3,4600,'[[30,46]]',201,'snow_war Palette',4,100),
+  (3,'j3246','sw_tree4','hh_room_snowwar_arena_sw_tree4_32_a_0_0',3610,2340,32,46,102400,147200,0,1,0,0,161,3,4600,'[[32,46]]',201,'snow_war Palette',4,94),
+  (3,'h3148','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,31,48,99200,153600,0,1,0,0,162,3,4600,'[[31,48]]',201,'snow_war Palette',3,91),
+  (4,'h221','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,22,1,70400,3200,0,1,0,0,3,3,4600,'[[22,1]]',201,'snow_war Palette',3,91),
+  (4,'h204','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,20,4,64000,12800,0,1,0,0,4,3,4600,'[[20,4]]',201,'snow_war Palette',3,91),
+  (4,'g244','sw_tree1','hh_room_snowwar_arena_sw_tree1_32_a_0_0',3604,2343,24,4,76800,12800,0,1,0,0,9,3,4600,'[[24,4]]',201,'snow_war Palette',4,100),
+  (4,'g275','sw_tree1','hh_room_snowwar_arena_sw_tree1_32_a_0_0',3604,2343,27,5,86400,16000,0,1,0,0,15,3,4600,'[[27,5]]',201,'snow_war Palette',4,100),
+  (4,'i246','sw_tree3','hh_room_snowwar_arena_sw_tree3_32_a_0_0',3608,2341,24,6,76800,19200,0,1,0,0,13,3,4600,'[[24,6]]',201,'snow_war Palette',4,95),
+  (4,'j278','sw_tree4','hh_room_snowwar_arena_sw_tree4_32_a_0_0',3610,2340,27,8,86400,25600,0,1,0,0,19,3,4600,'[[27,8]]',201,'snow_war Palette',4,94),
+  (4,'j209','sw_tree4','hh_room_snowwar_arena_sw_tree4_32_a_0_0',3610,2340,20,9,64000,28800,0,1,0,0,12,3,4600,'[[20,9]]',201,'snow_war Palette',4,94),
+  (4,'h319','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,31,9,99200,28800,0,1,0,0,21,3,4600,'[[31,9]]',201,'snow_war Palette',3,91),
+  (4,'h1610','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,16,10,51200,32000,0,1,0,0,6,3,4600,'[[16,10]]',201,'snow_war Palette',3,91),
+  (4,'i1013','sw_tree3','hh_room_snowwar_arena_sw_tree3_32_a_0_0',3608,2341,10,13,32000,41600,0,1,0,0,2,3,4600,'[[10,13]]',201,'snow_war Palette',4,95),
+  (4,'i2713','sw_tree3','hh_room_snowwar_arena_sw_tree3_32_a_0_0',3608,2341,27,13,86400,41600,0,1,0,0,20,3,4600,'[[27,13]]',201,'snow_war Palette',4,95),
+  (4,'g1815','sw_tree1','hh_room_snowwar_arena_sw_tree1_32_a_0_0',3604,2343,18,15,57600,48000,0,1,0,0,16,3,4600,'[[18,15]]',201,'snow_war Palette',4,100),
+  (4,'i3916','sw_tree3','hh_room_snowwar_arena_sw_tree3_32_a_0_0',3608,2341,39,16,124800,51200,0,1,0,0,28,3,4600,'[[39,16]]',201,'snow_war Palette',4,95),
+  (4,'g1017','sw_tree1','hh_room_snowwar_arena_sw_tree1_32_a_0_0',3604,2343,10,17,32000,54400,0,1,0,0,8,3,4600,'[[10,17]]',201,'snow_war Palette',4,100),
+  (4,'h2517','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,25,17,80000,54400,0,1,0,0,22,3,4600,'[[25,17]]',201,'snow_war Palette',3,91),
+  (4,'h418','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,4,18,12800,57600,0,1,0,0,1,3,4600,'[[4,18]]',201,'snow_war Palette',3,91),
+  (4,'j718','sw_tree4','hh_room_snowwar_arena_sw_tree4_32_a_0_0',3610,2340,7,18,22400,57600,0,1,0,0,5,3,4600,'[[7,18]]',201,'snow_war Palette',4,94),
+  (4,'j1519','sw_tree4','hh_room_snowwar_arena_sw_tree4_32_a_0_0',3610,2340,15,19,48000,60800,0,1,0,0,18,3,4600,'[[15,19]]',201,'snow_war Palette',4,94),
+  (4,'j3520','sw_tree4','hh_room_snowwar_arena_sw_tree4_32_a_0_0',3610,2340,35,20,112000,64000,0,1,0,0,27,3,4600,'[[35,20]]',201,'snow_war Palette',4,94),
+  (4,'j121','sw_tree4','hh_room_snowwar_arena_sw_tree4_32_a_0_0',3610,2340,1,21,3200,67200,0,1,0,0,0,3,4600,'[[1,21]]',201,'snow_war Palette',4,94),
+  (4,'i1121','sw_tree3','hh_room_snowwar_arena_sw_tree3_32_a_0_0',3608,2341,11,21,35200,67200,0,1,0,0,14,3,4600,'[[11,21]]',201,'snow_war Palette',4,95),
+  (4,'g522','sw_tree1','hh_room_snowwar_arena_sw_tree1_32_a_0_0',3604,2343,5,22,16000,70400,0,1,0,0,7,3,4600,'[[5,22]]',201,'snow_war Palette',4,100),
+  (4,'h722','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,7,22,22400,70400,0,1,0,0,11,3,4600,'[[7,22]]',201,'snow_war Palette',3,91),
+  (4,'g2223','sw_tree1','hh_room_snowwar_arena_sw_tree1_32_a_0_0',3604,2343,22,23,70400,73600,0,1,0,0,24,3,4600,'[[22,23]]',201,'snow_war Palette',4,100),
+  (4,'h4323','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,43,23,137600,73600,0,1,0,0,31,3,4600,'[[43,23]]',201,'snow_war Palette',3,91),
+  (4,'h425','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,4,25,12800,80000,0,1,0,0,10,3,4600,'[[4,25]]',201,'snow_war Palette',3,91),
+  (4,'g4725','sw_tree1','hh_room_snowwar_arena_sw_tree1_32_a_0_0',3604,2343,47,25,150400,80000,0,1,0,0,34,3,4600,'[[47,25]]',201,'snow_war Palette',4,100),
+  (4,'i727','sw_tree3','hh_room_snowwar_arena_sw_tree3_32_a_0_0',3608,2341,7,27,22400,86400,0,1,0,0,17,3,4600,'[[7,27]]',201,'snow_war Palette',4,95),
+  (4,'i2030','sw_tree3','hh_room_snowwar_arena_sw_tree3_32_a_0_0',3608,2341,20,30,64000,96000,0,1,0,0,25,3,4600,'[[20,30]]',201,'snow_war Palette',4,95),
+  (4,'j3931','sw_tree4','hh_room_snowwar_arena_sw_tree4_32_a_0_0',3610,2340,39,31,124800,99200,0,1,0,0,33,3,4600,'[[39,31]]',201,'snow_war Palette',4,94),
+  (4,'g1133','sw_tree1','hh_room_snowwar_arena_sw_tree1_32_a_0_0',3604,2343,11,33,35200,105600,0,1,0,0,23,3,4600,'[[11,33]]',201,'snow_war Palette',4,100),
+  (4,'i4734','sw_tree3','hh_room_snowwar_arena_sw_tree3_32_a_0_0',3608,2341,47,34,150400,108800,0,1,0,100000,38,3,4600,'[[47,34]]',201,'snow_war Palette',4,95),
+  (4,'j1636','sw_tree4','hh_room_snowwar_arena_sw_tree4_32_a_0_0',3610,2340,16,36,51200,115200,0,1,0,0,26,3,4600,'[[16,36]]',201,'snow_war Palette',4,94),
+  (4,'h2937','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,29,37,92800,118400,0,1,0,0,30,3,4600,'[[29,37]]',201,'snow_war Palette',3,91),
+  (4,'i2239','sw_tree3','hh_room_snowwar_arena_sw_tree3_32_a_0_0',3608,2341,22,39,70400,124800,0,1,0,0,29,3,4600,'[[22,39]]',201,'snow_war Palette',4,95),
+  (4,'i3843','sw_tree3','hh_room_snowwar_arena_sw_tree3_32_a_0_0',3608,2341,38,43,121600,137600,0,1,0,100000,37,3,4600,'[[38,43]]',201,'snow_war Palette',4,95),
+  (4,'g2445','sw_tree1','hh_room_snowwar_arena_sw_tree1_32_a_0_0',3604,2343,24,45,76800,144000,0,1,0,0,32,3,4600,'[[24,45]]',201,'snow_war Palette',4,100),
+  (4,'j3248','sw_tree4','hh_room_snowwar_arena_sw_tree4_32_a_0_0',3610,2340,32,48,102400,153600,0,1,0,0,36,3,4600,'[[32,48]]',201,'snow_war Palette',4,94),
+  (4,'h2749','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,27,49,86400,156800,0,1,0,0,35,3,4600,'[[27,49]]',201,'snow_war Palette',3,91),
+  (5,'i231','sw_tree3','hh_room_snowwar_arena_sw_tree3_32_a_0_0',3608,2341,23,1,73600,3200,0,1,0,0,11,3,4600,'[[23,1]]',201,'snow_war Palette',4,95),
+  (5,'h202','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,20,2,64000,6400,0,1,0,0,3,3,4600,'[[20,2]]',201,'snow_war Palette',3,91),
+  (5,'j254','sw_tree4','hh_room_snowwar_arena_sw_tree4_32_a_0_0',3610,2340,25,4,80000,12800,0,1,0,0,33,3,4600,'[[25,4]]',201,'snow_war Palette',4,94),
+  (5,'g195','sw_tree1','hh_room_snowwar_arena_sw_tree1_32_a_0_0',3604,2343,19,5,60800,16000,0,1,0,0,10,3,4600,'[[19,5]]',201,'snow_war Palette',4,100),
+  (5,'a198','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,19,8,60800,25600,0,1,0,0,21,1,2300,'[[19,8]]',201,'snow_war Palette',0,22),
+  (5,'a298','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,29,8,92800,25600,0,1,0,0,73,1,2300,'[[29,8]]',201,'snow_war Palette',0,22),
+  (5,'a308','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,30,8,96000,25600,0,1,0,0,78,1,2300,'[[30,8]]',201,'snow_war Palette',0,22),
+  (5,'a318','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,31,8,99200,25600,0,1,0,0,83,1,2300,'[[31,8]]',201,'snow_war Palette',0,22),
+  (5,'a328','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,32,8,102400,25600,0,1,0,100000,91,1,2300,'[[32,8]]',201,'snow_war Palette',0,22),
+  (5,'a338','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,33,8,105600,25600,0,1,0,100000,100,1,2300,'[[33,8]]',201,'snow_war Palette',0,22),
+  (5,'a348','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,34,8,108800,25600,0,1,0,100000,109,1,2300,'[[34,8]]',201,'snow_war Palette',0,22),
+  (5,'a358','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,35,8,112000,25600,0,1,0,100000,118,1,2300,'[[35,8]]',201,'snow_war Palette',0,22),
+  (5,'a199','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,19,9,60800,28800,0,1,0,0,27,1,2300,'[[19,9]]',201,'snow_war Palette',0,22),
+  (5,'a359','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,35,9,112000,28800,0,1,0,100000,125,1,2300,'[[35,9]]',201,'snow_war Palette',0,22),
+  (5,'a1910','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,19,10,60800,32000,0,1,0,0,32,1,2300,'[[19,10]]',201,'snow_war Palette',0,22),
+  (5,'a2210','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,22,10,70400,32000,0,1,0,0,40,1,2300,'[[22,10]]',201,'snow_war Palette',0,22),
+  (5,'a2310','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,23,10,73600,32000,0,1,0,0,47,1,2300,'[[23,10]]',201,'snow_war Palette',0,22),
+  (5,'a2410','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,24,10,76800,32000,0,1,0,0,54,1,2300,'[[24,10]]',201,'snow_war Palette',0,22),
+  (5,'a2510','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,25,10,80000,32000,0,1,0,0,60,1,2300,'[[25,10]]',201,'snow_war Palette',0,22),
+  (5,'a3510','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,35,10,112000,32000,0,1,0,100000,132,1,2300,'[[35,10]]',201,'snow_war Palette',0,22),
+  (5,'a1011','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,10,11,32000,35200,0,1,0,0,0,1,2300,'[[10,11]]',201,'snow_war Palette',0,22),
+  (5,'a1111','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,11,11,35200,35200,0,1,0,0,2,1,2300,'[[11,11]]',201,'snow_war Palette',0,22),
+  (5,'a1211','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,12,11,38400,35200,0,1,0,0,7,1,2300,'[[12,11]]',201,'snow_war Palette',0,22),
+  (5,'a1311','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,13,11,41600,35200,0,1,0,0,9,1,2300,'[[13,11]]',201,'snow_war Palette',0,22),
+  (5,'a1411','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,14,11,44800,35200,0,1,0,0,13,1,2300,'[[14,11]]',201,'snow_war Palette',0,22),
+  (5,'a1511','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,15,11,48000,35200,0,1,0,0,15,1,2300,'[[15,11]]',201,'snow_war Palette',0,22),
+  (5,'a1611','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,16,11,51200,35200,0,1,0,0,20,1,2300,'[[16,11]]',201,'snow_war Palette',0,22),
+  (5,'a1711','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,17,11,54400,35200,0,1,0,0,26,1,2300,'[[17,11]]',201,'snow_war Palette',0,22),
+  (5,'a1811','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,18,11,57600,35200,0,1,0,0,31,1,2300,'[[18,11]]',201,'snow_war Palette',0,22),
+  (5,'a1911','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,19,11,60800,35200,0,1,0,0,37,1,2300,'[[19,11]]',201,'snow_war Palette',0,22),
+  (5,'a2211','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,22,11,70400,35200,0,1,0,0,46,1,2300,'[[22,11]]',201,'snow_war Palette',0,22),
+  (5,'a2511','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,25,11,80000,35200,0,1,0,0,66,1,2300,'[[25,11]]',201,'snow_war Palette',0,22),
+  (5,'a2811','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,28,11,89600,35200,0,1,0,0,82,1,2300,'[[28,11]]',201,'snow_war Palette',0,22),
+  (5,'a2911','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,29,11,92800,35200,0,1,0,0,90,1,2300,'[[29,11]]',201,'snow_war Palette',0,22),
+  (5,'a3011','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,30,11,96000,35200,0,1,0,0,99,1,2300,'[[30,11]]',201,'snow_war Palette',0,22),
+  (5,'a3111','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,31,11,99200,35200,0,1,0,0,108,1,2300,'[[31,11]]',201,'snow_war Palette',0,22),
+  (5,'a3211','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,32,11,102400,35200,0,1,0,0,116,1,2300,'[[32,11]]',201,'snow_war Palette',0,22),
+  (5,'a3511','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,35,11,112000,35200,0,1,0,100000,139,1,2300,'[[35,11]]',201,'snow_war Palette',0,22),
+  (5,'a1012','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,10,12,32000,38400,0,1,0,0,1,1,2300,'[[10,12]]',201,'snow_war Palette',0,22),
+  (5,'a2212','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,22,12,70400,38400,0,1,0,0,53,1,2300,'[[22,12]]',201,'snow_war Palette',0,22),
+  (5,'a2512','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,25,12,80000,38400,0,1,0,0,72,1,2300,'[[25,12]]',201,'snow_war Palette',0,22),
+  (5,'a2812','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,28,12,89600,38400,0,1,0,0,89,1,2300,'[[28,12]]',201,'snow_war Palette',0,22),
+  (5,'a3212','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,32,12,102400,38400,0,1,0,0,124,1,2300,'[[32,12]]',201,'snow_war Palette',0,22),
+  (5,'a3512','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,35,12,112000,38400,0,1,0,0,145,1,2300,'[[35,12]]',201,'snow_war Palette',0,22),
+  (5,'a1013','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,10,13,32000,41600,0,1,0,0,6,1,2300,'[[10,13]]',201,'snow_war Palette',0,22),
+  (5,'a2213','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,22,13,70400,41600,0,1,0,0,59,1,2300,'[[22,13]]',201,'snow_war Palette',0,22),
+  (5,'a2313','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,23,13,73600,41600,0,1,0,0,65,1,2300,'[[23,13]]',201,'snow_war Palette',0,22),
+  (5,'a2413','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,24,13,76800,41600,0,1,0,0,71,1,2300,'[[24,13]]',201,'snow_war Palette',0,22),
+  (5,'a2513','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,25,13,80000,41600,0,1,0,0,77,1,2300,'[[25,13]]',201,'snow_war Palette',0,22),
+  (5,'a2813','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,28,13,89600,41600,0,1,0,0,98,1,2300,'[[28,13]]',201,'snow_war Palette',0,22),
+  (5,'a3213','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,32,13,102400,41600,0,1,0,0,131,1,2300,'[[32,13]]',201,'snow_war Palette',0,22),
+  (5,'a3513','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,35,13,112000,41600,0,1,0,0,151,1,2300,'[[35,13]]',201,'snow_war Palette',0,22),
+  (5,'a1014','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,10,14,32000,44800,0,1,0,0,8,1,2300,'[[10,14]]',201,'snow_war Palette',0,22),
+  (5,'a1314','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,13,14,41600,44800,0,1,0,0,19,1,2300,'[[13,14]]',201,'snow_war Palette',0,22),
+  (5,'a1414','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,14,14,44800,44800,0,1,0,0,25,1,2300,'[[14,14]]',201,'snow_war Palette',0,22),
+  (5,'a1514','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,15,14,48000,44800,0,1,0,0,30,1,2300,'[[15,14]]',201,'snow_war Palette',0,22),
+  (5,'a1614','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,16,14,51200,44800,0,1,0,0,36,1,2300,'[[16,14]]',201,'snow_war Palette',0,22),
+  (5,'a1914','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,19,14,60800,44800,0,1,0,0,45,1,2300,'[[19,14]]',201,'snow_war Palette',0,22),
+  (5,'a2814','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,28,14,89600,44800,0,1,0,0,107,1,2300,'[[28,14]]',201,'snow_war Palette',0,22),
+  (5,'a2914','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,29,14,92800,44800,0,1,0,0,115,1,2300,'[[29,14]]',201,'snow_war Palette',0,22),
+  (5,'a3014','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,30,14,96000,44800,0,1,0,0,123,1,2300,'[[30,14]]',201,'snow_war Palette',0,22),
+  (5,'a3114','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,31,14,99200,44800,0,1,0,0,130,1,2300,'[[31,14]]',201,'snow_war Palette',0,22),
+  (5,'a3214','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,32,14,102400,44800,0,1,0,0,138,1,2300,'[[32,14]]',201,'snow_war Palette',0,22),
+  (5,'a3514','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,35,14,112000,44800,0,1,0,0,156,1,2300,'[[35,14]]',201,'snow_war Palette',0,22),
+  (5,'a1015','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,10,15,32000,48000,0,1,0,0,12,1,2300,'[[10,15]]',201,'snow_war Palette',0,22),
+  (5,'a1315','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,13,15,41600,48000,0,1,0,0,24,1,2300,'[[13,15]]',201,'snow_war Palette',0,22),
+  (5,'a1915','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,19,15,60800,48000,0,1,0,0,52,1,2300,'[[19,15]]',201,'snow_war Palette',0,22),
+  (5,'a3515','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,35,15,112000,48000,0,1,0,0,159,1,2300,'[[35,15]]',201,'snow_war Palette',0,22),
+  (5,'g716','sw_tree1','hh_room_snowwar_arena_sw_tree1_32_a_0_0',3604,2343,7,16,22400,51200,0,1,0,0,5,3,4600,'[[7,16]]',201,'snow_war Palette',4,100),
+  (5,'a1016','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,10,16,32000,51200,0,1,0,0,14,1,2300,'[[10,16]]',201,'snow_war Palette',0,22),
+  (5,'a1316','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,13,16,41600,51200,0,1,0,0,29,1,2300,'[[13,16]]',201,'snow_war Palette',0,22),
+  (5,'a1916','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,19,16,60800,51200,0,1,0,0,58,1,2300,'[[19,16]]',201,'snow_war Palette',0,22),
+  (5,'a2216','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,22,16,70400,51200,0,1,0,0,76,1,2300,'[[22,16]]',201,'snow_war Palette',0,22),
+  (5,'a2516','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,25,16,80000,51200,0,1,0,0,97,1,2300,'[[25,16]]',201,'snow_war Palette',0,22),
+  (5,'a3516','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,35,16,112000,51200,0,1,0,0,162,1,2300,'[[35,16]]',201,'snow_war Palette',0,22),
+  (5,'a1017','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,10,17,32000,54400,0,1,0,0,18,1,2300,'[[10,17]]',201,'snow_war Palette',0,22),
+  (5,'a1317','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,13,17,41600,54400,0,1,0,0,35,1,2300,'[[13,17]]',201,'snow_war Palette',0,22),
+  (5,'a1617','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,16,17,51200,54400,0,1,0,0,44,1,2300,'[[16,17]]',201,'snow_war Palette',0,22),
+  (5,'a1717','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,17,17,54400,54400,0,1,0,0,51,1,2300,'[[17,17]]',201,'snow_war Palette',0,22),
+  (5,'a1817','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,18,17,57600,54400,0,1,0,0,57,1,2300,'[[18,17]]',201,'snow_war Palette',0,22),
+  (5,'a1917','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,19,17,60800,54400,0,1,0,0,64,1,2300,'[[19,17]]',201,'snow_war Palette',0,22),
+  (5,'a2217','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,22,17,70400,54400,0,1,0,0,81,1,2300,'[[22,17]]',201,'snow_war Palette',0,22),
+  (5,'a2517','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,25,17,80000,54400,0,1,0,0,106,1,2300,'[[25,17]]',201,'snow_war Palette',0,22),
+  (5,'a2817','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,28,17,89600,54400,0,1,0,0,129,1,2300,'[[28,17]]',201,'snow_war Palette',0,22),
+  (5,'a2917','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,29,17,92800,54400,0,1,0,0,137,1,2300,'[[29,17]]',201,'snow_war Palette',0,22),
+  (5,'a3017','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,30,17,96000,54400,0,1,0,0,144,1,2300,'[[30,17]]',201,'snow_war Palette',0,22),
+  (5,'a3117','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,31,17,99200,54400,0,1,0,0,150,1,2300,'[[31,17]]',201,'snow_war Palette',0,22),
+  (5,'a3217','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,32,17,102400,54400,0,1,0,0,155,1,2300,'[[32,17]]',201,'snow_war Palette',0,22),
+  (5,'a3517','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,35,17,112000,54400,0,1,0,0,166,1,2300,'[[35,17]]',201,'snow_war Palette',0,22),
+  (5,'a3617','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,36,17,115200,54400,0,1,0,0,170,1,2300,'[[36,17]]',201,'snow_war Palette',0,22),
+  (5,'a3717','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,37,17,118400,54400,0,1,0,0,174,1,2300,'[[37,17]]',201,'snow_war Palette',0,22),
+  (5,'a3817','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,38,17,121600,54400,0,1,0,0,178,1,2300,'[[38,17]]',201,'snow_war Palette',0,22),
+  (5,'a3917','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,39,17,124800,54400,0,1,0,0,185,1,2300,'[[39,17]]',201,'snow_war Palette',0,22),
+  (5,'a4017','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,40,17,128000,54400,0,1,0,0,192,1,2300,'[[40,17]]',201,'snow_war Palette',0,22),
+  (5,'a4117','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,41,17,131200,54400,0,1,0,100000,198,1,2300,'[[41,17]]',201,'snow_war Palette',0,22),
+  (5,'a4217','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,42,17,134400,54400,0,1,0,100000,204,1,2300,'[[42,17]]',201,'snow_war Palette',0,22),
+  (5,'a1018','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,10,18,32000,57600,0,1,0,0,23,1,2300,'[[10,18]]',201,'snow_war Palette',0,22),
+  (5,'a2218','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,22,18,70400,57600,0,1,0,0,88,1,2300,'[[22,18]]',201,'snow_war Palette',0,22),
+  (5,'a2518','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,25,18,80000,57600,0,1,0,0,114,1,2300,'[[25,18]]',201,'snow_war Palette',0,22),
+  (5,'a2818','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,28,18,89600,57600,0,1,0,0,136,1,2300,'[[28,18]]',201,'snow_war Palette',0,22),
+  (5,'a4218','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,42,18,134400,57600,0,1,0,100000,210,1,2300,'[[42,18]]',201,'snow_war Palette',0,22),
+  (5,'h419','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,4,19,12800,60800,0,1,0,0,4,3,4600,'[[4,19]]',201,'snow_war Palette',3,91),
+  (5,'a819','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,8,19,25600,60800,0,1,0,0,17,1,2300,'[[8,19]]',201,'snow_war Palette',0,22),
+  (5,'a919','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,9,19,28800,60800,0,1,0,0,22,1,2300,'[[9,19]]',201,'snow_war Palette',0,22),
+  (5,'a1019','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,10,19,32000,60800,0,1,0,0,28,1,2300,'[[10,19]]',201,'snow_war Palette',0,22),
+  (5,'a2219','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,22,19,70400,60800,0,1,0,0,96,1,2300,'[[22,19]]',201,'snow_war Palette',0,22),
+  (5,'a2519','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,25,19,80000,60800,0,1,0,0,122,1,2300,'[[25,19]]',201,'snow_war Palette',0,22),
+  (5,'a2819','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,28,19,89600,60800,0,1,0,0,143,1,2300,'[[28,19]]',201,'snow_war Palette',0,22),
+  (5,'a4219','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,42,19,134400,60800,0,1,0,0,215,1,2300,'[[42,19]]',201,'snow_war Palette',0,22),
+  (5,'a1320','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,13,20,41600,64000,0,1,0,0,43,1,2300,'[[13,20]]',201,'snow_war Palette',0,22),
+  (5,'a1620','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,16,20,51200,64000,0,1,0,0,63,1,2300,'[[16,20]]',201,'snow_war Palette',0,22),
+  (5,'a1720','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,17,20,54400,64000,0,1,0,0,70,1,2300,'[[17,20]]',201,'snow_war Palette',0,22),
+  (5,'a1820','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,18,20,57600,64000,0,1,0,0,75,1,2300,'[[18,20]]',201,'snow_war Palette',0,22),
+  (5,'a1920','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,19,20,60800,64000,0,1,0,0,80,1,2300,'[[19,20]]',201,'snow_war Palette',0,22),
+  (5,'a2220','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,22,20,70400,64000,0,1,0,0,105,1,2300,'[[22,20]]',201,'snow_war Palette',0,22),
+  (5,'a2320','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,23,20,73600,64000,0,1,0,0,113,1,2300,'[[23,20]]',201,'snow_war Palette',0,22),
+  (5,'a2420','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,24,20,76800,64000,0,1,0,0,121,1,2300,'[[24,20]]',201,'snow_war Palette',0,22),
+  (5,'a2520','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,25,20,80000,64000,0,1,0,0,128,1,2300,'[[25,20]]',201,'snow_war Palette',0,22),
+  (5,'a2820','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,28,20,89600,64000,0,1,0,0,149,1,2300,'[[28,20]]',201,'snow_war Palette',0,22),
+  (5,'a2920','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,29,20,92800,64000,0,1,0,0,154,1,2300,'[[29,20]]',201,'snow_war Palette',0,22),
+  (5,'a3020','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,30,20,96000,64000,0,1,0,0,158,1,2300,'[[30,20]]',201,'snow_war Palette',0,22),
+  (5,'a3120','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,31,20,99200,64000,0,1,0,0,161,1,2300,'[[31,20]]',201,'snow_war Palette',0,22),
+  (5,'a3220','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,32,20,102400,64000,0,1,0,0,165,1,2300,'[[32,20]]',201,'snow_war Palette',0,22),
+  (5,'a3320','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,33,20,105600,64000,0,1,0,0,169,1,2300,'[[33,20]]',201,'snow_war Palette',0,22),
+  (5,'a3620','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,36,20,115200,64000,0,1,0,0,184,1,2300,'[[36,20]]',201,'snow_war Palette',0,22),
+  (5,'a3720','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,37,20,118400,64000,0,1,0,0,191,1,2300,'[[37,20]]',201,'snow_war Palette',0,22),
+  (5,'a3820','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,38,20,121600,64000,0,1,0,0,197,1,2300,'[[38,20]]',201,'snow_war Palette',0,22),
+  (5,'a3920','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,39,20,124800,64000,0,1,0,0,203,1,2300,'[[39,20]]',201,'snow_war Palette',0,22),
+  (5,'a4220','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,42,20,134400,64000,0,1,0,0,224,1,2300,'[[42,20]]',201,'snow_war Palette',0,22),
+  (5,'a1321','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,13,21,41600,67200,0,1,0,0,50,1,2300,'[[13,21]]',201,'snow_war Palette',0,22),
+  (5,'a1621','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,16,21,51200,67200,0,1,0,0,69,1,2300,'[[16,21]]',201,'snow_war Palette',0,22),
+  (5,'a1921','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,19,21,60800,67200,0,1,0,0,87,1,2300,'[[19,21]]',201,'snow_war Palette',0,22),
+  (5,'a3321','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,33,21,105600,67200,0,1,0,0,173,1,2300,'[[33,21]]',201,'snow_war Palette',0,22),
+  (5,'a3621','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,36,21,115200,67200,0,1,0,0,190,1,2300,'[[36,21]]',201,'snow_war Palette',0,22),
+  (5,'a4221','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,42,21,134400,67200,0,1,0,0,234,1,2300,'[[42,21]]',201,'snow_war Palette',0,22),
+  (5,'a822','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,8,22,25600,70400,0,1,0,0,34,1,2300,'[[8,22]]',201,'snow_war Palette',0,22),
+  (5,'a922','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,9,22,28800,70400,0,1,0,0,38,1,2300,'[[9,22]]',201,'snow_war Palette',0,22),
+  (5,'a1022','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,10,22,32000,70400,0,1,0,0,39,1,2300,'[[10,22]]',201,'snow_war Palette',0,22),
+  (5,'a1322','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,13,22,41600,70400,0,1,0,0,56,1,2300,'[[13,22]]',201,'snow_war Palette',0,22),
+  (5,'a1922','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,19,22,60800,70400,0,1,0,0,95,1,2300,'[[19,22]]',201,'snow_war Palette',0,22),
+  (5,'a3322','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,33,22,105600,70400,0,1,0,0,177,1,2300,'[[33,22]]',201,'snow_war Palette',0,22),
+  (5,'a3622','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,36,22,115200,70400,0,1,0,0,196,1,2300,'[[36,22]]',201,'snow_war Palette',0,22),
+  (5,'a4222','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,42,22,134400,70400,0,1,0,0,242,1,2300,'[[42,22]]',201,'snow_war Palette',0,22),
+  (5,'a1023','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,10,23,32000,73600,0,1,0,0,42,1,2300,'[[10,23]]',201,'snow_war Palette',0,22),
+  (5,'a1323','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,13,23,41600,73600,0,1,0,0,62,1,2300,'[[13,23]]',201,'snow_war Palette',0,22),
+  (5,'a1923','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,19,23,60800,73600,0,1,0,0,104,1,2300,'[[19,23]]',201,'snow_war Palette',0,22),
+  (5,'a3323','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,33,23,105600,73600,0,1,0,0,183,1,2300,'[[33,23]]',201,'snow_war Palette',0,22),
+  (5,'a3623','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,36,23,115200,73600,0,1,0,0,202,1,2300,'[[36,23]]',201,'snow_war Palette',0,22),
+  (5,'a3923','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,39,23,124800,73600,0,1,0,0,223,1,2300,'[[39,23]]',201,'snow_war Palette',0,22),
+  (5,'a4023','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,40,23,128000,73600,0,1,0,0,233,1,2300,'[[40,23]]',201,'snow_war Palette',0,22),
+  (5,'a4123','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,41,23,131200,73600,0,1,0,0,241,1,2300,'[[41,23]]',201,'snow_war Palette',0,22),
+  (5,'a4223','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,42,23,134400,73600,0,1,0,0,249,1,2300,'[[42,23]]',201,'snow_war Palette',0,22),
+  (5,'i324','sw_tree3','hh_room_snowwar_arena_sw_tree3_32_a_0_0',3608,2341,3,24,9600,76800,0,1,0,0,16,3,4600,'[[3,24]]',201,'snow_war Palette',4,95),
+  (5,'a1024','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,10,24,32000,76800,0,1,0,0,49,1,2300,'[[10,24]]',201,'snow_war Palette',0,22),
+  (5,'a1324','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,13,24,41600,76800,0,1,0,0,68,1,2300,'[[13,24]]',201,'snow_war Palette',0,22),
+  (5,'a1624','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,16,24,51200,76800,0,1,0,0,86,1,2300,'[[16,24]]',201,'snow_war Palette',0,22),
+  (5,'a1724','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,17,24,54400,76800,0,1,0,0,94,1,2300,'[[17,24]]',201,'snow_war Palette',0,22),
+  (5,'a1824','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,18,24,57600,76800,0,1,0,0,103,1,2300,'[[18,24]]',201,'snow_war Palette',0,22),
+  (5,'a1924','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,19,24,60800,76800,0,1,0,0,112,1,2300,'[[19,24]]',201,'snow_war Palette',0,22),
+  (5,'a3324','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,33,24,105600,76800,0,1,0,0,189,1,2300,'[[33,24]]',201,'snow_war Palette',0,22),
+  (5,'a3624','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,36,24,115200,76800,0,1,0,0,209,1,2300,'[[36,24]]',201,'snow_war Palette',0,22),
+  (5,'a3924','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,39,24,124800,76800,0,1,0,0,232,1,2300,'[[39,24]]',201,'snow_war Palette',0,22),
+  (5,'a4024','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,40,24,128000,76800,0,1,0,0,240,1,2300,'[[40,24]]',201,'snow_war Palette',0,22),
+  (5,'a4124','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,41,24,131200,76800,0,1,0,0,248,1,2300,'[[41,24]]',201,'snow_war Palette',0,22),
+  (5,'a4224','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,42,24,134400,76800,0,1,0,0,256,1,2300,'[[42,24]]',201,'snow_war Palette',0,22),
+  (5,'a825','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,8,25,25600,80000,0,1,0,0,41,1,2300,'[[8,25]]',201,'snow_war Palette',0,22),
+  (5,'a925','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,9,25,28800,80000,0,1,0,0,48,1,2300,'[[9,25]]',201,'snow_war Palette',0,22),
+  (5,'a1025','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,10,25,32000,80000,0,1,0,0,55,1,2300,'[[10,25]]',201,'snow_war Palette',0,22),
+  (5,'h4926','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,49,26,156800,83200,0,1,0,0,304,3,4600,'[[49,26]]',201,'snow_war Palette',3,91),
+  (5,'a1327','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,13,27,41600,86400,0,1,0,0,85,1,2300,'[[13,27]]',201,'snow_war Palette',0,22),
+  (5,'a1627','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,16,27,51200,86400,0,1,0,0,111,1,2300,'[[16,27]]',201,'snow_war Palette',0,22),
+  (5,'a1727','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,17,27,54400,86400,0,1,0,0,120,1,2300,'[[17,27]]',201,'snow_war Palette',0,22),
+  (5,'a1827','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,18,27,57600,86400,0,1,0,0,127,1,2300,'[[18,27]]',201,'snow_war Palette',0,22),
+  (5,'a1927','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,19,27,60800,86400,0,1,0,0,135,1,2300,'[[19,27]]',201,'snow_war Palette',0,22),
+  (5,'a3327','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,33,27,105600,86400,0,1,0,0,208,1,2300,'[[33,27]]',201,'snow_war Palette',0,22),
+  (5,'a3427','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,34,27,108800,86400,0,1,0,0,214,1,2300,'[[34,27]]',201,'snow_war Palette',0,22),
+  (5,'a3527','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,35,27,112000,86400,0,0,0,0,222,1,2300,'[[35,27]]',201,'snow_war Palette',0,22),
+  (5,'a3627','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,36,27,115200,86400,0,1,0,0,231,1,2300,'[[36,27]]',201,'snow_war Palette',0,22),
+  (5,'a3927','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,39,27,124800,86400,0,1,0,0,255,1,2300,'[[39,27]]',201,'snow_war Palette',0,22),
+  (5,'a4027','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,40,27,128000,86400,0,1,0,0,260,1,2300,'[[40,27]]',201,'snow_war Palette',0,22),
+  (5,'a4127','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,41,27,131200,86400,0,1,0,0,264,1,2300,'[[41,27]]',201,'snow_war Palette',0,22),
+  (5,'a4227','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,42,27,134400,86400,0,1,0,0,269,1,2300,'[[42,27]]',201,'snow_war Palette',0,22),
+  (5,'a4327','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,43,27,137600,86400,0,1,0,0,275,1,2300,'[[43,27]]',201,'snow_war Palette',0,22),
+  (5,'a4427','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,44,27,140800,86400,0,1,0,0,282,1,2300,'[[44,27]]',201,'snow_war Palette',0,22),
+  (5,'a828','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,8,28,25600,89600,0,1,0,0,61,1,2300,'[[8,28]]',201,'snow_war Palette',0,22),
+  (5,'a928','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,9,28,28800,89600,0,1,0,0,67,1,2300,'[[9,28]]',201,'snow_war Palette',0,22),
+  (5,'a1028','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,10,28,32000,89600,0,1,0,0,74,1,2300,'[[10,28]]',201,'snow_war Palette',0,22),
+  (5,'a1328','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,13,28,41600,89600,0,1,0,0,93,1,2300,'[[13,28]]',201,'snow_war Palette',0,22),
+  (5,'a1928','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,19,28,60800,89600,0,1,0,0,142,1,2300,'[[19,28]]',201,'snow_war Palette',0,22),
+  (5,'a3328','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,33,28,105600,89600,0,1,0,0,213,1,2300,'[[33,28]]',201,'snow_war Palette',0,22),
+  (5,'a1029','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,10,29,32000,92800,0,1,0,0,79,1,2300,'[[10,29]]',201,'snow_war Palette',0,22),
+  (5,'a1329','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,13,29,41600,92800,0,1,0,0,102,1,2300,'[[13,29]]',201,'snow_war Palette',0,22),
+  (5,'a1929','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,19,29,60800,92800,0,1,0,0,148,1,2300,'[[19,29]]',201,'snow_war Palette',0,22),
+  (5,'a3329','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,33,29,105600,92800,0,1,0,0,221,1,2300,'[[33,29]]',201,'snow_war Palette',0,22),
+  (5,'a1030','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,10,30,32000,96000,0,1,0,0,84,1,2300,'[[10,30]]',201,'snow_war Palette',0,22),
+  (5,'a1330','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,13,30,41600,96000,0,1,0,0,110,1,2300,'[[13,30]]',201,'snow_war Palette',0,22),
+  (5,'a1630','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,16,30,51200,96000,0,1,0,0,134,1,2300,'[[16,30]]',201,'snow_war Palette',0,22),
+  (5,'a1930','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,19,30,60800,96000,0,1,0,0,153,1,2300,'[[19,30]]',201,'snow_war Palette',0,22),
+  (5,'a3330','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,33,30,105600,96000,0,1,0,0,230,1,2300,'[[33,30]]',201,'snow_war Palette',0,22),
+  (5,'a3430','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,34,30,108800,96000,0,1,0,0,239,1,2300,'[[34,30]]',201,'snow_war Palette',0,22),
+  (5,'a3530','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,35,30,112000,96000,0,1,0,0,247,1,2300,'[[35,30]]',201,'snow_war Palette',0,22),
+  (5,'a3630','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,36,30,115200,96000,0,1,0,0,254,1,2300,'[[36,30]]',201,'snow_war Palette',0,22),
+  (5,'a3930','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,39,30,124800,96000,0,1,0,0,268,1,2300,'[[39,30]]',201,'snow_war Palette',0,22),
+  (5,'a4030','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,40,30,128000,96000,0,1,0,0,274,1,2300,'[[40,30]]',201,'snow_war Palette',0,22),
+  (5,'a4130','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,41,30,131200,96000,0,1,0,0,281,1,2300,'[[41,30]]',201,'snow_war Palette',0,22),
+  (5,'a4230','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,42,30,134400,96000,0,1,0,0,288,1,2300,'[[42,30]]',201,'snow_war Palette',0,22),
+  (5,'a4330','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,43,30,137600,96000,0,1,0,0,293,1,2300,'[[43,30]]',201,'snow_war Palette',0,22),
+  (5,'a4430','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,44,30,140800,96000,0,1,0,0,298,1,2300,'[[44,30]]',201,'snow_war Palette',0,22),
+  (5,'a1031','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,10,31,32000,99200,0,1,0,0,92,1,2300,'[[10,31]]',201,'snow_war Palette',0,22),
+  (5,'a1331','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,13,31,41600,99200,0,1,0,0,119,1,2300,'[[13,31]]',201,'snow_war Palette',0,22),
+  (5,'a1631','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,16,31,51200,99200,0,1,0,0,141,1,2300,'[[16,31]]',201,'snow_war Palette',0,22),
+  (5,'a1931','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,19,31,60800,99200,0,1,0,0,157,1,2300,'[[19,31]]',201,'snow_war Palette',0,22),
+  (5,'a1032','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,10,32,32000,102400,0,1,0,0,101,1,2300,'[[10,32]]',201,'snow_war Palette',0,22),
+  (5,'a1332','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,13,32,41600,102400,0,1,0,0,126,1,2300,'[[13,32]]',201,'snow_war Palette',0,22),
+  (5,'a1632','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,16,32,51200,102400,0,1,0,0,147,1,2300,'[[16,32]]',201,'snow_war Palette',0,22),
+  (5,'a1932','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,19,32,60800,102400,0,1,0,0,160,1,2300,'[[19,32]]',201,'snow_war Palette',0,22),
+  (5,'a1033','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,10,33,32000,105600,0,1,0,100000,117,1,2300,'[[10,33]]',201,'snow_war Palette',0,22),
+  (5,'a1333','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,13,33,41600,105600,0,1,0,0,133,1,2300,'[[13,33]]',201,'snow_war Palette',0,22),
+  (5,'a1433','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,14,33,44800,105600,0,1,0,0,140,1,2300,'[[14,33]]',201,'snow_war Palette',0,22),
+  (5,'a1533','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,15,33,48000,105600,0,1,0,0,146,1,2300,'[[15,33]]',201,'snow_war Palette',0,22),
+  (5,'a1633','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,16,33,51200,105600,0,1,0,0,152,1,2300,'[[16,33]]',201,'snow_war Palette',0,22),
+  (5,'a1933','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,19,33,60800,105600,0,1,0,0,164,1,2300,'[[19,33]]',201,'snow_war Palette',0,22),
+  (5,'a2233','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,22,33,70400,105600,0,1,0,0,176,1,2300,'[[22,33]]',201,'snow_war Palette',0,22),
+  (5,'a2333','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,23,33,73600,105600,0,1,0,0,182,1,2300,'[[23,33]]',201,'snow_war Palette',0,22),
+  (5,'a2433','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,24,33,76800,105600,0,1,0,0,188,1,2300,'[[24,33]]',201,'snow_war Palette',0,22),
+  (5,'a2533','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,25,33,80000,105600,0,1,0,0,195,1,2300,'[[25,33]]',201,'snow_war Palette',0,22),
+  (5,'a2633','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,26,33,83200,105600,0,1,0,0,201,1,2300,'[[26,33]]',201,'snow_war Palette',0,22),
+  (5,'a2933','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,29,33,92800,105600,0,1,0,0,220,1,2300,'[[29,33]]',201,'snow_war Palette',0,22),
+  (5,'a3033','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,30,33,96000,105600,0,1,0,0,229,1,2300,'[[30,33]]',201,'snow_war Palette',0,22),
+  (5,'a3133','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,31,33,99200,105600,0,1,0,0,238,1,2300,'[[31,33]]',201,'snow_war Palette',0,22),
+  (5,'a3233','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,32,33,102400,105600,0,1,0,0,246,1,2300,'[[32,33]]',201,'snow_war Palette',0,22),
+  (5,'a3333','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,33,33,105600,105600,0,1,0,0,253,1,2300,'[[33,33]]',201,'snow_war Palette',0,22),
+  (5,'a3433','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,34,33,108800,105600,0,1,0,0,259,1,2300,'[[34,33]]',201,'snow_war Palette',0,22),
+  (5,'a3533','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,35,33,112000,105600,0,1,0,0,263,1,2300,'[[35,33]]',201,'snow_war Palette',0,22),
+  (5,'a3833','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,38,33,121600,105600,0,1,0,0,280,1,2300,'[[38,33]]',201,'snow_war Palette',0,22),
+  (5,'a3933','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,39,33,124800,105600,0,1,0,0,287,1,2300,'[[39,33]]',201,'snow_war Palette',0,22),
+  (5,'a4033','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,40,33,128000,105600,0,1,0,0,292,1,2300,'[[40,33]]',201,'snow_war Palette',0,22),
+  (5,'a4133','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,41,33,131200,105600,0,1,0,0,297,1,2300,'[[41,33]]',201,'snow_war Palette',0,22),
+  (5,'a4233','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,42,33,134400,105600,0,1,0,0,303,1,2300,'[[42,33]]',201,'snow_war Palette',0,22),
+  (5,'a4333','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,43,33,137600,105600,0,1,0,0,310,1,2300,'[[43,33]]',201,'snow_war Palette',0,22),
+  (5,'a1934','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,19,34,60800,108800,0,1,0,0,168,1,2300,'[[19,34]]',201,'snow_war Palette',0,22),
+  (5,'a2234','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,22,34,70400,108800,0,1,0,0,181,1,2300,'[[22,34]]',201,'snow_war Palette',0,22),
+  (5,'a2634','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,26,34,83200,108800,0,1,0,0,207,1,2300,'[[26,34]]',201,'snow_war Palette',0,22),
+  (5,'a2934','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,29,34,92800,108800,0,1,0,0,228,1,2300,'[[29,34]]',201,'snow_war Palette',0,22),
+  (5,'a3834','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,38,34,121600,108800,0,1,0,0,286,1,2300,'[[38,34]]',201,'snow_war Palette',0,22),
+  (5,'a4334','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,43,34,137600,108800,0,1,0,0,316,1,2300,'[[43,34]]',201,'snow_war Palette',0,22),
+  (5,'a1935','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,19,35,60800,112000,0,1,0,0,172,1,2300,'[[19,35]]',201,'snow_war Palette',0,22),
+  (5,'a2235','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,22,35,70400,112000,0,1,0,0,187,1,2300,'[[22,35]]',201,'snow_war Palette',0,22),
+  (5,'a2635','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,26,35,83200,112000,0,1,0,0,212,1,2300,'[[26,35]]',201,'snow_war Palette',0,22),
+  (5,'a2935','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,29,35,92800,112000,0,1,0,0,237,1,2300,'[[29,35]]',201,'snow_war Palette',0,22),
+  (5,'a3835','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,38,35,121600,112000,0,1,0,0,291,1,2300,'[[38,35]]',201,'snow_war Palette',0,22),
+  (5,'a3935','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,39,35,124800,112000,0,1,0,0,296,1,2300,'[[39,35]]',201,'snow_war Palette',0,22),
+  (5,'a4035','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,40,35,128000,112000,0,1,0,0,302,1,2300,'[[40,35]]',201,'snow_war Palette',0,22),
+  (5,'a4135','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,41,35,131200,112000,0,1,0,0,309,1,2300,'[[41,35]]',201,'snow_war Palette',0,22),
+  (5,'a4235','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,42,35,134400,112000,0,1,0,0,315,1,2300,'[[42,35]]',201,'snow_war Palette',0,22),
+  (5,'a4335','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,43,35,137600,112000,0,1,0,0,320,1,2300,'[[43,35]]',201,'snow_war Palette',0,22),
+  (5,'a1636','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,16,36,51200,115200,0,1,0,0,163,1,2300,'[[16,36]]',201,'snow_war Palette',0,22),
+  (5,'a1736','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,17,36,54400,115200,0,1,0,0,167,1,2300,'[[17,36]]',201,'snow_war Palette',0,22),
+  (5,'a1836','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,18,36,57600,115200,0,1,0,0,171,1,2300,'[[18,36]]',201,'snow_war Palette',0,22),
+  (5,'a1936','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,19,36,60800,115200,0,1,0,0,175,1,2300,'[[19,36]]',201,'snow_war Palette',0,22),
+  (5,'a2236','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,22,36,70400,115200,0,1,0,0,194,1,2300,'[[22,36]]',201,'snow_war Palette',0,22),
+  (5,'a2636','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,26,36,83200,115200,0,1,0,0,219,1,2300,'[[26,36]]',201,'snow_war Palette',0,22),
+  (5,'a2936','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,29,36,92800,115200,0,1,0,0,245,1,2300,'[[29,36]]',201,'snow_war Palette',0,22),
+  (5,'a3236','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,32,36,102400,115200,0,1,0,0,262,1,2300,'[[32,36]]',201,'snow_war Palette',0,22),
+  (5,'a3336','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,33,36,105600,115200,0,1,0,0,267,1,2300,'[[33,36]]',201,'snow_war Palette',0,22),
+  (5,'a3436','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,34,36,108800,115200,0,1,0,0,273,1,2300,'[[34,36]]',201,'snow_war Palette',0,22),
+  (5,'a3536','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,35,36,112000,115200,0,1,0,0,279,1,2300,'[[35,36]]',201,'snow_war Palette',0,22),
+  (5,'a2237','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,22,37,70400,118400,0,1,0,0,200,1,2300,'[[22,37]]',201,'snow_war Palette',0,22),
+  (5,'a2337','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,23,37,73600,118400,0,1,0,0,206,1,2300,'[[23,37]]',201,'snow_war Palette',0,22),
+  (5,'a2437','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,24,37,76800,118400,0,1,0,0,211,1,2300,'[[24,37]]',201,'snow_war Palette',0,22),
+  (5,'a2537','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,25,37,80000,118400,0,1,0,0,218,1,2300,'[[25,37]]',201,'snow_war Palette',0,22),
+  (5,'a2637','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,26,37,83200,118400,0,1,0,0,227,1,2300,'[[26,37]]',201,'snow_war Palette',0,22),
+  (5,'a2937','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,29,37,92800,118400,0,1,0,0,252,1,2300,'[[29,37]]',201,'snow_war Palette',0,22),
+  (5,'a3237','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,32,37,102400,118400,0,1,0,0,266,1,2300,'[[32,37]]',201,'snow_war Palette',0,22),
+  (5,'a3337','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,33,37,105600,118400,0,1,0,0,272,1,2300,'[[33,37]]',201,'snow_war Palette',0,22),
+  (5,'a3437','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,34,37,108800,118400,0,1,0,0,278,1,2300,'[[34,37]]',201,'snow_war Palette',0,22),
+  (5,'a3537','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,35,37,112000,118400,0,1,0,0,285,1,2300,'[[35,37]]',201,'snow_war Palette',0,22),
+  (5,'a3838','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,38,38,121600,121600,0,1,0,0,308,1,2300,'[[38,38]]',201,'snow_war Palette',0,22),
+  (5,'a3938','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,39,38,124800,121600,0,1,0,0,314,1,2300,'[[39,38]]',201,'snow_war Palette',0,22),
+  (5,'a4038','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,40,38,128000,121600,0,1,0,0,319,1,2300,'[[40,38]]',201,'snow_war Palette',0,22),
+  (5,'a4138','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,41,38,131200,121600,0,1,0,0,323,1,2300,'[[41,38]]',201,'snow_war Palette',0,22),
+  (5,'a1639','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,16,39,51200,124800,0,1,0,100000,179,1,2300,'[[16,39]]',201,'snow_war Palette',0,22),
+  (5,'a1739','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,17,39,54400,124800,0,1,0,0,180,1,2300,'[[17,39]]',201,'snow_war Palette',0,22),
+  (5,'a1839','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,18,39,57600,124800,0,1,0,0,186,1,2300,'[[18,39]]',201,'snow_war Palette',0,22),
+  (5,'a1939','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,19,39,60800,124800,0,1,0,0,193,1,2300,'[[19,39]]',201,'snow_war Palette',0,22),
+  (5,'a3839','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,38,39,121600,124800,0,1,0,0,313,1,2300,'[[38,39]]',201,'snow_war Palette',0,22),
+  (5,'a4139','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,41,39,131200,124800,0,1,0,0,326,1,2300,'[[41,39]]',201,'snow_war Palette',0,22),
+  (5,'a1940','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,19,40,60800,128000,0,1,0,0,199,1,2300,'[[19,40]]',201,'snow_war Palette',0,22),
+  (5,'a2240','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,22,40,70400,128000,0,1,0,0,217,1,2300,'[[22,40]]',201,'snow_war Palette',0,22),
+  (5,'a2340','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,23,40,73600,128000,0,1,0,0,226,1,2300,'[[23,40]]',201,'snow_war Palette',0,22),
+  (5,'a2440','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,24,40,76800,128000,0,1,0,0,236,1,2300,'[[24,40]]',201,'snow_war Palette',0,22),
+  (5,'a2540','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,25,40,80000,128000,0,1,0,0,244,1,2300,'[[25,40]]',201,'snow_war Palette',0,22),
+  (5,'a2640','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,26,40,83200,128000,0,1,0,0,251,1,2300,'[[26,40]]',201,'snow_war Palette',0,22),
+  (5,'a2940','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,29,40,92800,128000,0,1,0,0,265,1,2300,'[[29,40]]',201,'snow_war Palette',0,22),
+  (5,'a3040','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,30,40,96000,128000,0,1,0,0,271,1,2300,'[[30,40]]',201,'snow_war Palette',0,22),
+  (5,'a3140','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,31,40,99200,128000,0,1,0,0,277,1,2300,'[[31,40]]',201,'snow_war Palette',0,22),
+  (5,'a3240','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,32,40,102400,128000,0,1,0,0,284,1,2300,'[[32,40]]',201,'snow_war Palette',0,22),
+  (5,'a3540','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,35,40,112000,128000,0,1,0,0,301,1,2300,'[[35,40]]',201,'snow_war Palette',0,22),
+  (5,'a3640','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,36,40,115200,128000,0,1,0,0,307,1,2300,'[[36,40]]',201,'snow_war Palette',0,22),
+  (5,'a3740','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,37,40,118400,128000,0,1,0,0,312,1,2300,'[[37,40]]',201,'snow_war Palette',0,22),
+  (5,'a3840','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,38,40,121600,128000,0,1,0,0,318,1,2300,'[[38,40]]',201,'snow_war Palette',0,22),
+  (5,'a4140','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,41,40,131200,128000,0,1,0,100000,329,1,2300,'[[41,40]]',201,'snow_war Palette',0,22),
+  (5,'a1941','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,19,41,60800,131200,0,1,0,0,205,1,2300,'[[19,41]]',201,'snow_war Palette',0,22),
+  (5,'a2241','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,22,41,70400,131200,0,1,0,0,225,1,2300,'[[22,41]]',201,'snow_war Palette',0,22),
+  (5,'a2641','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,26,41,83200,131200,0,1,0,0,258,1,2300,'[[26,41]]',201,'snow_war Palette',0,22),
+  (5,'a2941','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,29,41,92800,131200,0,1,0,0,270,1,2300,'[[29,41]]',201,'snow_war Palette',0,22),
+  (5,'a3241','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,32,41,102400,131200,0,1,0,0,290,1,2300,'[[32,41]]',201,'snow_war Palette',0,22),
+  (5,'a4141','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,41,41,131200,131200,0,1,0,100000,331,1,2300,'[[41,41]]',201,'snow_war Palette',0,22),
+  (5,'a1942','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,19,42,60800,134400,0,1,0,100000,216,1,2300,'[[19,42]]',201,'snow_war Palette',0,22),
+  (5,'a2242','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,22,42,70400,134400,0,1,0,0,235,1,2300,'[[22,42]]',201,'snow_war Palette',0,22),
+  (5,'a2342','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,23,42,73600,134400,0,1,0,0,243,1,2300,'[[23,42]]',201,'snow_war Palette',0,22),
+  (5,'a2442','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,24,42,76800,134400,0,1,0,0,250,1,2300,'[[24,42]]',201,'snow_war Palette',0,22),
+  (5,'a2542','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,25,42,80000,134400,0,1,0,0,257,1,2300,'[[25,42]]',201,'snow_war Palette',0,22),
+  (5,'a2642','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,26,42,83200,134400,0,1,0,0,261,1,2300,'[[26,42]]',201,'snow_war Palette',0,22),
+  (5,'a2942','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,29,42,92800,134400,0,1,0,0,276,1,2300,'[[29,42]]',201,'snow_war Palette',0,22),
+  (5,'a3242','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,32,42,102400,134400,0,1,0,0,295,1,2300,'[[32,42]]',201,'snow_war Palette',0,22),
+  (5,'a4142','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,41,42,131200,134400,0,1,0,100000,333,1,2300,'[[41,42]]',201,'snow_war Palette',0,22),
+  (5,'a2943','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,29,43,92800,137600,0,1,0,0,283,1,2300,'[[29,43]]',201,'snow_war Palette',0,22),
+  (5,'a3243','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,32,43,102400,137600,0,1,0,0,300,1,2300,'[[32,43]]',201,'snow_war Palette',0,22),
+  (5,'a3543','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,35,43,112000,137600,0,1,0,0,317,1,2300,'[[35,43]]',201,'snow_war Palette',0,22),
+  (5,'a3643','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,36,43,115200,137600,0,1,0,0,322,1,2300,'[[36,43]]',201,'snow_war Palette',0,22),
+  (5,'a3743','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,37,43,118400,137600,0,1,0,0,325,1,2300,'[[37,43]]',201,'snow_war Palette',0,22),
+  (5,'a3843','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,38,43,121600,137600,0,1,0,100000,328,1,2300,'[[38,43]]',201,'snow_war Palette',0,22),
+  (5,'a3943','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,39,43,124800,137600,0,1,0,100000,330,1,2300,'[[39,43]]',201,'snow_war Palette',0,22),
+  (5,'a4043','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,40,43,128000,137600,0,1,0,100000,332,1,2300,'[[40,43]]',201,'snow_war Palette',0,22),
+  (5,'a4143','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,41,43,131200,137600,0,1,0,100000,334,1,2300,'[[41,43]]',201,'snow_war Palette',0,22),
+  (5,'a2944','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,29,44,92800,140800,0,1,0,0,289,1,2300,'[[29,44]]',201,'snow_war Palette',0,22),
+  (5,'a3244','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,32,44,102400,140800,0,1,0,0,306,1,2300,'[[32,44]]',201,'snow_war Palette',0,22),
+  (5,'a3544','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,35,44,112000,140800,0,1,0,0,321,1,2300,'[[35,44]]',201,'snow_war Palette',0,22),
+  (5,'a2945','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,29,45,92800,144000,0,1,0,0,294,1,2300,'[[29,45]]',201,'snow_war Palette',0,22),
+  (5,'a3045','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,30,45,96000,144000,0,1,0,0,299,1,2300,'[[30,45]]',201,'snow_war Palette',0,22),
+  (5,'a3145','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,31,45,99200,144000,0,1,0,0,305,1,2300,'[[31,45]]',201,'snow_war Palette',0,22),
+  (5,'a3245','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,32,45,102400,144000,0,1,0,0,311,1,2300,'[[32,45]]',201,'snow_war Palette',0,22),
+  (5,'a3545','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,35,45,112000,144000,0,1,0,0,324,1,2300,'[[35,45]]',201,'snow_war Palette',0,22),
+  (5,'a3546','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,35,46,112000,147200,0,1,0,100000,327,1,2300,'[[35,46]]',201,'snow_war Palette',0,22),
+  (6,'g212','sw_tree1','hh_room_snowwar_arena_sw_tree1_32_a_0_0',3604,2343,21,2,67200,6400,0,1,0,0,1,3,4600,'[[21,2]]',201,'snow_war Palette',4,100),
+  (6,'h232','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,23,2,73600,6400,0,1,0,0,2,3,4600,'[[23,2]]',201,'snow_war Palette',3,91),
+  (6,'i264','sw_tree3','hh_room_snowwar_arena_sw_tree3_32_a_0_0',3608,2341,26,4,83200,12800,0,1,0,0,12,3,4600,'[[26,4]]',201,'snow_war Palette',4,95),
+  (6,'j157','sw_tree4','hh_room_snowwar_arena_sw_tree4_32_a_0_0',3610,2340,15,7,48000,22400,0,1,0,0,0,3,4600,'[[15,7]]',201,'snow_war Palette',4,94),
+  (6,'b207','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,20,7,64000,22400,0,1,0,0,5,2,4600,'[[20,7]]',201,'snow_war Palette',0,38),
+  (6,'b208','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,20,8,64000,25600,0,1,0,0,7,2,4600,'[[20,8]]',201,'snow_war Palette',0,38),
+  (6,'b298','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,29,8,92800,25600,0,1,0,0,29,2,4600,'[[29,8]]',201,'snow_war Palette',0,38),
+  (6,'b209','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,20,9,64000,28800,0,1,0,0,9,2,4600,'[[20,9]]',201,'snow_war Palette',0,38),
+  (6,'b299','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,29,9,92800,28800,0,1,0,0,33,2,4600,'[[29,9]]',201,'snow_war Palette',0,38),
+  (6,'b2010','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,20,10,64000,32000,0,1,0,0,11,2,4600,'[[20,10]]',201,'snow_war Palette',0,38),
+  (6,'b2910','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,29,10,92800,32000,0,1,0,0,37,2,4600,'[[29,10]]',201,'snow_war Palette',0,38),
+  (6,'i1511','sw_tree3','hh_room_snowwar_arena_sw_tree3_32_a_0_0',3608,2341,15,11,48000,35200,0,1,0,0,3,3,4600,'[[15,11]]',201,'snow_war Palette',4,95),
+  (6,'b2011','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,20,11,64000,35200,0,1,0,0,14,2,4600,'[[20,11]]',201,'snow_war Palette',0,38),
+  (6,'b2911','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,29,11,92800,35200,0,1,0,0,40,2,4600,'[[29,11]]',201,'snow_war Palette',0,38),
+  (6,'b2012','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,20,12,64000,38400,0,1,0,0,17,2,4600,'[[20,12]]',201,'snow_war Palette',0,38),
+  (6,'b2112','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,21,12,67200,38400,0,1,0,0,19,2,4600,'[[21,12]]',201,'snow_war Palette',0,38),
+  (6,'b2212','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,22,12,70400,38400,0,1,0,0,21,2,4600,'[[22,12]]',201,'snow_war Palette',0,38),
+  (6,'a2312','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,23,12,73600,38400,0,0,0,0,23,1,2300,'[[23,12]]',201,'snow_war Palette',0,22),
+  (6,'a2612','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,26,12,83200,38400,0,1,0,0,32,1,2300,'[[26,12]]',201,'snow_war Palette',0,22),
+  (6,'b2712','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,27,12,86400,38400,0,1,0,0,36,2,4600,'[[27,12]]',201,'snow_war Palette',0,38),
+  (6,'b2812','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,28,12,89600,38400,0,1,0,0,39,2,4600,'[[28,12]]',201,'snow_war Palette',0,38),
+  (6,'b2912','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,29,12,92800,38400,0,1,0,0,42,2,4600,'[[29,12]]',201,'snow_war Palette',0,38),
+  (6,'h3312','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,33,12,105600,38400,0,1,0,0,45,3,4600,'[[33,12]]',201,'snow_war Palette',3,91),
+  (6,'a2313','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,23,13,73600,41600,0,1,0,0,26,1,2300,'[[23,13]]',201,'snow_war Palette',0,22),
+  (6,'a2613','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,26,13,83200,41600,0,1,0,0,35,1,2300,'[[26,13]]',201,'snow_war Palette',0,22),
+  (6,'a1217','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,12,17,38400,54400,0,1,0,0,8,1,2300,'[[12,17]]',201,'snow_war Palette',0,22),
+  (6,'b1218','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,12,18,38400,57600,0,1,0,0,10,2,4600,'[[12,18]]',201,'snow_war Palette',0,38),
+  (6,'b1219','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,12,19,38400,60800,0,1,0,0,13,2,4600,'[[12,19]]',201,'snow_war Palette',0,38),
+  (6,'b1220','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,12,20,38400,64000,0,1,0,0,16,2,4600,'[[12,20]]',201,'snow_war Palette',0,38),
+  (6,'b1221','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,12,21,38400,67200,0,1,0,0,18,2,4600,'[[12,21]]',201,'snow_war Palette',0,38),
+  (6,'g622','sw_tree1','hh_room_snowwar_arena_sw_tree1_32_a_0_0',3604,2343,6,22,19200,70400,0,1,0,0,6,3,4600,'[[6,22]]',201,'snow_war Palette',4,100),
+  (6,'c1222','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,12,22,38400,70400,0,1,0,0,20,3,6900,'[[12,22]]',201,'snow_war Palette',0,54),
+  (6,'b1322','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,13,22,41600,70400,0,1,0,0,22,2,4600,'[[13,22]]',201,'snow_war Palette',0,38),
+  (6,'a1422','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,14,22,44800,70400,0,1,0,0,25,1,2300,'[[14,22]]',201,'snow_war Palette',0,22),
+  (6,'g3522','sw_tree1','hh_room_snowwar_arena_sw_tree1_32_a_0_0',3604,2343,35,22,112000,70400,0,1,0,0,64,3,4600,'[[35,22]]',201,'snow_war Palette',4,100),
+  (6,'b4122','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,41,22,131200,70400,0,1,0,0,66,2,4600,'[[41,22]]',201,'snow_war Palette',0,38),
+  (6,'b4222','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,42,22,134400,70400,0,1,0,0,68,2,4600,'[[42,22]]',201,'snow_war Palette',0,38),
+  (6,'a4322','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,43,22,137600,70400,0,1,0,0,71,1,2300,'[[43,22]]',201,'snow_war Palette',0,22),
+  (6,'c4123','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,41,23,131200,73600,0,1,0,0,67,3,6900,'[[41,23]]',201,'snow_war Palette',0,54),
+  (6,'h324','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,3,24,9600,76800,0,1,0,0,4,3,4600,'[[3,24]]',201,'snow_war Palette',3,91),
+  (6,'c1224','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,12,24,38400,76800,0,1,0,0,24,3,6900,'[[12,24]]',201,'snow_war Palette',0,54),
+  (6,'b1324','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,13,24,41600,76800,0,1,0,0,28,2,4600,'[[13,24]]',201,'snow_war Palette',0,38),
+  (6,'a1424','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,14,24,44800,76800,0,1,0,0,31,1,2300,'[[14,24]]',201,'snow_war Palette',0,22),
+  (6,'a2424','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,24,24,76800,76800,0,1,0,0,46,1,2300,'[[24,24]]',201,'snow_war Palette',0,22),
+  (6,'a2524','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,25,24,80000,76800,0,1,0,0,48,1,2300,'[[25,24]]',201,'snow_war Palette',0,22),
+  (6,'a2624','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,26,24,83200,76800,0,1,0,0,50,1,2300,'[[26,24]]',201,'snow_war Palette',0,22),
+  (6,'a2724','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,27,24,86400,76800,0,1,0,0,52,1,2300,'[[27,24]]',201,'snow_war Palette',0,22),
+  (6,'a2824','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,28,24,89600,76800,0,1,0,0,55,1,2300,'[[28,24]]',201,'snow_war Palette',0,22),
+  (6,'b4124','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,41,24,131200,76800,0,1,0,0,70,2,4600,'[[41,24]]',201,'snow_war Palette',0,38),
+  (6,'b1225','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,12,25,38400,80000,0,1,0,0,27,2,4600,'[[12,25]]',201,'snow_war Palette',0,38),
+  (6,'a2425','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,24,25,76800,80000,0,1,0,0,47,1,2300,'[[24,25]]',201,'snow_war Palette',0,22),
+  (6,'a2825','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,28,25,89600,80000,0,1,0,0,57,1,2300,'[[28,25]]',201,'snow_war Palette',0,22),
+  (6,'c4125','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,41,25,131200,80000,0,1,0,0,74,3,6900,'[[41,25]]',201,'snow_war Palette',0,54),
+  (6,'b1226','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,12,26,38400,83200,0,1,0,0,30,2,4600,'[[12,26]]',201,'snow_war Palette',0,38),
+  (6,'a2426','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,24,26,76800,83200,0,1,0,0,49,1,2300,'[[24,26]]',201,'snow_war Palette',0,22),
+  (6,'k2626','obst_duck','hh_room_snowwar_arena_obst_duck_32_a_0_0',3594,2348,26,26,83200,83200,0,1,0,0,54,1,2300,'[[26,26]]',201,'snow_war Palette',-3,28),
+  (6,'a2826','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,28,26,89600,83200,0,1,0,0,60,1,2300,'[[28,26]]',201,'snow_war Palette',0,22),
+  (6,'b4126','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,41,26,131200,83200,0,1,0,0,77,2,4600,'[[41,26]]',201,'snow_war Palette',0,38),
+  (6,'j527','sw_tree4','hh_room_snowwar_arena_sw_tree4_32_a_0_0',3610,2340,5,27,16000,86400,0,1,0,0,15,3,4600,'[[5,27]]',201,'snow_war Palette',4,94),
+  (6,'b1227','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,12,27,38400,86400,0,1,0,0,34,2,4600,'[[12,27]]',201,'snow_war Palette',0,38),
+  (6,'a2427','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,24,27,76800,86400,0,1,0,0,51,1,2300,'[[24,27]]',201,'snow_war Palette',0,22),
+  (6,'a2827','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,28,27,89600,86400,0,1,0,0,62,1,2300,'[[28,27]]',201,'snow_war Palette',0,22),
+  (6,'c4127','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,41,27,131200,86400,0,1,0,0,80,3,6900,'[[41,27]]',201,'snow_war Palette',0,54),
+  (6,'b4227','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,42,27,134400,86400,0,1,0,0,82,2,4600,'[[42,27]]',201,'snow_war Palette',0,38),
+  (6,'a4327','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,43,27,137600,86400,0,1,0,0,83,1,2300,'[[43,27]]',201,'snow_war Palette',0,22),
+  (6,'b1228','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,12,28,38400,89600,0,1,0,0,38,2,4600,'[[12,28]]',201,'snow_war Palette',0,38),
+  (6,'a2428','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,24,28,76800,89600,0,1,0,0,53,1,2300,'[[24,28]]',201,'snow_war Palette',0,22),
+  (6,'a2528','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,25,28,80000,89600,0,1,0,0,56,1,2300,'[[25,28]]',201,'snow_war Palette',0,22),
+  (6,'a2628','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,26,28,83200,89600,0,1,0,0,59,1,2300,'[[26,28]]',201,'snow_war Palette',0,22),
+  (6,'a2728','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,27,28,86400,89600,0,1,0,0,61,1,2300,'[[27,28]]',201,'snow_war Palette',0,22),
+  (6,'a2828','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,28,28,89600,89600,0,1,0,0,63,1,2300,'[[28,28]]',201,'snow_war Palette',0,22),
+  (6,'b1229','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,12,29,38400,92800,0,1,0,0,41,2,4600,'[[12,29]]',201,'snow_war Palette',0,38),
+  (6,'a1230','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,12,30,38400,96000,0,1,0,0,43,1,2300,'[[12,30]]',201,'snow_war Palette',0,22),
+  (6,'i1530','sw_tree3','hh_room_snowwar_arena_sw_tree3_32_a_0_0',3608,2341,15,30,48000,96000,0,1,0,0,44,3,4600,'[[15,30]]',201,'snow_war Palette',4,95),
+  (6,'c4130','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,41,30,131200,96000,0,1,0,0,85,3,6900,'[[41,30]]',201,'snow_war Palette',0,54),
+  (6,'b4230','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,42,30,134400,96000,0,1,0,0,88,2,4600,'[[42,30]]',201,'snow_war Palette',0,38),
+  (6,'a4330','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,43,30,137600,96000,0,1,0,0,91,1,2300,'[[43,30]]',201,'snow_war Palette',0,22),
+  (6,'b4131','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,41,31,131200,99200,0,1,0,0,87,2,4600,'[[41,31]]',201,'snow_war Palette',0,38),
+  (6,'c4132','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,41,32,131200,102400,0,1,0,0,90,3,6900,'[[41,32]]',201,'snow_war Palette',0,54),
+  (6,'b4133','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,41,33,131200,105600,0,1,0,0,93,2,4600,'[[41,33]]',201,'snow_war Palette',0,38),
+  (6,'c4134','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,41,34,131200,108800,0,1,0,0,95,3,6900,'[[41,34]]',201,'snow_war Palette',0,54),
+  (6,'b4135','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,41,35,131200,112000,0,1,0,0,97,2,4600,'[[41,35]]',201,'snow_war Palette',0,38),
+  (6,'b4235','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,42,35,134400,112000,0,1,0,0,99,2,4600,'[[42,35]]',201,'snow_war Palette',0,38),
+  (6,'a4335','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,43,35,137600,112000,0,1,0,0,101,1,2300,'[[43,35]]',201,'snow_war Palette',0,22),
+  (6,'g1638','sw_tree1','hh_room_snowwar_arena_sw_tree1_32_a_0_0',3604,2343,16,38,51200,121600,0,1,0,0,58,3,4600,'[[16,38]]',201,'snow_war Palette',4,100),
+  (6,'h2040','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,20,40,64000,128000,0,1,0,0,65,3,4600,'[[20,40]]',201,'snow_war Palette',3,91),
+  (6,'b2441','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,24,41,76800,131200,0,0,0,0,69,2,4600,'[[24,41]]',201,'snow_war Palette',0,38),
+  (6,'b2541','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,25,41,80000,131200,0,0,0,0,73,2,4600,'[[25,41]]',201,'snow_war Palette',0,38),
+  (6,'c2641','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,26,41,83200,131200,0,0,0,0,76,3,6900,'[[26,41]]',201,'snow_war Palette',0,54),
+  (6,'b2741','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,27,41,86400,131200,0,1,0,0,79,2,4600,'[[27,41]]',201,'snow_war Palette',0,38),
+  (6,'d2841','block_arch1','hh_room_snowwar_arena_block_arch1_32_a_0_0',3628,1955,28,41,89600,131200,0,1,0,0,81,3,2300,'[[28,41]]',201,'snow_war Palette',0,53),
+  (6,'f3041','block_arch3','hh_room_snowwar_arena_block_arch3_32_a_0_0',3630,2175,30,41,96000,131200,0,1,0,0,84,3,2300,'[[30,41]]',201,'snow_war Palette',16,63),
+  (6,'b3141','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,31,41,99200,131200,0,1,0,0,86,2,4600,'[[31,41]]',201,'snow_war Palette',0,38),
+  (6,'c3241','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,32,41,102400,131200,0,1,0,0,89,3,6900,'[[32,41]]',201,'snow_war Palette',0,54),
+  (6,'b3341','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,33,41,105600,131200,0,1,0,0,92,2,4600,'[[33,41]]',201,'snow_war Palette',0,38),
+  (6,'b3441','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,34,41,108800,131200,0,1,0,0,94,2,4600,'[[34,41]]',201,'snow_war Palette',0,38),
+  (6,'b2442','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,24,42,76800,134400,0,0,0,0,72,2,4600,'[[24,42]]',201,'snow_war Palette',0,38),
+  (6,'b3442','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,34,42,108800,134400,0,1,0,0,96,2,4600,'[[34,42]]',201,'snow_war Palette',0,38),
+  (6,'j3842','sw_tree4','hh_room_snowwar_arena_sw_tree4_32_a_0_0',3610,2340,38,42,121600,134400,0,1,0,0,103,3,4600,'[[38,42]]',201,'snow_war Palette',4,94),
+  (6,'b2443','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,24,43,76800,137600,0,0,0,0,75,2,4600,'[[24,43]]',201,'snow_war Palette',0,38),
+  (6,'b3443','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,34,43,108800,137600,0,1,0,0,98,2,4600,'[[34,43]]',201,'snow_war Palette',0,38),
+  (6,'a2444','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,24,44,76800,140800,0,0,0,0,78,1,2300,'[[24,44]]',201,'snow_war Palette',0,22),
+  (6,'b3444','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,34,44,108800,140800,0,1,0,0,100,2,4600,'[[34,44]]',201,'snow_war Palette',0,38),
+  (6,'a3445','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,34,45,108800,144000,0,1,0,0,102,1,2300,'[[34,45]]',201,'snow_war Palette',0,22),
+  (7,'i299','sw_tree3','hh_room_snowwar_arena_sw_tree3_32_a_0_0',3608,2341,29,9,92800,28800,0,1,0,0,4,3,4600,'[[29,9]]',201,'snow_war Palette',4,95),
+  (7,'h1410','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,14,10,44800,32000,0,1,0,0,1,3,4600,'[[14,10]]',201,'snow_war Palette',3,91),
+  (7,'j1214','sw_tree4','hh_room_snowwar_arena_sw_tree4_32_a_0_0',3610,2340,12,14,38400,44800,0,1,0,0,2,3,4600,'[[12,14]]',201,'snow_war Palette',4,94),
+  (7,'i1515','sw_tree3','hh_room_snowwar_arena_sw_tree3_32_a_0_0',3608,2341,15,15,48000,48000,0,1,0,0,3,3,4600,'[[15,15]]',201,'snow_war Palette',4,95),
+  (7,'s019','sw_backround7','hh_room_snowwar_arena_sw_backround7_32_a_0_0',3651,2794,0,19,0,60800,0,0,0,0,0,0,0,'[[0,19]]',242,'sw_v2 Palette',32,1),
+  (7,'a4219','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,42,19,134400,60800,0,1,0,0,11,1,2300,'[[42,19]]',201,'snow_war Palette',0,22),
+  (7,'a4220','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,42,20,134400,64000,0,1,0,0,12,1,2300,'[[42,20]]',201,'snow_war Palette',0,22),
+  (7,'a4221','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,42,21,134400,67200,0,1,0,0,13,1,2300,'[[42,21]]',201,'snow_war Palette',0,22),
+  (7,'g2922','sw_tree1','hh_room_snowwar_arena_sw_tree1_32_a_0_0',3604,2343,29,22,92800,70400,0,1,0,0,8,3,4600,'[[29,22]]',201,'snow_war Palette',4,100),
+  (7,'a4222','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,42,22,134400,70400,0,1,0,0,14,1,2300,'[[42,22]]',201,'snow_war Palette',0,22),
+  (7,'j3223','sw_tree4','hh_room_snowwar_arena_sw_tree4_32_a_0_0',3610,2340,32,23,102400,73600,0,1,0,0,10,3,4600,'[[32,23]]',201,'snow_war Palette',4,94),
+  (7,'p4225','block_ice','hh_room_snowwar_arena_block_ice_32_a_0_0',3653,2747,42,25,134400,80000,0,1,0,0,16,1,2300,'[[42,25]]',242,'sw_v2 Palette',0,22),
+  (7,'a4325','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,43,25,137600,80000,0,1,0,0,18,1,2300,'[[43,25]]',201,'snow_war Palette',0,22),
+  (7,'p4625','block_ice','hh_room_snowwar_arena_block_ice_32_a_0_0',3653,2747,46,25,147200,80000,0,1,0,0,25,1,2300,'[[46,25]]',242,'sw_v2 Palette',0,22),
+  (7,'a4725','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,47,25,150400,80000,0,1,0,0,28,1,2300,'[[47,25]]',201,'snow_war Palette',0,22),
+  (7,'p4825','block_ice','hh_room_snowwar_arena_block_ice_32_a_0_0',3653,2747,48,25,153600,80000,0,1,0,0,32,1,2300,'[[48,25]]',242,'sw_v2 Palette',0,22),
+  (7,'h2926','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,29,26,92800,83200,0,1,0,0,9,3,4600,'[[29,26]]',201,'snow_war Palette',3,91),
+  (7,'b4226','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,42,26,134400,83200,0,1,0,0,17,2,4600,'[[42,26]]',201,'snow_war Palette',0,38),
+  (7,'q4227','block_ice2','hh_room_snowwar_arena_block_ice2_32_a_0_0',3655,1793,42,27,134400,86400,0,1,0,0,20,2,4600,'[[42,27]]',242,'sw_v2 Palette',0,38),
+  (7,'b4228','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,42,28,134400,89600,0,1,0,0,22,2,4600,'[[42,28]]',201,'snow_war Palette',0,38),
+  (7,'p4528','block_ice','hh_room_snowwar_arena_block_ice_32_a_0_0',3653,2747,45,28,144000,89600,0,1,0,0,31,1,2300,'[[45,28]]',242,'sw_v2 Palette',0,22),
+  (7,'a4628','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,46,28,147200,89600,0,1,0,0,36,1,2300,'[[46,28]]',201,'snow_war Palette',0,22),
+  (7,'q4229','block_ice2','hh_room_snowwar_arena_block_ice2_32_a_0_0',3655,1793,42,29,134400,92800,0,1,0,0,24,2,4600,'[[42,29]]',242,'sw_v2 Palette',0,38),
+  (7,'a4529','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,45,29,144000,92800,0,1,0,0,35,1,2300,'[[45,29]]',201,'snow_war Palette',0,22),
+  (7,'i1330','sw_tree3','hh_room_snowwar_arena_sw_tree3_32_a_0_0',3608,2341,13,30,41600,96000,0,1,0,0,5,3,4600,'[[13,30]]',201,'snow_war Palette',4,95),
+  (7,'a4230','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,42,30,134400,96000,0,1,0,0,27,1,2300,'[[42,30]]',201,'snow_war Palette',0,22),
+  (7,'g1632','sw_tree1','hh_room_snowwar_arena_sw_tree1_32_a_0_0',3604,2343,16,32,51200,102400,0,1,0,0,7,3,4600,'[[16,32]]',201,'snow_war Palette',4,100),
+  (7,'h1233','sw_tree2','hh_room_snowwar_arena_sw_tree2_32_a_0_0',3606,2342,12,33,38400,105600,0,1,0,0,6,3,4600,'[[12,33]]',201,'snow_war Palette',3,91),
+  (7,'a3733','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,37,33,118400,105600,0,1,0,0,21,1,2300,'[[37,33]]',201,'snow_war Palette',0,22),
+  (7,'q4233','block_ice2','hh_room_snowwar_arena_block_ice2_32_a_0_0',3655,1793,42,33,134400,105600,0,1,0,0,39,2,4600,'[[42,33]]',242,'sw_v2 Palette',0,38),
+  (7,'q3734','block_ice2','hh_room_snowwar_arena_block_ice2_32_a_0_0',3655,1793,37,34,118400,108800,0,1,0,0,23,2,4600,'[[37,34]]',242,'sw_v2 Palette',0,38),
+  (7,'a4234','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,42,34,134400,108800,0,1,0,0,41,1,2300,'[[42,34]]',201,'snow_war Palette',0,22),
+  (7,'c3735','block_basic3','hh_room_snowwar_arena_block_basic3_32_a_0_0',3618,2256,37,35,118400,112000,0,1,0,0,26,3,6900,'[[37,35]]',201,'snow_war Palette',0,54),
+  (7,'p4235','block_ice','hh_room_snowwar_arena_block_ice_32_a_0_0',3653,2747,42,35,134400,112000,0,1,0,0,43,1,2300,'[[42,35]]',242,'sw_v2 Palette',0,22),
+  (7,'q3736','block_ice2','hh_room_snowwar_arena_block_ice2_32_a_0_0',3655,1793,37,36,118400,115200,0,1,0,0,30,2,4600,'[[37,36]]',242,'sw_v2 Palette',0,38),
+  (7,'b4236','block_basic2','hh_room_snowwar_arena_block_basic2_32_a_0_0',3616,2257,42,36,134400,115200,0,1,0,0,45,2,4600,'[[42,36]]',201,'snow_war Palette',0,38),
+  (7,'p4336','block_ice','hh_room_snowwar_arena_block_ice_32_a_0_0',3653,2747,43,36,137600,115200,0,1,0,0,47,1,2300,'[[43,36]]',242,'sw_v2 Palette',0,22),
+  (7,'a4436','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,44,36,140800,115200,0,1,0,0,49,1,2300,'[[44,36]]',201,'snow_war Palette',0,22),
+  (7,'p4536','block_ice','hh_room_snowwar_arena_block_ice_32_a_0_0',3653,2747,45,36,144000,115200,0,1,0,100000,50,1,2300,'[[45,36]]',242,'sw_v2 Palette',0,22),
+  (7,'a3737','block_basic','hh_room_snowwar_arena_block_basic_32_a_0_0',3590,2353,37,37,118400,118400,0,1,0,0,34,1,2300,'[[37,37]]',201,'snow_war Palette',0,22),
+  (7,'p3538','block_ice','hh_room_snowwar_arena_block_ice_32_a_0_0',3653,2747,35,38,112000,121600,0,1,0,0,29,1,2300,'[[35,38]]',242,'sw_v2 Palette',0,22),
+  (7,'p3638','block_ice','hh_room_snowwar_arena_block_ice_32_a_0_0',3653,2747,36,38,115200,121600,0,1,0,0,33,1,2300,'[[36,38]]',242,'sw_v2 Palette',0,22),
+  (7,'p3738','block_ice','hh_room_snowwar_arena_block_ice_32_a_0_0',3653,2747,37,38,118400,121600,0,1,0,0,38,1,2300,'[[37,38]]',242,'sw_v2 Palette',0,22),
+  (7,'i2540','sw_tree3','hh_room_snowwar_arena_sw_tree3_32_a_0_0',3608,2341,25,40,80000,128000,0,1,0,0,15,3,4600,'[[25,40]]',201,'snow_war Palette',4,95),
+  (7,'p3540','block_ice','hh_room_snowwar_arena_block_ice_32_a_0_0',3653,2747,35,40,112000,128000,0,1,0,0,37,1,2300,'[[35,40]]',242,'sw_v2 Palette',0,22),
+  (7,'p3640','block_ice','hh_room_snowwar_arena_block_ice_32_a_0_0',3653,2747,36,40,115200,128000,0,1,0,0,40,1,2300,'[[36,40]]',242,'sw_v2 Palette',0,22),
+  (7,'p3740','block_ice','hh_room_snowwar_arena_block_ice_32_a_0_0',3653,2747,37,40,118400,128000,0,1,0,0,42,1,2300,'[[37,40]]',242,'sw_v2 Palette',0,22),
+  (7,'p3741','block_ice','hh_room_snowwar_arena_block_ice_32_a_0_0',3653,2747,37,41,118400,131200,0,1,0,0,44,1,2300,'[[37,41]]',242,'sw_v2 Palette',0,22),
+  (7,'p3742','block_ice','hh_room_snowwar_arena_block_ice_32_a_0_0',3653,2747,37,42,118400,134400,0,1,0,0,46,1,2300,'[[37,42]]',242,'sw_v2 Palette',0,22),
+  (7,'j2643','sw_tree4','hh_room_snowwar_arena_sw_tree4_32_a_0_0',3610,2340,26,43,83200,137600,0,1,0,0,19,3,4600,'[[26,43]]',201,'snow_war Palette',4,94),
+  (7,'p3743','block_ice','hh_room_snowwar_arena_block_ice_32_a_0_0',3653,2747,37,43,118400,137600,0,1,0,0,48,1,2300,'[[37,43]]',242,'sw_v2 Palette',0,22);
+
+INSERT INTO `snowstorm_map_machines`
+  (`map_id`,`machine_id`,`tile_x`,`tile_y`,`world_x`,`world_y`,`world_z`,`collection_tile_x`,`collection_tile_y`,`direction`,`collision_tiles_json`,`collision_radius`,`collision_height`,`initial_stock`,`maximum_stock`,`refill_interval_ms`,`transfer_interval_ms`)
+VALUES
+  (1,1,25,24,80000,76800,0,25,25,0,'[[25,24],[26,24],[27,24]]',1200,2400,0,5,3000,1000),
+  (2,1,26,26,83200,83200,0,26,27,0,'[[26,26],[27,26],[28,26]]',1200,2400,0,5,3000,1000),
+  (3,1,36,17,115200,54400,0,36,18,0,'[[36,17],[37,17],[38,17]]',1200,2400,0,5,3000,1000),
+  (3,2,42,28,134400,89600,0,42,29,0,'[[42,28],[43,28],[44,28]]',1200,2400,0,5,3000,1000),
+  (3,3,36,37,115200,118400,0,36,38,0,'[[36,37],[37,37],[38,37]]',1200,2400,0,5,3000,1000);
+
+INSERT INTO `snowstorm_map_spawns`
+  (`map_id`,`spawn_id`,`center_x`,`center_y`,`radius`,`minimum_separation`,`team_count_mask`,`fallback_rule`)
+VALUES
+  (1,1,30,41,8,4,15,'bounded-64-attempt-stable-farthest-legal-search-or-fail-start'),
+  (1,2,39,33,8,4,15,'bounded-64-attempt-stable-farthest-legal-search-or-fail-start'),
+  (1,3,39,28,12,4,15,'bounded-64-attempt-stable-farthest-legal-search-or-fail-start'),
+  (2,1,33,37,8,4,15,'bounded-64-attempt-stable-farthest-legal-search-or-fail-start'),
+  (2,2,18,12,8,4,15,'bounded-64-attempt-stable-farthest-legal-search-or-fail-start'),
+  (2,3,12,26,8,4,15,'bounded-64-attempt-stable-farthest-legal-search-or-fail-start'),
+  (3,1,14,21,3,1,15,'bounded-64-attempt-stable-farthest-legal-search-or-fail-start'),
+  (3,2,15,14,3,1,15,'bounded-64-attempt-stable-farthest-legal-search-or-fail-start'),
+  (3,3,23,19,3,1,15,'bounded-64-attempt-stable-farthest-legal-search-or-fail-start'),
+  (4,1,26,27,50,10,15,'bounded-64-attempt-stable-farthest-legal-search-or-fail-start'),
+  (5,1,14,14,5,2,15,'bounded-64-attempt-stable-farthest-legal-search-or-fail-start'),
+  (5,2,26,26,8,3,15,'bounded-64-attempt-stable-farthest-legal-search-or-fail-start'),
+  (5,3,39,21,5,2,15,'bounded-64-attempt-stable-farthest-legal-search-or-fail-start'),
+  (6,1,18,18,8,3,15,'bounded-64-attempt-stable-farthest-legal-search-or-fail-start'),
+  (6,2,34,34,8,3,15,'bounded-64-attempt-stable-farthest-legal-search-or-fail-start'),
+  (6,3,24,7,8,3,15,'bounded-64-attempt-stable-farthest-legal-search-or-fail-start'),
+  (6,4,28,45,8,3,15,'bounded-64-attempt-stable-farthest-legal-search-or-fail-start'),
+  (6,5,46,27,8,3,15,'bounded-64-attempt-stable-farthest-legal-search-or-fail-start'),
+  (7,1,12,12,4,3,15,'bounded-64-attempt-stable-farthest-legal-search-or-fail-start'),
+  (7,2,29,14,5,3,15,'bounded-64-attempt-stable-farthest-legal-search-or-fail-start'),
+  (7,3,45,30,5,2,15,'bounded-64-attempt-stable-farthest-legal-search-or-fail-start'),
+  (7,4,24,41,3,2,15,'bounded-64-attempt-stable-farthest-legal-search-or-fail-start'),
+  (7,5,18,38,6,3,15,'bounded-64-attempt-stable-farthest-legal-search-or-fail-start');
+
+COMMIT;
+-- END GENERATED SNOWSTORM MAP SEED
+
+CREATE TABLE IF NOT EXISTS `snowstorm_rounds` (
+  `result_id` INT NOT NULL AUTO_INCREMENT,
+  `instance_id` INT NOT NULL,
+  `round_number` INT NOT NULL,
+  `game_name` VARCHAR(32) NOT NULL DEFAULT '',
+  `owner_user_id` INT NOT NULL DEFAULT 0,
+  `owner_name` VARCHAR(64) NOT NULL DEFAULT '',
+  `map_id` TINYINT UNSIGNED NOT NULL,
+  `map_revision` INT NOT NULL,
+  `map_checksum` INT NOT NULL,
+  `team_count` TINYINT UNSIGNED NOT NULL,
+  `round_seconds` SMALLINT UNSIGNED NOT NULL,
+  `started_at` INT NOT NULL,
+  `charged_at` INT NOT NULL,
+  `ended_at` INT NULL,
+  `end_reason` TINYINT UNSIGNED NULL,
+  `winning_team` SMALLINT NULL,
+  `team_0_score` INT NOT NULL DEFAULT 0,
+  `team_1_score` INT NOT NULL DEFAULT 0,
+  `team_2_score` INT NOT NULL DEFAULT 0,
+  `team_3_score` INT NOT NULL DEFAULT 0,
+  `ranked` TINYINT(1) NOT NULL DEFAULT 0,
+  `aborted` TINYINT(1) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`instance_id`, `round_number`),
+  UNIQUE KEY `uq_snowstorm_round_result` (`result_id`),
+  KEY `idx_snowstorm_round_finished` (`ended_at`, `result_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `snowstorm_round_players` (
+  `instance_id` INT NOT NULL,
+  `round_number` INT NOT NULL,
+  `user_id` INT NOT NULL,
+  `object_id` INT NOT NULL,
+  `player_name` VARCHAR(64) NOT NULL DEFAULT '',
+  `team_id` TINYINT UNSIGNED NOT NULL,
+  `human` TINYINT(1) NOT NULL DEFAULT 1,
+  `ticket_cost` INT NOT NULL DEFAULT 0,
+  `score` INT NOT NULL DEFAULT 0,
+  `placement` TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  `winner` TINYINT(1) NOT NULL DEFAULT 0,
+  `disconnected` TINYINT(1) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`instance_id`, `round_number`, `user_id`),
+  KEY `idx_snowstorm_round_user` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `snowstorm_player_stats` (
+  `user_id` INT NOT NULL,
+  `games_played` INT NOT NULL DEFAULT 0,
+  `wins` INT NOT NULL DEFAULT 0,
+  `score_all_time` BIGINT NOT NULL DEFAULT 0,
+  `score_month` BIGINT NOT NULL DEFAULT 0,
+  `ranked_points` BIGINT NOT NULL DEFAULT 0,
+  `skill_level` INT NOT NULL DEFAULT 1,
+  `month_key` CHAR(7) NOT NULL DEFAULT '',
+  PRIMARY KEY (`user_id`),
+  KEY `idx_snowstorm_all_time` (`score_all_time`),
+  KEY `idx_snowstorm_month` (`month_key`, `score_month`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Migrate the early singular bot-setting names without losing administrator values.
+INSERT IGNORE INTO `emulator_settings` (`key`, `value`)
+SELECT 'snowstorm.bots.decision.interval.ms', `value` FROM `emulator_settings`
+WHERE `key` = 'snowstorm.bot.decision.milliseconds';
+INSERT IGNORE INTO `emulator_settings` (`key`, `value`)
+SELECT 'snowstorm.bots.throw-radius.tiles', `value` FROM `emulator_settings`
+WHERE `key` = 'snowstorm.bot.throw.radius';
+INSERT IGNORE INTO `emulator_settings` (`key`, `value`)
+SELECT 'snowstorm.bots.figures', `value` FROM `emulator_settings`
+WHERE `key` = 'snowstorm.bot.figures';
+DELETE FROM `emulator_settings` WHERE `key` IN (
+  'snowstorm.bot.decision.milliseconds',
+  'snowstorm.bot.throw.radius',
+  'snowstorm.bot.figures'
+);
+
+-- Preserve administrator choices on every rerun.
+INSERT IGNORE INTO `emulator_settings` (`key`, `value`) VALUES
+  ('hotel.ticket.currency.type', '106'),
+  ('snowstorm.enabled', '0'),
+  ('snowstorm.ticket.cost', '2'),
+  ('snowstorm.bots.enabled', '1'),
+  ('snowstorm.bots.max-per-game', '8'),
+  ('snowstorm.ranked.requires.human.opponent', '1'),
+  ('snowstorm.bots.decision.interval.ms', '1200'),
+  ('snowstorm.bots.throw-radius.tiles', '10'),
+  ('snowstorm.bots.figures', 'hr-100.hd-190-7.ch-210-66.lg-270-82.sh-290-80,hr-100-61.hd-190-1.ch-210-92.lg-270-82.sh-290-80,hr-115-42.hd-195-19.ch-3030-82.lg-275-1408.fa-1201.ca-1804-64,ch-665-92.hd-629-1.sh-740-92.hr-515-31.lg-3174-71-92.he-3082-92'),
+  ('snowstorm.max.instances', '100'),
+  ('snowstorm.max.spectators', '20'),
+  ('snowstorm.idle.timeout.seconds', '60'),
+  ('snowstorm.idle.warning.seconds', '15');
+
+-- Shared, room-scoped leaderboard catalogue and metric store.
+CREATE TABLE IF NOT EXISTS `leaderboards` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `room_id` INT(11) NOT NULL,
+  `game_type` VARCHAR(32) NOT NULL,
+  `metric` VARCHAR(32) NOT NULL,
+  `title_localization_code` VARCHAR(128) NOT NULL,
+  `description_localization_code` VARCHAR(128) NOT NULL,
+  `menu_localization_code` VARCHAR(128) NOT NULL,
+  `sort_order` INT(11) NOT NULL DEFAULT 0,
+  `enabled` TINYINT(1) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_leaderboards_room_game_metric` (`room_id`, `game_type`, `metric`),
+  KEY `idx_leaderboards_room_enabled_sort` (`room_id`, `enabled`, `sort_order`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+DROP TABLE IF EXISTS `gamehall_leaderboard_stats`;
+
+CREATE TABLE IF NOT EXISTS `leaderboard_stats` (
+  `game_type` VARCHAR(32) NOT NULL,
+  `metric` VARCHAR(32) NOT NULL,
+  `period_type` VARCHAR(16) NOT NULL,
+  `period_start` BIGINT(20) NOT NULL DEFAULT 0,
+  `user_id` INT(11) NOT NULL,
+  `value` INT(11) NOT NULL DEFAULT 0,
+  `last_result_at` BIGINT(20) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`game_type`, `metric`, `period_type`, `period_start`, `user_id`),
+  KEY `idx_leaderboard_stats_rank` (`game_type`, `metric`, `period_type`, `period_start`, `value`, `last_result_at`),
+  KEY `idx_leaderboard_stats_user` (`user_id`, `game_type`, `metric`, `period_type`, `period_start`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `leaderboards`
+  (`room_id`, `game_type`, `metric`, `title_localization_code`,
+   `description_localization_code`, `menu_localization_code`, `sort_order`, `enabled`)
+SELECT `id`, 'SNOWSTORM', 'POINTS', 'gamehall.leaderboard.option.snowstorm',
+       'gamehall.leaderboard.info.snowstorm', 'gamehall.leaderboard.dropdown.snowstorm', 0, 1
+FROM `rooms` WHERE `model` = 'snowwar_lobby_1'
+ON DUPLICATE KEY UPDATE
+  `title_localization_code` = VALUES(`title_localization_code`),
+  `description_localization_code` = VALUES(`description_localization_code`),
+  `menu_localization_code` = VALUES(`menu_localization_code`),
+  `sort_order` = VALUES(`sort_order`), `enabled` = 1;

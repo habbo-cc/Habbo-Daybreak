@@ -10,10 +10,10 @@ public class DeclineFriendRequestEvent extends MessageHandler {
         if (all) {
             this.client.getHabbo().getMessenger().deleteAllFriendRequests(this.client.getHabbo().getHabboInfo().getId());
         } else {
-            int count = this.packet.readInt();
+            int count = this.packet.readBoundedCount(500, Integer.BYTES);
 
             for (int i = 0; i < count; i++) {
-                this.client.getHabbo().getMessenger().deleteFriendRequests(this.packet.readInt(), this.client.getHabbo().getHabboInfo().getId());
+                this.client.getHabbo().getMessenger().deleteFriendRequests(this.packet.readRequiredInt(), this.client.getHabbo().getHabboInfo().getId());
             }
         }
     }

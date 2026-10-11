@@ -34,12 +34,16 @@ import com.eu.habbo.messages.outgoing.hotelview.CloseConnectionMessageComposer;
 import com.eu.habbo.messages.outgoing.polls.PollOfferMessageComposer;
 import com.eu.habbo.messages.outgoing.polls.infobus.QuestionFinishedMessageComposer;
 import com.eu.habbo.messages.outgoing.polls.infobus.QuestionMessageComposer;
+import com.eu.habbo.habbohotel.rooms.infobus.InfobusManager;
+import com.eu.habbo.habbohotel.rooms.walkways.WalkwaysEntrance;
 import com.eu.habbo.messages.outgoing.rooms.*;
 import com.eu.habbo.messages.outgoing.rooms.items.ObjectsMessageComposer;
 import com.eu.habbo.messages.outgoing.rooms.items.ItemsMessageComposer;
+import com.eu.habbo.messages.outgoing.rooms.items.ConfigurationItemStatesMessageComposer;
 import com.eu.habbo.messages.outgoing.rooms.pets.PetFigureUpdateMessageComposer;
 import com.eu.habbo.messages.outgoing.rooms.promotions.RoomPromotionMessageComposer;
 import com.eu.habbo.messages.outgoing.rooms.users.*;
+import com.eu.habbo.messages.outgoing.wired.WiredEnvironmentMessageComposer;
 import com.eu.habbo.messages.outgoing.users.RemainingMutePeriodMessageComposer;
 import com.eu.habbo.plugin.events.navigator.NavigatorRoomCreatedEvent;
 import com.eu.habbo.plugin.events.rooms.RoomFloorItemsLoadEvent;
@@ -76,6 +80,7 @@ public class RoomManager {
     private final List<String> mapNames;
     private volatile THashSet<String> publicModels;
     private volatile THashMap<String, List<PublicItem>> publicItems;
+    private volatile THashMap<Integer, List<WalkwaysEntrance>> walkways;
     private final ConcurrentHashMap<Integer, Room> activeRooms;
     private final ArrayList<Class<? extends Game>> gameTypes;
 
@@ -85,10 +90,12 @@ public class RoomManager {
         this.mapNames = new ArrayList<>();
         this.publicModels = new THashSet<>();
         this.publicItems = new THashMap<>();
+        this.walkways = new THashMap<>();
         this.activeRooms = new ConcurrentHashMap<>();
         this.loadRoomCategories();
         this.loadRoomModels();
         this.loadPublicItems();
+        this.loadWalkways();
 
         this.gameTypes = new ArrayList<>();
 
@@ -153,6 +160,85 @@ public class RoomManager {
         }
 
         return items;
+    }
+
+    public void loadWalkways() {
+        THashMap<Integer, List<WalkwaysEntrance>> loaded = new THashMap<>();
+        try (Connection connection = Emulator.getDatabase().getDataSource().getConnection();
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM public_roomwalkways");
+             ResultSet set = statement.executeQuery()) {
+            while (set.next()) {
+                int roomId = set.getInt("room_id");
+                int targetRoomId = set.getInt("to_id");
+
+                List<int[]> coords = new ArrayList<>();
+                String coordsMap = set.getString("coords_map");
+                if (coordsMap != null) {
+                    for (String part : coordsMap.trim().split(" ")) {
+                        if (part.isEmpty()) {
+                            continue;
+                        }
+                        String[] xy = part.split(",");
+                        coords.add(new int[]{Integer.parseInt(xy[0].trim()), Integer.parseInt(xy[1].trim())});
+                    }
+                }
+
+                int[] destination = null;
+                String doorPosition = set.getString("door_position");
+                if (doorPosition != null && !doorPosition.trim().isEmpty()) {
+                    String[] d = doorPosition.trim().split(",");
+                    destination = new int[]{
+                            Integer.parseInt(d[0].trim()),
+                            Integer.parseInt(d[1].trim()),
+                            d.length > 2 ? Integer.parseInt(d[2].trim()) : 0,
+                            d.length > 3 ? Integer.parseInt(d[3].trim()) : 0
+                    };
+                }
+
+                List<WalkwaysEntrance> list = loaded.get(roomId);
+                if (list == null) {
+                    list = new ArrayList<>();
+                    loaded.put(roomId, list);
+                }
+                list.add(new WalkwaysEntrance(roomId, targetRoomId, coords, destination));
+            }
+
+            this.walkways = loaded;
+        } catch (SQLException e) {
+            LOGGER.error("Caught SQL exception", e);
+        }
+    }
+
+    public WalkwaysEntrance getWalkway(Room room, int x, int y) {
+        if (room == null || !room.isPublicRoom()) {
+            return null;
+        }
+        List<WalkwaysEntrance> list = this.walkways.get(room.getId());
+        if (list == null) {
+            return null;
+        }
+        for (WalkwaysEntrance entrance : list) {
+            if (entrance.matches(x, y)) {
+                return entrance;
+            }
+        }
+        return null;
+    }
+
+    public RoomTile getFirstWalkwayTile(Room room) {
+        if (room == null || room.getLayout() == null) {
+            return null;
+        }
+        List<WalkwaysEntrance> list = this.walkways.get(room.getId());
+        if (list == null || list.isEmpty()) {
+            return null;
+        }
+        List<int[]> fromCoords = list.get(0).getFromCoords();
+        if (fromCoords.isEmpty()) {
+            return null;
+        }
+        int[] coord = fromCoords.get(0);
+        return room.getLayout().getTile((short) coord[0], (short) coord[1]);
     }
 
     public void refreshActivePublicRoomItems() {
@@ -801,8 +887,13 @@ public class RoomManager {
             habbo.getClient().sendResponse(new RoomPromotionMessageComposer(null, null));
         }
 
-        if (room.getOwnerId() != habbo.getHabboInfo().getId() && !habbo.getHabboStats().visitedRoom(room.getId())) {
-            AchievementManager.progressAchievement(habbo, Emulator.getGameEnvironment().getAchievementManager().getAchievement("RoomEntry"));
+        if (room.getOwnerId() != habbo.getHabboInfo().getId()) {
+            if (!habbo.getHabboStats().visitedRoom(room.getId())) {
+                AchievementManager.progressAchievement(habbo, Emulator.getGameEnvironment().getAchievementManager().getAchievement("RoomEntry"));
+            }
+            if (Emulator.getGameEnvironment().getRewardTrackManager() != null) {
+                Emulator.getGameEnvironment().getRewardTrackManager().progress(habbo, "enter_other_users_room");
+            }
         }
     }
 
@@ -828,7 +919,10 @@ public class RoomManager {
         habbo.getRoomUnit().isKicked = false;
 
         if (habbo.getRoomUnit().getCurrentLocation() == null && !habbo.getRoomUnit().isTeleporting) {
-            RoomTile doorTile = room.getLayout().getTile(room.getLayout().getDoorX(), room.getLayout().getDoorY());
+            RoomTile doorTile = room.getAreaHideSafeSpawnTile();
+            if (doorTile == null) {
+                doorTile = room.getLayout().getTile(room.getLayout().getDoorX(), room.getLayout().getDoorY());
+            }
 
             if (doorTile != null) {
                 habbo.getRoomUnit().setLocation(doorTile);
@@ -844,6 +938,7 @@ public class RoomManager {
 
         habbo.getRoomUnit().setInvisible(false);
         room.addHabbo(habbo);
+        habbo.getClient().sendResponse(new WiredEnvironmentMessageComposer(room));
 
         List<Habbo> habbos = new ArrayList<>();
         if (!room.getCurrentHabbos().isEmpty()) {
@@ -931,6 +1026,8 @@ public class RoomManager {
                 public boolean execute(HabboItem object) {
                     if (room.isHideWired() && object instanceof InteractionWired)
                         return true;
+                    if (room.isItemHiddenByAreaHide(object))
+                        return true;
 
                     floorItems.add(object);
                     if (floorItems.size() == 250) {
@@ -946,8 +1043,15 @@ public class RoomManager {
             floorItems.clear();
         }
 
+        habbo.getClient().sendResponse(new ConfigurationItemStatesMessageComposer(room));
+
         if (this.isPublicModel(room.getLayout().getName())) {
             habbo.getClient().sendResponse(new PublicRoomObjectsMessageComposer(room, this.getPublicItems(room.getLayout().getName())));
+
+            // Tell the park client the current Infobus door state (boots closed; staff :bus open it).
+            if ("park_a".equals(room.getLayout().getName())) {
+                habbo.getClient().sendResponse(new BusDoorMessageComposer(InfobusManager.isDoorOpen()));
+            }
         }
 
         if (!room.getCurrentPets().isEmpty()) {
@@ -1074,8 +1178,21 @@ public class RoomManager {
         if (habbo.getHabboInfo().getCurrentRoom() != null && habbo.getHabboInfo().getCurrentRoom() == room) {
             habbo.getRoomUnit().setPathFinderRoom(null);
 
+            // Wired 2.0 trigger 23: avatar leaves room (dispatched while still in the room).
+            com.eu.habbo.habbohotel.wired.core.WiredManager.triggerUserLeavesRoom(room, habbo.getRoomUnit());
+
             this.logExit(habbo);
+            if (Emulator.getGameEnvironment().getBattleBallManager() != null) {
+                Emulator.getGameEnvironment().getBattleBallManager()
+                        .roomLeave(habbo.getHabboInfo().getId());
+            }
+            if (Emulator.getGameEnvironment().getSnowStormManager() != null) {
+                Emulator.getGameEnvironment().getSnowStormManager()
+                        .roomLeave(habbo.getHabboInfo().getId());
+            }
             room.removeHabbo(habbo, true);
+            Emulator.getGameEnvironment().getChestManager()
+                    .autoLockChestsForOwner(room, habbo);
 
             if (redirectToHotelView) {
                 habbo.getClient().sendResponse(new CloseConnectionMessageComposer());

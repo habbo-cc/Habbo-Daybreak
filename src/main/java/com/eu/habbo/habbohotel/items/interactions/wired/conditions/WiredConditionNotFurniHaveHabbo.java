@@ -27,6 +27,7 @@ public class WiredConditionNotFurniHaveHabbo extends InteractionWiredCondition {
     public static final WiredConditionType type = WiredConditionType.NOT_FURNI_HAVE_HABBO;
 
     protected THashSet<HabboItem> items;
+    private boolean all = false;
 
     public WiredConditionNotFurniHaveHabbo(ResultSet set, Item baseItem) throws SQLException {
         super(set, baseItem);
@@ -42,6 +43,7 @@ public class WiredConditionNotFurniHaveHabbo extends InteractionWiredCondition {
     @Override
     public void onPickUp() {
         this.items.clear();
+        this.all = false;
     }
 
     @Override
@@ -50,7 +52,9 @@ public class WiredConditionNotFurniHaveHabbo extends InteractionWiredCondition {
 
         this.refresh();
 
-        if (this.items.isEmpty())
+        java.util.Collection<HabboItem> targets = resolveFurniSource(ctx, this.getWiredFurniSourceTypes(), 0, this.items, null);
+
+        if (targets.isEmpty())
             return true;
 
         if (room.getLayout() == null)
@@ -60,7 +64,7 @@ public class WiredConditionNotFurniHaveHabbo extends InteractionWiredCondition {
         Collection<Bot> bots = room.getCurrentBots().valueCollection();
         Collection<Pet> pets = room.getCurrentPets().valueCollection();
 
-        return this.items.stream().filter(item -> item != null).noneMatch(item -> {
+        java.util.function.Predicate<HabboItem> hasOccupant = item -> {
             RoomTile baseTile = room.getLayout().getTile(item.getX(), item.getY());
             if (baseTile == null)
                 return false;
@@ -77,7 +81,11 @@ public class WiredConditionNotFurniHaveHabbo extends InteractionWiredCondition {
                     ||
                     pets.stream().anyMatch(character -> character.getRoomUnit() != null
                             && occupiedTiles.contains(character.getRoomUnit().getCurrentLocation()));
-        });
+        };
+
+        return this.all
+                ? targets.stream().filter(item -> item != null).noneMatch(hasOccupant)
+                : targets.stream().filter(item -> item != null).anyMatch(item -> !hasOccupant.test(item));
     }
 
     @Deprecated
@@ -90,6 +98,7 @@ public class WiredConditionNotFurniHaveHabbo extends InteractionWiredCondition {
     public String getWiredData() {
         this.refresh();
         return WiredManager.getGson().toJson(new JsonData(
+                this.all,
                 this.items.stream().map(HabboItem::getId).collect(Collectors.toList())));
     }
 
@@ -99,8 +108,8 @@ public class WiredConditionNotFurniHaveHabbo extends InteractionWiredCondition {
         String wiredData = set.getString("wired_data");
 
         if (wiredData.startsWith("{")) {
-            WiredConditionFurniHaveHabbo.JsonData data = WiredManager.getGson().fromJson(wiredData,
-                    WiredConditionFurniHaveHabbo.JsonData.class);
+            JsonData data = WiredManager.getGson().fromJson(wiredData, JsonData.class);
+            this.all = data.all;
 
             for (int id : data.itemIds) {
                 HabboItem item = room.getHabboItemByDatabaseId(id);
@@ -130,6 +139,16 @@ public class WiredConditionNotFurniHaveHabbo extends InteractionWiredCondition {
         return type;
     }
 
+    // Wired 2.0 getters
+    @Override
+    protected java.util.Collection<HabboItem> getSelectedItems() { return this.items; }
+
+    @Override
+    protected boolean supportsFurniPicking() { return true; }
+
+    @Override
+    protected int[] getWiredIntParams() { return new int[]{ this.all ? 1 : 0 }; }
+
     @Override
     public void serializeWiredData(ServerMessage message, Room room) {
         this.refresh();
@@ -144,7 +163,8 @@ public class WiredConditionNotFurniHaveHabbo extends InteractionWiredCondition {
         message.appendInt(this.getBaseItem().getSpriteId());
         message.appendInt(this.getRoomVisibleId());
         message.appendString("");
-        message.appendInt(0);
+        message.appendInt(1);
+        message.appendInt(this.all ? 1 : 0);
         message.appendInt(0);
         message.appendInt(this.getType().code);
         message.appendInt(0);
@@ -154,6 +174,7 @@ public class WiredConditionNotFurniHaveHabbo extends InteractionWiredCondition {
     @Override
     public boolean saveData(WiredSettings settings) {
         int count = settings.getFurniIds().length;
+        this.all = settings.getIntParams().length > 0 && settings.getIntParams()[0] == 1;
         if (count > Emulator.getConfig().getInt("hotel.wired.furni.selection.count"))
             return false;
 
@@ -194,9 +215,11 @@ public class WiredConditionNotFurniHaveHabbo extends InteractionWiredCondition {
     }
 
     static class JsonData {
+        boolean all;
         List<Integer> itemIds;
 
-        public JsonData(List<Integer> itemIds) {
+        public JsonData(boolean all, List<Integer> itemIds) {
+            this.all = all;
             this.itemIds = itemIds;
         }
     }

@@ -1,6 +1,7 @@
 package com.eu.habbo.messages.incoming.friends;
 
 import com.eu.habbo.Emulator;
+import com.eu.habbo.habbohotel.messenger.Messenger;
 import com.eu.habbo.habbohotel.messenger.MessengerBuddy;
 import com.eu.habbo.messages.incoming.MessageHandler;
 import com.eu.habbo.plugin.events.users.friends.UserFriendChatEvent;
@@ -16,10 +17,11 @@ public class SendMsgMessageEvent extends MessageHandler {
         }
 
         long millis = System.currentTimeMillis();
-        if (millis - this.client.getHabbo().getHabboStats().lastChat < 750) {
+        if (Messenger.CHAT_DELAY_MILLIS > 0
+                && millis - this.client.getHabbo().getHabboStats().lastMessengerChat < Messenger.CHAT_DELAY_MILLIS) {
             return;
         }
-        this.client.getHabbo().getHabboStats().lastChat = millis;
+        this.client.getHabbo().getHabboStats().lastMessengerChat = millis;
 
         MessengerBuddy buddy = this.client.getHabbo().getMessenger().getFriend(userId);
         if (buddy == null)
@@ -32,5 +34,8 @@ public class SendMsgMessageEvent extends MessageHandler {
             return;
 
         buddy.onMessageReceived(this.client.getHabbo(), message);
+        if (Emulator.getGameEnvironment().getRewardTrackManager() != null) {
+            Emulator.getGameEnvironment().getRewardTrackManager().progress(this.client.getHabbo(), "send_messenger_message");
+        }
     }
 }

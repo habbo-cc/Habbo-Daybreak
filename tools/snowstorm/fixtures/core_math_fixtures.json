@@ -1,0 +1,245 @@
+{
+  "schemaVersion": 2,
+  "source": {
+    "cast": "hh_gamesys.cct",
+    "classes": [
+      "CIterateSeed",
+      "Gamesystem Gameobject Class",
+      "Gamesystem Component Class"
+    ],
+    "rule": "signed-32-bit rolling checksum over object type, numeric ID and insertion-ordered sync values, objects by numeric ID"
+  },
+  "arithmetic": "signed-32-bit-wrap; arithmetic-right-shift",
+  "seedVectors": [
+    {
+      "input": 0,
+      "output": 253983
+    },
+    {
+      "input": 1,
+      "output": 270369
+    },
+    {
+      "input": 2,
+      "output": 540738
+    },
+    {
+      "input": 5,
+      "output": 1351845
+    },
+    {
+      "input": 127,
+      "output": 32763768
+    },
+    {
+      "input": 32767,
+      "output": -267610112
+    },
+    {
+      "input": 2147483647,
+      "output": -2147213281
+    },
+    {
+      "input": -1,
+      "output": 253983
+    },
+    {
+      "input": -2,
+      "output": 507966
+    },
+    {
+      "input": -2147483648,
+      "output": -2146975744
+    }
+  ],
+  "contributionVectors": [
+    {
+      "name": "machine-basic",
+      "objectType": "machine",
+      "values": [
+        9600,
+        12800,
+        3
+      ],
+      "contribution": 35209
+    },
+    {
+      "name": "avatar-basic",
+      "objectType": "avatar",
+      "values": [
+        3200,
+        6400,
+        2,
+        4,
+        5,
+        0,
+        0,
+        0,
+        1,
+        2,
+        9600,
+        12800,
+        6,
+        42,
+        1,
+        7
+      ],
+      "contribution": 276069
+    },
+    {
+      "name": "snowball-basic",
+      "objectType": "snowball",
+      "values": [
+        6400,
+        3200,
+        4000,
+        90,
+        0,
+        13,
+        7,
+        6
+      ],
+      "contribution": 25335
+    },
+    {
+      "name": "signed-overflow",
+      "objectType": "diagnostic",
+      "values": [
+        2147483647,
+        -2147483648,
+        1073741824,
+        -1073741824,
+        65536
+      ],
+      "contribution": 1074069503
+    }
+  ],
+  "checksumVectors": [
+    {
+      "name": "empty-turn-zero",
+      "turnNumber": 0,
+      "objects": [],
+      "checksum": 253983
+    },
+    {
+      "name": "empty-turn-five",
+      "turnNumber": 5,
+      "objects": [],
+      "checksum": 1351845
+    },
+    {
+      "name": "mixed-object-order",
+      "turnNumber": 5,
+      "objects": [
+        {
+          "objectId": 10,
+          "objectType": "machine",
+          "values": [
+            9600,
+            12800,
+            3
+          ]
+        },
+        {
+          "objectId": 7,
+          "objectType": "avatar",
+          "values": [
+            3200,
+            6400,
+            2,
+            4,
+            5,
+            0,
+            0,
+            0,
+            1,
+            2,
+            9600,
+            12800,
+            6,
+            42,
+            1,
+            7
+          ]
+        },
+        {
+          "objectId": 2,
+          "objectType": "snowball",
+          "values": [
+            6400,
+            3200,
+            4000,
+            90,
+            0,
+            13,
+            7,
+            6
+          ]
+        }
+      ],
+      "sortedObjectIds": [
+        2,
+        7,
+        10
+      ],
+      "checksum": -493132512
+    },
+    {
+      "name": "mixed-object-reversed-input",
+      "turnNumber": 5,
+      "objects": [
+        {
+          "objectId": 2,
+          "objectType": "snowball",
+          "values": [
+            6400,
+            3200,
+            4000,
+            90,
+            0,
+            13,
+            7,
+            6
+          ]
+        },
+        {
+          "objectId": 7,
+          "objectType": "avatar",
+          "values": [
+            3200,
+            6400,
+            2,
+            4,
+            5,
+            0,
+            0,
+            0,
+            1,
+            2,
+            9600,
+            12800,
+            6,
+            42,
+            1,
+            7
+          ]
+        },
+        {
+          "objectId": 10,
+          "objectType": "machine",
+          "values": [
+            9600,
+            12800,
+            3
+          ]
+        }
+      ],
+      "sortedObjectIds": [
+        2,
+        7,
+        10
+      ],
+      "checksum": -493132512
+    }
+  ]
+}

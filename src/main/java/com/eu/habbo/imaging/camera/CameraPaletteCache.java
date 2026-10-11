@@ -40,7 +40,7 @@ public class CameraPaletteCache {
 
         File[] files = binaryFolder.listFiles((dir, name) -> name.endsWith("_assets.xml"));
         if (files == null || files.length == 0) {
-            LOGGER.info("No camera *_assets.xml files found in {}", binaryFolder.getAbsolutePath());
+            LOGGER.warn("Camera Palette Cache -> No *_assets.xml files found in {}", binaryFolder.getAbsolutePath());
             return;
         }
 
@@ -90,7 +90,7 @@ public class CameraPaletteCache {
             }
         }
 
-        LOGGER.info("Loaded {} camera palettes from {}", loaded, binaryFolder.getAbsolutePath());
+        LOGGER.debug("Camera Palette Cache -> Loaded {} palettes from {}.", loaded, binaryFolder.getAbsolutePath());
     }
 
     public CameraPalette getPalette(String name) {

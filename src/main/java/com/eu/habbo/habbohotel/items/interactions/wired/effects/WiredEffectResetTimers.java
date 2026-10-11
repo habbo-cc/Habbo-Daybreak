@@ -33,6 +33,10 @@ public class WiredEffectResetTimers extends InteractionWiredEffect {
         super(id, userId, item, extradata, limitedStack, limitedSells);
     }
 
+    // Wired 2.0 getters
+    @Override
+    protected int[] getWiredIntParams() { return new int[]{ this.getDelay() }; }
+
     @Override
     public void serializeWiredData(ServerMessage message, Room room) {
         message.appendBoolean(false);

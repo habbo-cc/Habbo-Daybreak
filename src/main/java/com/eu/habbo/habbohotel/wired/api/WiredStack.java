@@ -1,6 +1,9 @@
 package com.eu.habbo.habbohotel.wired.api;
 
 import com.eu.habbo.habbohotel.users.HabboItem;
+import com.eu.habbo.habbohotel.items.interactions.InteractionWiredSelector;
+import com.eu.habbo.habbohotel.items.interactions.InteractionWiredAddon;
+import com.eu.habbo.habbohotel.wired.WiredAddonType;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,11 +37,15 @@ public final class WiredStack {
     private final IWiredTrigger trigger;
     private final List<IWiredCondition> conditions;
     private final List<IWiredEffect> effects;
+    private final List<InteractionWiredSelector> selectors;
     
     // Extra modifiers
     private final boolean useOrMode;       // WiredExtraOrEval present
     private final boolean useRandom;        // WiredExtraRandom present
     private final boolean useUnseen;        // WiredExtraUnseen present
+    private final boolean executeInOrder;   // Wired 2.0 add-on code 17 present
+    /** Add-ons are sorted by database id; duplicate type policy is lowest id wins. */
+    private final List<InteractionWiredAddon> addons;
 
     /**
      * Create a new wired stack.
@@ -73,13 +80,47 @@ public final class WiredStack {
                       boolean useOrMode,
                       boolean useRandom,
                       boolean useUnseen) {
+        this(triggerItem, trigger, conditions, effects, Collections.emptyList(), useOrMode, useRandom, useUnseen);
+    }
+
+    public WiredStack(HabboItem triggerItem,
+                      IWiredTrigger trigger,
+                      List<IWiredCondition> conditions,
+                      List<IWiredEffect> effects,
+                      List<InteractionWiredSelector> selectors,
+                      boolean useOrMode,
+                      boolean useRandom,
+                      boolean useUnseen) {
+        this(triggerItem, trigger, conditions, effects, selectors, useOrMode, useRandom, useUnseen, false);
+    }
+
+    public WiredStack(HabboItem triggerItem,
+                      IWiredTrigger trigger,
+                      List<IWiredCondition> conditions,
+                      List<IWiredEffect> effects,
+                      List<InteractionWiredSelector> selectors,
+                      boolean useOrMode,
+                      boolean useRandom,
+                      boolean useUnseen,
+                      boolean executeInOrder) {
+        this(triggerItem, trigger, conditions, effects, selectors, useOrMode, useRandom, useUnseen,
+                executeInOrder, Collections.emptyList());
+    }
+
+    public WiredStack(HabboItem triggerItem, IWiredTrigger trigger, List<IWiredCondition> conditions,
+                      List<IWiredEffect> effects, List<InteractionWiredSelector> selectors,
+                      boolean useOrMode, boolean useRandom, boolean useUnseen, boolean executeInOrder,
+                      List<InteractionWiredAddon> addons) {
         this.triggerItem = triggerItem;
         this.trigger = trigger;
         this.conditions = conditions != null ? Collections.unmodifiableList(conditions) : Collections.emptyList();
         this.effects = effects != null ? Collections.unmodifiableList(effects) : Collections.emptyList();
+        this.selectors = selectors != null ? Collections.unmodifiableList(selectors) : Collections.emptyList();
         this.useOrMode = useOrMode;
         this.useRandom = useRandom;
         this.useUnseen = useUnseen;
+        this.executeInOrder = executeInOrder;
+        this.addons = addons != null ? Collections.unmodifiableList(addons) : Collections.emptyList();
     }
 
     /**
@@ -114,6 +155,10 @@ public final class WiredStack {
         return effects;
     }
 
+    public List<InteractionWiredSelector> selectors() {
+        return selectors;
+    }
+
     /**
      * Check if this stack has any conditions.
      * @return true if there are conditions
@@ -128,6 +173,10 @@ public final class WiredStack {
      */
     public boolean hasEffects() {
         return !effects.isEmpty();
+    }
+
+    public boolean hasSelectors() {
+        return !selectors.isEmpty();
     }
 
     /**
@@ -158,6 +207,19 @@ public final class WiredStack {
     }
 
     /**
+     * Whether add-on code 17 is present on this stack.
+     * Random and unseen modifiers retain precedence in the engine.
+     */
+    public boolean executeInOrder() {
+        return executeInOrder;
+    }
+
+    public InteractionWiredAddon addon(WiredAddonType type) {
+        for (InteractionWiredAddon addon : addons) if (addon.getType() == type) return addon;
+        return null;
+    }
+
+    /**
      * Get the number of conditions.
      * @return condition count
      */
@@ -180,9 +242,11 @@ public final class WiredStack {
                 ", trigger=" + (trigger != null ? trigger.listensTo() : "null") +
                 ", conditions=" + conditions.size() +
                 ", effects=" + effects.size() +
+                ", selectors=" + selectors.size() +
                 ", orMode=" + useOrMode +
                 ", random=" + useRandom +
                 ", unseen=" + useUnseen +
+                ", executeInOrder=" + executeInOrder +
                 '}';
     }
 }

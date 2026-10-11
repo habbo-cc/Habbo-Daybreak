@@ -21,11 +21,11 @@ public class AcceptFriendRequestEvent extends MessageHandler {
 
     @Override
     public void handle() throws Exception {
-        int count = this.packet.readInt();
+        int count = this.packet.readBoundedCount(500, Integer.BYTES);
         int userId;
 
         for (int i = 0; i < count; i++) {
-            userId = this.packet.readInt();
+            userId = this.packet.readRequiredInt();
 
             if (userId == 0)
                 return;

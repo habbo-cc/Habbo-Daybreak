@@ -16,5 +16,6 @@ public class GetSelectedBadgesMessageEvent extends MessageHandler {
             this.client.sendResponse(new UserBadgesMessageComposer(BadgesComponent.getBadgesOfflineHabbo(userId), userId));
         else
             this.client.sendResponse(new UserBadgesMessageComposer(habbo.getInventory().getBadgesComponent().getWearingBadges(), habbo.getHabboInfo().getId()));
+
     }
 }

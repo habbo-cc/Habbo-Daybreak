@@ -23,7 +23,7 @@ public class CraftSecretEvent extends MessageHandler {
     @Override
     public void handle() throws Exception {
         int altarId = this.packet.readInt();
-        int count = this.packet.readInt();
+        int count = this.packet.readBoundedCount(200, Integer.BYTES);
 
         HabboItem craftingAltar = this.client.getHabbo().getHabboInfo().getCurrentRoom().getHabboItem(altarId);
 
@@ -35,7 +35,7 @@ public class CraftSecretEvent extends MessageHandler {
                 Map<Item, Integer> items = new THashMap<>();
 
                 for (int i = 0; i < count; i++) {
-                    HabboItem habboItem = this.client.getHabbo().getInventory().getItemsComponent().getHabboItem(this.packet.readInt());
+                    HabboItem habboItem = this.client.getHabbo().getInventory().getItemsComponent().getHabboItem(this.packet.readRequiredInt());
 
                     if (habboItem == null) {
                         this.client.sendResponse(new CraftingResultMessageComposer(null));

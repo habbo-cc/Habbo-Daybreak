@@ -26,10 +26,11 @@ import java.util.stream.Collectors;
 public class WiredTriggerBotReachedFurni extends InteractionWiredTrigger {
     private static final Logger LOGGER = LoggerFactory.getLogger(WiredTriggerBotReachedFurni.class);
 
-    public final static WiredTriggerType type = WiredTriggerType.WALKS_ON_FURNI;
+    public final static WiredTriggerType type = WiredTriggerType.BOT_REACHED_STF;
 
     private THashSet<HabboItem> items;
     private String botName = "";
+    private static final int USER_SOURCE_PICKED_BOT = 100;
 
     public WiredTriggerBotReachedFurni(ResultSet set, Item baseItem) throws SQLException {
         super(set, baseItem);
@@ -46,59 +47,51 @@ public class WiredTriggerBotReachedFurni extends InteractionWiredTrigger {
         return type;
     }
 
+    // Wired 2.0 getters
+    @Override
+    protected java.util.Collection<HabboItem> getSelectedItems() { return this.items; }
+
+    @Override
+    protected boolean supportsFurniPicking() { return true; }
+
+    @Override
+    protected String getWiredStringParam() { return this.botName; }
+
+    @Override
+    protected int getFurniSourceSlotCount() { return 1; }
+
+    @Override
+    protected int getUserSourceSlotCount() { return 1; }
+
+    @Override
+    protected int[] getAllowedFurniSourcesForSlot(int slot) {
+        return new int[] { FURNI_SOURCE_TRIGGERING_ITEM, FURNI_SOURCE_PICKED_1, FURNI_SOURCE_SIGNAL };
+    }
+
+    @Override
+    protected int[] getAllowedUserSourcesForSlot(int slot) {
+        return new int[] { USER_SOURCE_TRIGGERING_USER, USER_SOURCE_PICKED_BOT, USER_SOURCE_SIGNAL };
+    }
+
+    @Override
+    protected int getDefaultFurniSourceForSlot(int slot) { return FURNI_SOURCE_PICKED_1; }
+
+    @Override
+    protected int getDefaultUserSourceForSlot(int slot) { return USER_SOURCE_PICKED_BOT; }
+
     @Override
     public void serializeWiredData(ServerMessage message, Room room) {
-        THashSet<HabboItem> items = new THashSet<>();
-
-        if (Emulator.getGameEnvironment().getRoomManager().getRoom(this.getRoomId()) == null) {
-            items.addAll(this.items);
-        } else {
-            for (HabboItem item : this.items) {
-                if (Emulator.getGameEnvironment().getRoomManager().getRoom(this.getRoomId()).getHabboItemByDatabaseId(item.getId()) == null)
-                    items.add(item);
-            }
-        }
-
-        for (HabboItem item : items) {
-            this.items.remove(item);
-        }
-
-        message.appendBoolean(false);
-        message.appendInt(WiredManager.MAXIMUM_FURNI_SELECTION);
-        message.appendInt(this.items.size());
-        for (HabboItem item : this.items) {
-            message.appendInt(item.getRoomVisibleId());
-        }
-        message.appendInt(this.getBaseItem().getSpriteId());
-        message.appendInt(this.getRoomVisibleId());
-        message.appendString(this.botName);
-        message.appendInt(0);
-        message.appendInt(0);
-        message.appendInt(WiredTriggerType.BOT_REACHED_STF.code);
-
-        if (!this.isTriggeredByRoomUnit()) {
-            List<Integer> invalidTriggers = new ArrayList<>();
-            room.getRoomSpecialTypes().getEffects(this.getX(), this.getY()).forEach(new TObjectProcedure<InteractionWiredEffect>() {
-                @Override
-                public boolean execute(InteractionWiredEffect object) {
-                    if (object.requiresTriggeringUser()) {
-                        invalidTriggers.add(object.getBaseItem().getSpriteId());
-                    }
-                    return true;
-                }
-            });
-            message.appendInt(invalidTriggers.size());
-            for (Integer i : invalidTriggers) {
-                message.appendInt(i);
-            }
-        } else {
-            message.appendInt(0);
-        }
+        this.serializeWiredDataV2(message, room);
     }
 
     @Override
     public boolean saveData(WiredSettings settings) {
-        this.botName = settings.getStringParam();
+        if (settings == null || settings.getStringParam() == null
+                || settings.getStringParam().trim().length() > 32
+                || settings.getFurniIds() == null || settings.getFurniIds().length > 20) {
+            return false;
+        }
+        this.botName = settings.getStringParam().trim();
 
         this.items.clear();
 
@@ -123,13 +116,27 @@ public class WiredTriggerBotReachedFurni extends InteractionWiredTrigger {
         
         // Get the furniture item the bot walked onto
         HabboItem sourceItem = event.getSourceItem().orElse(null);
-        if (sourceItem == null || roomUnit == null) {
+        if (sourceItem == null || roomUnit == null || room.getBot(roomUnit) == null) {
             return false;
         }
         
-        // Check if this furniture is in our monitored list AND the actor is the correct bot
-        return this.items.contains(sourceItem) && 
-               room.getBots(this.botName).stream().anyMatch(bot -> bot.getRoomUnit() == roomUnit);
+        java.util.Collection<HabboItem> furni = switch (getWiredFurniSourceTypes()[0]) {
+            case FURNI_SOURCE_TRIGGERING_ITEM -> java.util.List.of(sourceItem);
+            case FURNI_SOURCE_SIGNAL -> event.getSignalPayload().items(room);
+            default -> this.items;
+        };
+        boolean furniMatched = furni.stream().anyMatch(item -> item == sourceItem
+                || event.getTile().map(tile -> item.getX() == tile.getX() && item.getY() == tile.getY()).orElse(false));
+
+        java.util.Collection<RoomUnit> bots = switch (getWiredUserSourceTypes()[0]) {
+            case USER_SOURCE_TRIGGERING_USER -> java.util.List.of(roomUnit);
+            case USER_SOURCE_SIGNAL -> event.getSignalPayload().users(room);
+            default -> room.getBots(this.botName).stream()
+                    .map(bot -> bot.getRoomUnit())
+                    .filter(java.util.Objects::nonNull)
+                    .collect(Collectors.toList());
+        };
+        return furniMatched && bots.contains(roomUnit);
     }
 
     @Deprecated
@@ -153,8 +160,8 @@ public class WiredTriggerBotReachedFurni extends InteractionWiredTrigger {
 
         if (wiredData.startsWith("{")) {
             JsonData data = WiredManager.getGson().fromJson(wiredData, JsonData.class);
-            this.botName = data.botName;
-            for (Integer id: data.itemIds) {
+            this.botName = data == null || data.botName == null ? "" : data.botName.trim();
+            for (Integer id: data == null || data.itemIds == null ? java.util.List.<Integer>of() : data.itemIds) {
                 HabboItem item = room.getHabboItemByDatabaseId(id);
                 if (item != null) {
                     this.items.add(item);

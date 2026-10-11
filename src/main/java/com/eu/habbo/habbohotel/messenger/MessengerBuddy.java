@@ -129,6 +129,10 @@ public class MessengerBuddy implements Runnable, ISerialize {
         return this.motto;
     }
 
+    public void setMotto(String motto) {
+        this.motto = motto;
+    }
+
     public short getRelation() {
         return this.relation;
     }

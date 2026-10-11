@@ -1,0 +1,340 @@
+{
+  "schemaVersion": 2,
+  "contract": "SnowStorm v1",
+  "reserved": {
+    "clientToServer": [
+      7700,
+      7701,
+      7702,
+      7703,
+      7704,
+      7705,
+      7706,
+      7707,
+      7708,
+      7709,
+      7710,
+      7711,
+      7712,
+      7713
+    ],
+    "serverToClient": [
+      7800,
+      7801,
+      7802,
+      7803,
+      7804,
+      7805,
+      7806,
+      7807,
+      7808,
+      7809,
+      7810,
+      7811,
+      7812,
+      7813,
+      7814,
+      7815,
+      7816
+    ]
+  },
+  "files": [
+    {
+      "role": "serverIncoming",
+      "path": "C:/habbo/server/Arcturus-Community/src/main/java/com/eu/habbo/messages/incoming/Incoming.java",
+      "sha256": "2B28ADB11223303D9E887076BBB4CC40251C5C62E8099CB0BF9F9FC18F1E3D1E"
+    },
+    {
+      "role": "serverOutgoing",
+      "path": "C:/habbo/server/Arcturus-Community/src/main/java/com/eu/habbo/messages/outgoing/Outgoing.java",
+      "sha256": "FF3542A161F3EA567751B55B57F295E7ECBEAD843B5954A79D75E5A3403A43EF"
+    },
+    {
+      "role": "clientRegistry",
+      "path": "C:/habbo/client/habbo-client-clean/src/com/sulake/habbo/communication/HabboMessages.as",
+      "sha256": "882357713A69D6F37FD45549ADDB20C46C5004C8F51B295D81105605EAE58C22"
+    }
+  ],
+  "parsedCounts": {
+    "serverIncoming": 479,
+    "serverOutgoing": 581,
+    "clientIncoming": 599,
+    "clientOutgoing": 581
+  },
+  "existingRegistryDuplicates": {
+    "serverIncoming": [],
+    "serverOutgoing": [],
+    "clientIncoming": [],
+    "clientOutgoing": []
+  },
+  "existingClientClassDuplicates": {
+    "clientIncoming": [],
+    "clientOutgoing": []
+  },
+  "snowstormRangePhase": "registered",
+  "snowstormRangeEntries": {
+    "serverIncoming7700To7713": [
+      {
+        "id": 7700,
+        "name": "SnowStormGetLoungeEvent"
+      },
+      {
+        "id": 7701,
+        "name": "SnowStormSetGameParametersEvent"
+      },
+      {
+        "id": 7702,
+        "name": "SnowStormDeleteEvent"
+      },
+      {
+        "id": 7703,
+        "name": "SnowStormInitiateJoinEvent"
+      },
+      {
+        "id": 7704,
+        "name": "SnowStormSetJoinParametersEvent"
+      },
+      {
+        "id": 7705,
+        "name": "SnowStormLeaveEvent"
+      },
+      {
+        "id": 7706,
+        "name": "SnowStormKickEvent"
+      },
+      {
+        "id": 7707,
+        "name": "SnowStormWatchEvent"
+      },
+      {
+        "id": 7708,
+        "name": "SnowStormStartEvent"
+      },
+      {
+        "id": 7709,
+        "name": "SnowStormGameEvent"
+      },
+      {
+        "id": 7710,
+        "name": "SnowStormRequestFullStatusEvent"
+      },
+      {
+        "id": 7711,
+        "name": "SnowStormRequestFinishedGameEvent"
+      },
+      {
+        "id": 7712,
+        "name": "SnowStormAddBotEvent"
+      },
+      {
+        "id": 7713,
+        "name": "SnowStormRemoveBotEvent"
+      }
+    ],
+    "clientOutgoing7700To7713": [
+      {
+        "id": 7700,
+        "name": "SnowStormGetLoungeComposer"
+      },
+      {
+        "id": 7701,
+        "name": "SnowStormSetGameParametersComposer"
+      },
+      {
+        "id": 7702,
+        "name": "SnowStormDeleteComposer"
+      },
+      {
+        "id": 7703,
+        "name": "SnowStormInitiateJoinComposer"
+      },
+      {
+        "id": 7704,
+        "name": "SnowStormSetJoinParametersComposer"
+      },
+      {
+        "id": 7705,
+        "name": "SnowStormLeaveComposer"
+      },
+      {
+        "id": 7706,
+        "name": "SnowStormKickComposer"
+      },
+      {
+        "id": 7707,
+        "name": "SnowStormWatchComposer"
+      },
+      {
+        "id": 7708,
+        "name": "SnowStormStartComposer"
+      },
+      {
+        "id": 7709,
+        "name": "SnowStormGameEventComposer"
+      },
+      {
+        "id": 7710,
+        "name": "SnowStormRequestFullStatusComposer"
+      },
+      {
+        "id": 7711,
+        "name": "SnowStormRequestFinishedGameComposer"
+      },
+      {
+        "id": 7712,
+        "name": "SnowStormAddBotComposer"
+      },
+      {
+        "id": 7713,
+        "name": "SnowStormRemoveBotComposer"
+      }
+    ],
+    "serverOutgoing7800To7816": [
+      {
+        "id": 7800,
+        "name": "ShockwaveSnowStormLoungeInfoComposer"
+      },
+      {
+        "id": 7801,
+        "name": "ShockwaveSnowStormInstanceListComposer"
+      },
+      {
+        "id": 7802,
+        "name": "ShockwaveSnowStormGameInstanceComposer"
+      },
+      {
+        "id": 7803,
+        "name": "ShockwaveSnowStormInstanceRemovedComposer"
+      },
+      {
+        "id": 7804,
+        "name": "ShockwaveSnowStormJoinParametersComposer"
+      },
+      {
+        "id": 7805,
+        "name": "ShockwaveSnowStormOperationFailedComposer"
+      },
+      {
+        "id": 7806,
+        "name": "ShockwaveSnowStormGameLocationComposer"
+      },
+      {
+        "id": 7807,
+        "name": "ShockwaveSnowStormGameResetComposer"
+      },
+      {
+        "id": 7808,
+        "name": "ShockwaveSnowStormGameStartComposer"
+      },
+      {
+        "id": 7809,
+        "name": "ShockwaveSnowStormFullGameStatusComposer"
+      },
+      {
+        "id": 7810,
+        "name": "ShockwaveSnowStormGameStatusComposer"
+      },
+      {
+        "id": 7811,
+        "name": "ShockwaveSnowStormGameEndComposer"
+      },
+      {
+        "id": 7812,
+        "name": "ShockwaveSnowStormPlayerRemovedComposer"
+      },
+      {
+        "id": 7813,
+        "name": "ShockwaveSnowStormSpectatorCountComposer"
+      },
+      {
+        "id": 7814,
+        "name": "ShockwaveSnowStormFinishedGameComposer"
+      },
+      {
+        "id": 7815,
+        "name": "ShockwaveSnowStormSkillLevelChangedComposer"
+      },
+      {
+        "id": 7816,
+        "name": "ShockwaveSnowStormIdleWarningComposer"
+      }
+    ],
+    "clientIncoming7800To7816": [
+      {
+        "id": 7800,
+        "name": "SnowStormLoungeInfoEvent"
+      },
+      {
+        "id": 7801,
+        "name": "SnowStormInstanceListEvent"
+      },
+      {
+        "id": 7802,
+        "name": "SnowStormGameInstanceEvent"
+      },
+      {
+        "id": 7803,
+        "name": "SnowStormInstanceRemovedEvent"
+      },
+      {
+        "id": 7804,
+        "name": "SnowStormJoinParametersEvent"
+      },
+      {
+        "id": 7805,
+        "name": "SnowStormOperationFailedEvent"
+      },
+      {
+        "id": 7806,
+        "name": "SnowStormGameLocationEvent"
+      },
+      {
+        "id": 7807,
+        "name": "SnowStormGameResetEvent"
+      },
+      {
+        "id": 7808,
+        "name": "SnowStormGameStartEvent"
+      },
+      {
+        "id": 7809,
+        "name": "ShockwaveSnowStormFullGameStatusEvent"
+      },
+      {
+        "id": 7810,
+        "name": "ShockwaveSnowStormGameStatusEvent"
+      },
+      {
+        "id": 7811,
+        "name": "SnowStormGameEndEvent"
+      },
+      {
+        "id": 7812,
+        "name": "SnowStormPlayerRemovedEvent"
+      },
+      {
+        "id": 7813,
+        "name": "SnowStormSpectatorCountEvent"
+      },
+      {
+        "id": 7814,
+        "name": "SnowStormFinishedGameEvent"
+      },
+      {
+        "id": 7815,
+        "name": "SnowStormSkillLevelChangedEvent"
+      },
+      {
+        "id": 7816,
+        "name": "SnowStormIdleWarningEvent"
+      }
+    ]
+  },
+  "snowstormRangeUnexpected": {
+    "serverIncoming7700To7713": [],
+    "clientOutgoing7700To7713": [],
+    "serverOutgoing7800To7816": [],
+    "clientIncoming7800To7816": []
+  },
+  "passed": true
+}

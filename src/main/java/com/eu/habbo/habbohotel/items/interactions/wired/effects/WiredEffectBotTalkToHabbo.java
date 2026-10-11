@@ -13,6 +13,7 @@ import com.eu.habbo.habbohotel.users.Habbo;
 import com.eu.habbo.habbohotel.wired.WiredEffectType;
 import com.eu.habbo.habbohotel.wired.core.WiredManager;
 import com.eu.habbo.habbohotel.wired.core.WiredContext;
+import com.eu.habbo.habbohotel.wired.core.WiredTextTransform;
 import com.eu.habbo.messages.ServerMessage;
 import com.eu.habbo.messages.incoming.wired.WiredSaveException;
 import gnu.trove.procedure.TObjectProcedure;
@@ -37,6 +38,12 @@ public class WiredEffectBotTalkToHabbo extends InteractionWiredEffect {
     public WiredEffectBotTalkToHabbo(int id, int userId, Item item, String extradata, int limitedStack, int limitedSells) {
         super(id, userId, item, extradata, limitedStack, limitedSells);
     }
+
+    // Wired 2.0 getters
+    @Override
+    protected String getWiredStringParam() { return this.botName + "\t" + this.message; }
+    @Override
+    protected int[] getWiredIntParams() { return new int[]{ this.mode }; }
 
     @Override
     public void serializeWiredData(ServerMessage message, Room room) {
@@ -127,6 +134,7 @@ public class WiredEffectBotTalkToHabbo extends InteractionWiredEffect {
                     .replace(Emulator.getTexts().getValue("wired.variable.name", "%name%"), this.botName)
                     .replace(Emulator.getTexts().getValue("wired.variable.roomname", "%roomname%"), room.getName())
                     .replace(Emulator.getTexts().getValue("wired.variable.user_count", "%user_count%"), room.getUserCount() + "");
+            m = WiredTextTransform.apply(ctx, m);
 
             List<Bot> bots = room.getBots(this.botName);
 

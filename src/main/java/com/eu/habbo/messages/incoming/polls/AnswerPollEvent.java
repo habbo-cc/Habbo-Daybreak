@@ -20,8 +20,8 @@ public class AnswerPollEvent extends MessageHandler {
     public void handle() throws Exception {
         int pollId = this.packet.readInt();
         int questionId = this.packet.readInt();
-        int count = this.packet.readInt();
-        String answers = this.packet.readString();
+        int count = this.packet.readBoundedCount(128, 0);
+        String answers = this.packet.readBoundedString(32000);
         
         StringBuilder answer = new StringBuilder();
         for (int i = 0; i < count; i++) {

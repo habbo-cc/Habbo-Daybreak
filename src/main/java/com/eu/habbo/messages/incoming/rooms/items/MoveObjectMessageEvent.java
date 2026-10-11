@@ -1,5 +1,6 @@
 package com.eu.habbo.messages.incoming.rooms.items;
 
+import com.eu.habbo.Emulator;
 import com.eu.habbo.habbohotel.rooms.FurnitureMovementError;
 import com.eu.habbo.habbohotel.rooms.Room;
 import com.eu.habbo.habbohotel.rooms.RoomTile;
@@ -24,6 +25,9 @@ public class MoveObjectMessageEvent extends MessageHandler {
         int x = this.packet.readInt();
         int y = this.packet.readInt();
         int rotation = this.packet.readInt();
+        int oldX = item.getX();
+        int oldY = item.getY();
+        int oldRotation = item.getRotation();
         RoomTile tile = room.getLayout().getTile((short) x, (short) y);
 
         FurnitureMovementError error = room.canPlaceFurnitureAt(item, this.client.getHabbo(), tile, rotation);
@@ -37,6 +41,16 @@ public class MoveObjectMessageEvent extends MessageHandler {
         if (!error.equals(FurnitureMovementError.NONE)) {
             this.client.sendResponse(new NotificationDialogMessageComposer(BubbleAlertKeys.FURNITURE_PLACEMENT_ERROR.key, error.errorCode));
             this.client.sendResponse(new ObjectUpdateMessageComposer(item));
+            return;
+        }
+
+        if (Emulator.getGameEnvironment().getRewardTrackManager() != null) {
+            if (oldX != item.getX() || oldY != item.getY()) {
+                Emulator.getGameEnvironment().getRewardTrackManager().progress(this.client.getHabbo(), "move_item");
+            }
+            if (oldRotation != item.getRotation()) {
+                Emulator.getGameEnvironment().getRewardTrackManager().progress(this.client.getHabbo(), "rotate_item");
+            }
         }
     }
 }

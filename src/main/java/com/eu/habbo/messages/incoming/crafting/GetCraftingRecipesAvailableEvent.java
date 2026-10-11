@@ -23,9 +23,9 @@ public class GetCraftingRecipesAvailableEvent extends MessageHandler {
         if (altar != null) {
             Map<Item, Integer> items = new THashMap<>();
 
-            int count = this.packet.readInt();
+            int count = this.packet.readBoundedCount(200, Integer.BYTES);
             for (int i = 0; i < count; i++) {
-                HabboItem habboItem = this.client.getHabbo().getInventory().getItemsComponent().getHabboItem(this.packet.readInt());
+                HabboItem habboItem = this.client.getHabbo().getInventory().getItemsComponent().getHabboItem(this.packet.readRequiredInt());
 
                 if (habboItem != null) {
                     if (!items.containsKey(habboItem.getBaseItem())) {

@@ -37,7 +37,9 @@ public class OpenTradingEvent extends MessageHandler {
 
                     if (targetUser.getHabboStats().userIgnored(this.client.getHabbo().getHabboInfo().getId())) return;
 
-                    if (this.client.getHabbo().getRoomUnit().hasStatus(RoomUnitStatus.TRADING)) {
+                    if (this.client.getHabbo().getRoomUnit().hasStatus(RoomUnitStatus.TRADING)
+                            || Emulator.getGameEnvironment().getChestManager()
+                                    .hasActiveTrade(this.client)) {
                         this.client.sendResponse(new TradingOpenFailedMessageComposer(TradingOpenFailedMessageComposer.YOU_ALREADY_TRADING));
                         return;
                     }
@@ -47,7 +49,9 @@ public class OpenTradingEvent extends MessageHandler {
                         return;
                     }
 
-                    if (targetUser.getRoomUnit().hasStatus(RoomUnitStatus.TRADING)) {
+                    if (targetUser.getRoomUnit().hasStatus(RoomUnitStatus.TRADING)
+                            || Emulator.getGameEnvironment().getChestManager()
+                                    .hasActiveTrade(targetUser.getClient())) {
                         this.client.sendResponse(new TradingOpenFailedMessageComposer(TradingOpenFailedMessageComposer.TARGET_ALREADY_TRADING, targetUser.getHabboInfo().getUsername()));
                         return;
                     }

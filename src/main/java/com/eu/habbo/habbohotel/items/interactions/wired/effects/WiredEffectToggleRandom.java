@@ -90,6 +90,12 @@ public class WiredEffectToggleRandom extends InteractionWiredEffect {
         super(id, userId, item, extradata, limitedStack, limitedSells);
     }
 
+    // Wired 2.0 getters
+    @Override
+    protected java.util.Collection<HabboItem> getSelectedItems() { return this.items; }
+    @Override
+    protected boolean supportsFurniPicking() { return true; }
+
     @Override
     public void serializeWiredData(ServerMessage message, Room room) {
         THashSet<HabboItem> items = new THashSet<>();
@@ -172,9 +178,8 @@ public class WiredEffectToggleRandom extends InteractionWiredEffect {
     @Override
     public void execute(WiredContext ctx) {
         Room room = ctx.room();
-        THashSet<HabboItem> items = this.items;
 
-        for (HabboItem item : items) {
+        for (HabboItem item : new java.util.ArrayList<>(resolveFurniSource(ctx, this.getWiredFurniSourceTypes(), 0, this.items, null))) {
             if (item.getRoomId() == 0 || FORBIDDEN_TYPES.stream().anyMatch(a -> a.isAssignableFrom(item.getClass()))) {
                 this.items.remove(item);
                 continue;

@@ -7,7 +7,7 @@ import com.eu.habbo.messages.incoming.MessageHandler;
 public class RemoveRightsMessageEvent extends MessageHandler {
     @Override
     public void handle() throws Exception {
-        int amount = this.packet.readInt();
+        int amount = this.packet.readBoundedCount(500, Integer.BYTES);
 
         Room room = this.client.getHabbo().getHabboInfo().getCurrentRoom();
 
@@ -16,7 +16,7 @@ public class RemoveRightsMessageEvent extends MessageHandler {
 
         if (room.getOwnerId() == this.client.getHabbo().getHabboInfo().getId() || this.client.getHabbo().hasPermission(Permission.ACC_ANYROOMOWNER)) {
             for (int i = 0; i < amount; i++) {
-                int userId = this.packet.readInt();
+                int userId = this.packet.readRequiredInt();
 
                 room.removeRights(userId);
             }

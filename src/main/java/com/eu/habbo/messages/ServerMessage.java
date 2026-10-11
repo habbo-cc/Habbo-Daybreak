@@ -145,6 +145,22 @@ public class ServerMessage {
         }
     }
 
+    public void appendFloat(float value) {
+        try {
+            this.stream.writeFloat(value);
+        } catch (IOException e) {
+            throw new ServerMessageException(e);
+        }
+    }
+
+    public void appendLong(long value) {
+        try {
+            this.stream.writeLong(value);
+        } catch (IOException e) {
+            throw new ServerMessageException(e);
+        }
+    }
+
     public void appendDouble(Double obj) {
         try {
             this.stream.writeDouble(obj);

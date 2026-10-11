@@ -1,0 +1,390 @@
+{
+  "schemaVersion": 1,
+  "target": "Habbo Shockwave r26 SnowStorm",
+  "evidencePrecedence": [
+    "r26 casts and recovered raw bytecode",
+    "cleaned Lingo matched to raw bytecode",
+    "14.1 b8 comparison casts",
+    "Havana only where independently corroborated",
+    "Quackster guide as an index/explanation",
+    "later AIR snowwar is excluded as gameplay truth"
+  ],
+  "casts": [
+    {
+      "path": "C:/habbo/client/v14/dcr/r26_20080915_0408_7984_61ccb5f8b8797a3aba62c1fa2ca80169/hh_game_snowwar.cct",
+      "filename": "hh_game_snowwar.cct",
+      "version": "r26",
+      "sha256": "D2F82FA0EFB1154CF825091A13BACC1D77BCFB56FA761E8D408C7A4673E5D9B8",
+      "bytes": 143791,
+      "license": "No redistribution licence present in the archive; preservation/reference evidence only",
+      "role": "authoritative target"
+    },
+    {
+      "path": "C:/habbo/client/v14/dcr/r26_20080915_0408_7984_61ccb5f8b8797a3aba62c1fa2ca80169/hh_game_snowwar_room.cct",
+      "filename": "hh_game_snowwar_room.cct",
+      "version": "r26",
+      "sha256": "D0366C53235C91A19F1F36E9A988D5AA4C05C0A89E8D94A54A477D44ABEC9004",
+      "bytes": 261288,
+      "license": "No redistribution licence present in the archive; preservation/reference evidence only",
+      "role": "authoritative target"
+    },
+    {
+      "path": "C:/habbo/client/v14/dcr/r26_20080915_0408_7984_61ccb5f8b8797a3aba62c1fa2ca80169/hh_game_snowwar_ui.cct",
+      "filename": "hh_game_snowwar_ui.cct",
+      "version": "r26",
+      "sha256": "1587895AEE310029B0D44D30B367ED33212E84A8745EBB9CC7BF10832685144A",
+      "bytes": 45624,
+      "license": "No redistribution licence present in the archive; preservation/reference evidence only",
+      "role": "authoritative target"
+    },
+    {
+      "path": "C:/habbo/client/v14/dcr/14.1_b8/hh_game_snowwar.cct",
+      "filename": "hh_game_snowwar.cct",
+      "version": "14.1_b8",
+      "sha256": "0909B3174D3E101A1B6A3AD70B9214676F30C5090B379CCDC4C7B8F251F1A37D",
+      "bytes": 146469,
+      "license": "No redistribution licence present in the archive; preservation/reference evidence only",
+      "role": "historical comparison only"
+    },
+    {
+      "path": "C:/habbo/client/v14/dcr/14.1_b8/hh_game_snowwar_room.cct",
+      "filename": "hh_game_snowwar_room.cct",
+      "version": "14.1_b8",
+      "sha256": "6B4B7DF820F09CBF45B4DD16DC108E806B701FD744D8FE57698C35CD3D53A6E4",
+      "bytes": 223259,
+      "license": "No redistribution licence present in the archive; preservation/reference evidence only",
+      "role": "historical comparison only"
+    },
+    {
+      "path": "C:/habbo/client/v14/dcr/14.1_b8/hh_game_snowwar_ui.cct",
+      "filename": "hh_game_snowwar_ui.cct",
+      "version": "14.1_b8",
+      "sha256": "9F999434B0BE3E16A05B1231EF0672B4D13582BF1302D36BF8816C078289D122",
+      "bytes": 73233,
+      "license": "No redistribution licence present in the archive; preservation/reference evidence only",
+      "role": "historical comparison only"
+    },
+    {
+      "path": "C:/habbo/client/v14/dcr/r26_20080915_0408_7984_61ccb5f8b8797a3aba62c1fa2ca80169/hh_gamesys.cct",
+      "filename": "hh_gamesys.cct",
+      "version": "r26",
+      "sha256": "5DDAB758683CECF03F4840F6EDA68CD18F3E04698F6E8618B769D3B83F9A9C6D",
+      "bytes": 31187,
+      "license": "No redistribution licence present in the archive; preservation/reference evidence only",
+      "role": "authoritative shared game runtime used by the target SnowStorm casts"
+    },
+    {
+      "path": "C:/habbo/client/v14/dcr/r26_20080915_0408_7984_61ccb5f8b8797a3aba62c1fa2ca80169/hh_games.cct",
+      "filename": "hh_games.cct",
+      "version": "r26",
+      "sha256": "C6B7265587D938910E80DB7EC7060B4909F5636B81AF03C087A8DF0819C4ACA6",
+      "bytes": 49847,
+      "license": "No redistribution licence present in the archive; preservation/reference evidence only",
+      "role": "authoritative shared game runtime used by the target SnowStorm casts"
+    }
+  ],
+  "recoveredClient": {
+    "path": "C:/habbo/hh_ig_game_snowwar",
+    "revision": "9b9444effa1defa702bcf0561609fbf377c26d10",
+    "remote": "https://github.com/igorlira/hh_ig_game_snowwar.git",
+    "dirty": false,
+    "license": "GPL-3.0",
+    "role": "raw and cleaned r26 Lingo recovery"
+  },
+  "explanatoryGuide": {
+    "path": "C:/habbo/snowstorm",
+    "revision": "aea9a53a6ea39d5d5456dd229702baf6e25967f8",
+    "remote": "https://github.com/Quackster/snowstorm.git",
+    "dirty": false,
+    "license": "Apache-2.0",
+    "role": "explanation/index only"
+  },
+  "havana": {
+    "path": "C:/habbo/server/Havana",
+    "revision": null,
+    "dirty": null,
+    "license": "AGPL-3.0",
+    "role": "candidate server/map comparison only; local snapshot has no .git metadata",
+    "snowstormSourceTree": {
+      "root": "C:/habbo/server/Havana/Havana-Server/src/main/java/org/alexdev/havana/game/games/snowstorm",
+      "fileCount": 32,
+      "sha256": "40941A59E5BA671A308F40D262116C1C8800A0AF90CB02AB4606108922491062",
+      "files": [
+        {
+          "path": "events/SnowStormAvatarMoveEvent.java",
+          "sha256": "9E16E74B9FC7E3E0C72F3EA3D1072E8CDE531D57DE51BEE7A3DF6C6EFF4978B4",
+          "bytes": 971
+        },
+        {
+          "path": "events/SnowStormCreateSnowballEvent.java",
+          "sha256": "CD3402D22B5FE74982D36A43A51C47EBC8FD708D5EB30E93052369F21ED4FE65",
+          "bytes": 701
+        },
+        {
+          "path": "events/SnowStormDeleteObjectEvent.java",
+          "sha256": "4D59435D297C0DD4947209718C8E092EB8A9892175DD3F85FE89843007EE4EA1",
+          "bytes": 675
+        },
+        {
+          "path": "events/SnowStormHitEvent.java",
+          "sha256": "587C21DBDE60D59E60CE03FB5CB94BA6D9E7BD6F8B55B9E8E9E3FF75D1FBCAEA",
+          "bytes": 912
+        },
+        {
+          "path": "events/SnowStormLaunchSnowballEvent.java",
+          "sha256": "7FF9D0563D77547ECBDCAE95B729CF80E1EAE88F8FB8012319A21F65F8E283F2",
+          "bytes": 1104
+        },
+        {
+          "path": "events/SnowStormMachineAddSnowballEvent.java",
+          "sha256": "7D606414926F2DC8DD692EBB4560218389BB3CE23D12B366378D8DB5525CC76D",
+          "bytes": 700
+        },
+        {
+          "path": "events/SnowStormMachineMoveSnowballsEvent.java",
+          "sha256": "D077FD8B44313F6A51F0B341D343C4204DF1BA1435905C5E714ECEDF5F95CE67",
+          "bytes": 821
+        },
+        {
+          "path": "events/SnowStormStunEvent.java",
+          "sha256": "1F50A22312B3B06AD30ED8AB35E14FA9A0B655141F200DE33C539FBAA764237B",
+          "bytes": 910
+        },
+        {
+          "path": "events/SnowStormThrowEvent.java",
+          "sha256": "469B50E640325A4F9F5796593CBF9848C517DC95142AFBFE43CED03FD9A4FBA1",
+          "bytes": 971
+        },
+        {
+          "path": "mapping/SnowStormItem.java",
+          "sha256": "72F5D2439EC84C51B467956C96DF7EACA0CE3DBF9C6789D0DC3A7D66E3AD9519",
+          "bytes": 1256
+        },
+        {
+          "path": "mapping/SnowStormMap.java",
+          "sha256": "E4F5F486E37C7410E3199E7191A16A75E8695425C6EF6A24B9CC5D6235BEE531",
+          "bytes": 3191
+        },
+        {
+          "path": "mapping/SnowStormPathfinder.java",
+          "sha256": "C4A7227FC0BFF3A294CFCE5550BC8DB0F41D46774FD210508369DCED41700702",
+          "bytes": 6908
+        },
+        {
+          "path": "mapping/SnowStormTile.java",
+          "sha256": "51777348FA02DA7B1E121EF6291E87ED42EFF497DE4D3659DC16FB162CE4A682",
+          "bytes": 1832
+        },
+        {
+          "path": "messages/incoming/SnowStormAttackPlayerMessage.java",
+          "sha256": "1D23B3DF6014436498EE54AD660B1A5D33C691BBE974585B001C5675DBBE09D8",
+          "bytes": 4302
+        },
+        {
+          "path": "messages/incoming/SnowstormCreateSnowballMessage.java",
+          "sha256": "DFF254C122956BC83D39C7709A48CE8F4006CB31C0D2B7107A91B056E08A5CC6",
+          "bytes": 1941
+        },
+        {
+          "path": "messages/incoming/SnowStormThrowLocationMessage.java",
+          "sha256": "CC5692F05C329017F358AD5684B1E122B10FB661221EF02ACA0A44B21B3E0B3D",
+          "bytes": 3841
+        },
+        {
+          "path": "messages/incoming/SnowStormWalkMessage.java",
+          "sha256": "AD98707F58FBADB63836E0235A930D525CC9EA174EF66756B0809FDFBF40C378",
+          "bytes": 1573
+        },
+        {
+          "path": "messages/SnowStormMessageHandler.java",
+          "sha256": "0DF2DF0690D6A7611D8A3DEC42E6994B41E19CCD27BF84ACB732E47E54E79269",
+          "bytes": 1988
+        },
+        {
+          "path": "objects/SnowballObject.java",
+          "sha256": "9496C8E7EA1366279B3F87B4AB7BB85036B57E493B68433E379F32CF4342AFD4",
+          "bytes": 5532
+        },
+        {
+          "path": "objects/SnowStormAvatarObject.java",
+          "sha256": "0331DF4E88B9E5ECF26E64B74971B6B2CD213B193CEBC080BCB38058D0F898F4",
+          "bytes": 3056
+        },
+        {
+          "path": "objects/SnowStormMachineObject.java",
+          "sha256": "4E76A4D906C1AF7D9AA2644FE89DBE5F8F6F0A934D4BF28D13F95127D8EFDFFA",
+          "bytes": 2257
+        },
+        {
+          "path": "SnowStormGame.java",
+          "sha256": "1EEC250EA116D3656AB1D77893B8D64B3AF92B6D401A915D3528E87C0DF66E0C",
+          "bytes": 13271
+        },
+        {
+          "path": "SnowStormMapsManager.java",
+          "sha256": "E205D52814CF3742E1526A3CD809F770216D72B7321C142C1D29473CE0F4810E",
+          "bytes": 19006
+        },
+        {
+          "path": "SnowStormTurn.java",
+          "sha256": "701BBFC442488403176B084A8347C98A3A695D04CD536400B2C46AC4D582917F",
+          "bytes": 404
+        },
+        {
+          "path": "tasks/SnowballMovementTask.java",
+          "sha256": "287293D7AC08BACF23BD41DD1234F4CD2E32A0E35C074720635CA23F0E7F56B1",
+          "bytes": 5496
+        },
+        {
+          "path": "tasks/SnowStormGameTask.java",
+          "sha256": "5DDD0AF8D75F8D753107F17E8A1C25039F84555E66D06F5C64C138CFFD889055",
+          "bytes": 10237
+        },
+        {
+          "path": "util/SnowStormActivityState.java",
+          "sha256": "93724DB632E32CCCF814B0C54F7B8FB46200F499AF59F83594D668AAFFFFBF20",
+          "bytes": 747
+        },
+        {
+          "path": "util/SnowStormAttributes.java",
+          "sha256": "C3AF1822917468BBB81A4152D3DF23153975BB1C546DDC3BE9C463F1CA0BBB68",
+          "bytes": 4429
+        },
+        {
+          "path": "util/SnowStormEvent.java",
+          "sha256": "A804BF3A6570288990D168A7A461AB45713FB9A9C34D31D2B2344301CC2CBCDE",
+          "bytes": 550
+        },
+        {
+          "path": "util/SnowStormFuture.java",
+          "sha256": "074CC398ECAF6923B373D64013B9D54CDDDCD178FC91DB63EC41FDE9571110D2",
+          "bytes": 677
+        },
+        {
+          "path": "util/SnowStormMessage.java",
+          "sha256": "26AD46C50F57475CCA89D96F9030766825A8FFA7ECFE10C57FC1F9189DAFC73B",
+          "bytes": 460
+        },
+        {
+          "path": "util/SnowStormSpawn.java",
+          "sha256": "644366FDDF11869048BED54123311D8DC50381A016C11968FC15415AE564543E",
+          "bytes": 612
+        }
+      ]
+    },
+    "mapTree": {
+      "root": "C:/habbo/server/Havana/tools/snowstorm_maps",
+      "fileCount": 17,
+      "sha256": "6056F25F348500D1B5561CD0D6B53C7877E7C3F7946851506F10CCA3AA7CD9CA",
+      "files": [
+        {
+          "path": "arena_1_snowmachines.dat",
+          "sha256": "4842C49635CAFDBE4AB0FDD6B576250CB6A41928707A1CE952EA0CA7CF246082",
+          "bytes": 5
+        },
+        {
+          "path": "arena_1_spawn_clusters.dat",
+          "sha256": "8D4EC9C16A66B9CD79694AFF2C60E16561262F5978D17E98B9DD331B44B89373",
+          "bytes": 30
+        },
+        {
+          "path": "arena_1.dat",
+          "sha256": "21BCDE90E28A03A01EC126E2D04EB24DA88D02BFB32EC81633F24B7BD7E3256E",
+          "bytes": 2336
+        },
+        {
+          "path": "arena_2_snowmachines.dat",
+          "sha256": "F5FA559C79063995B57E51ECDC65BDE3F660670965897398324ACF503189998F",
+          "bytes": 5
+        },
+        {
+          "path": "arena_2_spawn_clusters.dat",
+          "sha256": "BB21C88D3507A51D1D308B83B7324B977178F5A5635B4720A694AA5DE257581D",
+          "bytes": 29
+        },
+        {
+          "path": "arena_2.dat",
+          "sha256": "220884A5351CCE33C9E99A66CBF3ED6E897FF21AC6DE7B323371C9C600173752",
+          "bytes": 1203
+        },
+        {
+          "path": "arena_3_snowmachines.dat",
+          "sha256": "BE9B6E0095A1CAE19661F61C8EAB06862585D71F9BFA9339B56931194A325B2A",
+          "bytes": 17
+        },
+        {
+          "path": "arena_3_spawn_clusters.dat",
+          "sha256": "3286F9E4F119F28398A9FA8B5466306FD40E0F3BBCCD91FB31C9CD204187EB09",
+          "bytes": 29
+        },
+        {
+          "path": "arena_3.dat",
+          "sha256": "F4136A0B5B05E0638495AEDD349CBE709A6C32E7D5542175FF3D50F3C4DBAB2B",
+          "bytes": 4448
+        },
+        {
+          "path": "arena_4_spawn_clusters.dat",
+          "sha256": "AFBBDF26EF96DBBB761C9C724781B50EE080FE6AA320C219EB03B8747ABF1D23",
+          "bytes": 12
+        },
+        {
+          "path": "arena_4.dat",
+          "sha256": "12074846B33DA553DE43DE543354FB408531EDA5705EE75FF2C1A23870F26DE1",
+          "bytes": 954
+        },
+        {
+          "path": "arena_5_spawn_clusters.dat",
+          "sha256": "209C55336FE5588B1C05EA26951FFC703FAC7E636382ED500F9F1B0CB724B65B",
+          "bytes": 30
+        },
+        {
+          "path": "arena_5.dat",
+          "sha256": "A12F1935BFAB2D4B3FEE7DC0FA623A07720CCF4DB617DB0B725951244F391C26",
+          "bytes": 9410
+        },
+        {
+          "path": "arena_6_spawn_clusters.dat",
+          "sha256": "C038D62ACD779E13BE1E13C0D967F6718C8792447E4CFCCF1E0CC4F654610088",
+          "bytes": 49
+        },
+        {
+          "path": "arena_6.dat",
+          "sha256": "E960523BA4FA869C6D2F6B8ADF61064AB3AB14833258B80B52E476CFFC28D41E",
+          "bytes": 2900
+        },
+        {
+          "path": "arena_7_spawn_clusters.dat",
+          "sha256": "45E1EC78AA16CC682FAFA701EE68A6A6F3D8503D7CD535D00922FC5E69C3DDAE",
+          "bytes": 50
+        },
+        {
+          "path": "arena_7.dat",
+          "sha256": "A4F65C4DDEB382F1A1CF906EC1B4FF63F1613CD514611CF243DCC91DC9368628",
+          "bytes": 1361
+        }
+      ]
+    }
+  },
+  "extractor": {
+    "path": "C:/habbo/ccttoswf/convert_snowstorm.py",
+    "sha256": "388E5EC95039B7D3AB35B5CC479FB2E83349B4A2CF130EA3CE27AD19DAA06A0B",
+    "role": "pinned r26 cast extractor"
+  },
+  "projectorRays": {
+    "version": "1.1.1",
+    "license": "MPL-2.0",
+    "package": "https://www.npmjs.com/package/projectorrays",
+    "role": "cross-version RIFX/XFIR evidence parser only"
+  },
+  "battleBallGuidance": {
+    "server": [
+      "5e3d61b0d6cb038df48b21eb23efbdbe399759cb",
+      "f96376d6b9561dda8558d2545595163652c7e340"
+    ],
+    "client": [
+      "999c4483a5846a6668de0781547d0cd4db53ad3c",
+      "9b265927b2779d0756cdf4821af2098cdfa6c27f"
+    ],
+    "role": "integration patterns only"
+  }
+}

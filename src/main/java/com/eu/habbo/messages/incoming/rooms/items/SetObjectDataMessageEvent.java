@@ -28,10 +28,10 @@ public class SetObjectDataMessageEvent extends MessageHandler {
         }
         if (item instanceof InteractionCustomValues) {
             THashMap<String, String> oldValues = new THashMap<>(((InteractionCustomValues) item).values);
-            int count = this.packet.readInt();
+            int count = this.packet.readBoundedCount(200, Short.BYTES);
             for (int i = 0; i < count / 2; i++) {
-                String key = this.packet.readString();
-                String value = this.packet.readString();
+                String key = this.packet.readBoundedString(32000);
+                String value = this.packet.readBoundedString(32000);
 
                 if (!Emulator.getConfig().getBoolean("camera.use.https")) {
                     value = value.replace("https://", "http://");

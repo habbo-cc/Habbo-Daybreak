@@ -31,6 +31,7 @@ public class InteractionGameTimer extends HabboItem {
     private boolean isRunning = false;
     private boolean isPaused = false;
     private boolean threadActive = false;
+    private boolean halfTick = false;
 
     public enum InteractionGameTimerAction {
         START_STOP(1),
@@ -215,13 +216,14 @@ public class InteractionGameTimer extends HabboItem {
             this.timeNow = this.baseTime;
             this.isRunning = true;
             this.isPaused = false;
+            this.halfTick = false;
 
             room.updateItem(this);
             WiredManager.triggerGameStarts(room);
 
             if (!this.threadActive) {
                 this.threadActive = true;
-                Emulator.getThreading().run(new GameTimer(this), 1000);
+                Emulator.getThreading().run(new GameTimer(this), 500);
             }
         } else if (client != null) {
             if (!(room.hasRights(client.getHabbo()) || client.getHabbo().hasPermission(Permission.ACC_ANYROOMOWNER)))
@@ -251,6 +253,7 @@ public class InteractionGameTimer extends HabboItem {
                         this.isPaused = false;
                         this.isRunning = true;
                         this.timeNow = this.baseTime;
+                        this.halfTick = false;
                         room.updateItem(this);
 
                         this.createNewGame(room);
@@ -258,7 +261,7 @@ public class InteractionGameTimer extends HabboItem {
 
                         if (!this.threadActive) {
                             this.threadActive = true;
-                            Emulator.getThreading().run(new GameTimer(this), 1000);
+                            Emulator.getThreading().run(new GameTimer(this), 500);
                         }
                     }
 
@@ -290,6 +293,7 @@ public class InteractionGameTimer extends HabboItem {
         if (!isRunning) {
             isRunning = true;
             isPaused = false;
+            halfTick = false;
             if(timeNow <= 0) {
                 timeNow = baseTime;
                 room.updateItem(this);
@@ -298,7 +302,7 @@ public class InteractionGameTimer extends HabboItem {
             WiredManager.triggerGameStarts(room);
             if (!threadActive) {
                 threadActive = true;
-                Emulator.getThreading().run(new GameTimer(this), 1000);
+                Emulator.getThreading().run(new GameTimer(this), 500);
             }
         }
     }
@@ -322,7 +326,7 @@ public class InteractionGameTimer extends HabboItem {
 
             if (!this.threadActive) {
                 this.threadActive = true;
-                Emulator.getThreading().run(new GameTimer(this), 1000);
+                Emulator.getThreading().run(new GameTimer(this), 500);
             }
         }
     }
@@ -390,5 +394,18 @@ public class InteractionGameTimer extends HabboItem {
 
     public void setTimeNow(int timeNow) {
         this.timeNow = timeNow;
+    }
+
+    public boolean isHalfTick() {
+        return this.halfTick;
+    }
+
+    public void setHalfTick(boolean halfTick) {
+        this.halfTick = halfTick;
+    }
+
+    public int getEffectiveHalfSeconds() {
+        long halfSeconds = (long) this.timeNow * 2L - (this.halfTick ? 1L : 0L);
+        return (int) Math.max(0L, Math.min(Integer.MAX_VALUE, halfSeconds));
     }
 }

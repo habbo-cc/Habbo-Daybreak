@@ -55,10 +55,11 @@ public abstract class Server {
         }
 
         if (!channelFuture.isSuccess()) {
-            LOGGER.info("Failed to connect to the host ({}:{})@{}", this.host, this.port, this.name);
-            System.exit(0);
+            LOGGER.error("{} -> Failed to bind! ({}:{})", this.name, this.host, this.port,
+                    channelFuture.cause());
+            System.exit(1);
         } else {
-            LOGGER.info("Started GameServer on {}:{}@{}", this.host, this.port, this.name);
+            LOGGER.info("{} -> Listening! ({}:{})", this.name, this.host, this.port);
         }
     }
 

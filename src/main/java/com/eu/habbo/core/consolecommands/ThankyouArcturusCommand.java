@@ -13,7 +13,7 @@ public class ThankyouArcturusCommand extends ConsoleCommand {
 
     @Override
     public void handle(String[] args) throws Exception {
-            LOGGER.info("Arcturus Morningstar is an opensource community fork of Arcturus Emulator by TheGeneral");
+            LOGGER.info("Habbo Daybreak is an opensource community fork of Arcturus Emulator by TheGeneral");
         LOGGER.info("Thankyou to the following people who have helped with it's development:");
         LOGGER.info("TheGeneral - For Creating Arcturus.");
         LOGGER.info("Capheus - Decompilation");

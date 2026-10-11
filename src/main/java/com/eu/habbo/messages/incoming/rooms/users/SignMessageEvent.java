@@ -4,6 +4,8 @@ import com.eu.habbo.Emulator;
 import com.eu.habbo.habbohotel.items.interactions.InteractionVoteCounter;
 import com.eu.habbo.habbohotel.rooms.Room;
 import com.eu.habbo.habbohotel.rooms.RoomUnitStatus;
+import com.eu.habbo.habbohotel.wired.WiredUserAction;
+import com.eu.habbo.habbohotel.wired.core.WiredManager;
 import com.eu.habbo.habbohotel.users.HabboItem;
 import com.eu.habbo.messages.incoming.MessageHandler;
 import com.eu.habbo.plugin.events.users.UserSignEvent;
@@ -32,6 +34,8 @@ public class SignMessageEvent extends MessageHandler {
                     }
                 }
             }
+
+            WiredManager.triggerUserPerformsAction(room, this.client.getHabbo().getRoomUnit(), WiredUserAction.SIGN, WiredUserAction.signExtra(event.sign));
         }
     }
 }

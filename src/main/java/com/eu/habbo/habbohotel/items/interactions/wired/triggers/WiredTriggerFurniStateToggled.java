@@ -99,6 +99,13 @@ public class WiredTriggerFurniStateToggled extends InteractionWiredTrigger {
         return type;
     }
 
+    // Wired 2.0 getters
+    @Override
+    protected java.util.Collection<HabboItem> getSelectedItems() { return this.items; }
+
+    @Override
+    protected boolean supportsFurniPicking() { return true; }
+
     @Override
     public void serializeWiredData(ServerMessage message, Room room) {
         THashSet<HabboItem> items = new THashSet<>();

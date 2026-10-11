@@ -1,0 +1,7274 @@
+{
+  "schemaVersion": 1,
+  "sources": {
+    "sharedRuntime": "hh_gamesys.cct",
+    "snowstormScripts": [
+      "Snowwar Avatar Gameobject Class",
+      "Snowwar Snowball Gameobject Class",
+      "Snowwar GameFieldManager Class"
+    ],
+    "squareRootLingoSha256": "5E7C319501D4EAA5723B7C8B9C28E2381917748081D3ECAC2662D6FC306D4D46",
+    "velocityTableLingoSha256": "EE48EACC42C31F3379CA6310326F20D7F9B0002E8B111A81DC99D089B75DEB40",
+    "componentToAngleLingoSha256": "B5E0231B45CD01FD8D20104A5F155F6AFDDAC6559930BC77109C960A976AFA1F",
+    "machineTiming": "Havana-visible timing approved for deterministic NGH implementation",
+    "havanaComparison": {
+      "accepted": [
+        "300 ms turn with five subturn payloads",
+        "machine stock/cadence intent"
+      ],
+      "rejected": [
+        "wall-clock projectile tasks",
+        "landing-tile-only hit detection",
+        "velocity 3000",
+        "distance-based quick TTL and 22-tile cap",
+        "opposition-only physical collision",
+        "health restoration at knockout"
+      ]
+    }
+  },
+  "timing": {
+    "turnMs": 300,
+    "subturnsPerTurn": 5,
+    "subturnMs": 60
+  },
+  "coordinateVectors": [
+    {
+      "world": -1601,
+      "tile": null,
+      "rejected": true
+    },
+    {
+      "world": -1600,
+      "tile": 0,
+      "rejected": false
+    },
+    {
+      "world": -1599,
+      "tile": 0,
+      "rejected": false
+    },
+    {
+      "world": -1,
+      "tile": 0,
+      "rejected": false
+    },
+    {
+      "world": 0,
+      "tile": 0,
+      "rejected": false
+    },
+    {
+      "world": 1599,
+      "tile": 0,
+      "rejected": false
+    },
+    {
+      "world": 1600,
+      "tile": 1,
+      "rejected": false
+    },
+    {
+      "world": 4799,
+      "tile": 1,
+      "rejected": false
+    },
+    {
+      "world": 4800,
+      "tile": 2,
+      "rejected": false
+    }
+  ],
+  "directionVectors": [
+    {
+      "direction": 0,
+      "deltaX": 0,
+      "deltaY": -1
+    },
+    {
+      "direction": 1,
+      "deltaX": 1,
+      "deltaY": -1
+    },
+    {
+      "direction": 2,
+      "deltaX": 1,
+      "deltaY": 0
+    },
+    {
+      "direction": 3,
+      "deltaX": 1,
+      "deltaY": 1
+    },
+    {
+      "direction": 4,
+      "deltaX": 0,
+      "deltaY": 1
+    },
+    {
+      "direction": 5,
+      "deltaX": -1,
+      "deltaY": 1
+    },
+    {
+      "direction": 6,
+      "deltaX": -1,
+      "deltaY": 0
+    },
+    {
+      "direction": 7,
+      "deltaX": -1,
+      "deltaY": -1
+    }
+  ],
+  "neighbourChoiceVectors": [
+    {
+      "name": "direct-east",
+      "angle": 90,
+      "candidateDirections": [
+        2,
+        1,
+        3
+      ],
+      "selectedDirection": 2
+    },
+    {
+      "name": "east-falls-back-ccw",
+      "angle": 90,
+      "candidateDirections": [
+        2,
+        1,
+        3
+      ],
+      "selectedDirection": 1
+    },
+    {
+      "name": "east-falls-back-cw",
+      "angle": 90,
+      "candidateDirections": [
+        2,
+        1,
+        3
+      ],
+      "selectedDirection": 3
+    },
+    {
+      "name": "all-three-blocked",
+      "angle": 90,
+      "candidateDirections": [
+        2,
+        1,
+        3
+      ],
+      "selectedDirection": null
+    }
+  ],
+  "movementVectors": [
+    {
+      "name": "cardinal-five-subturn-tile",
+      "start": [
+        0,
+        0
+      ],
+      "target": [
+        3200,
+        0
+      ],
+      "path": [
+        {
+          "subturn": 1,
+          "worldX": 640,
+          "worldY": 0
+        },
+        {
+          "subturn": 2,
+          "worldX": 1280,
+          "worldY": 0
+        },
+        {
+          "subturn": 3,
+          "worldX": 1920,
+          "worldY": 0
+        },
+        {
+          "subturn": 4,
+          "worldX": 2560,
+          "worldY": 0
+        },
+        {
+          "subturn": 5,
+          "worldX": 3200,
+          "worldY": 0
+        }
+      ]
+    },
+    {
+      "name": "diagonal-five-subturn-tile",
+      "start": [
+        0,
+        0
+      ],
+      "target": [
+        3200,
+        3200
+      ],
+      "path": [
+        {
+          "subturn": 1,
+          "worldX": 640,
+          "worldY": 640
+        },
+        {
+          "subturn": 2,
+          "worldX": 1280,
+          "worldY": 1280
+        },
+        {
+          "subturn": 3,
+          "worldX": 1920,
+          "worldY": 1920
+        },
+        {
+          "subturn": 4,
+          "worldX": 2560,
+          "worldY": 2560
+        },
+        {
+          "subturn": 5,
+          "worldX": 3200,
+          "worldY": 3200
+        }
+      ]
+    },
+    {
+      "name": "snap-inside-one-step",
+      "start": [
+        0,
+        0
+      ],
+      "target": [
+        639,
+        -639
+      ],
+      "path": [
+        {
+          "subturn": 1,
+          "worldX": 639,
+          "worldY": -639
+        }
+      ]
+    },
+    {
+      "name": "exact-step",
+      "start": [
+        0,
+        0
+      ],
+      "target": [
+        640,
+        -640
+      ],
+      "path": [
+        {
+          "subturn": 1,
+          "worldX": 640,
+          "worldY": -640
+        }
+      ]
+    }
+  ],
+  "reservationContention": {
+    "processingOrder": [
+      7,
+      8
+    ],
+    "desiredTile": [
+      1,
+      0
+    ],
+    "winnerObjectId": 7,
+    "loserFallbackDirection": 1,
+    "rule": "ascending object ID reserves first; loser retries direct, CCW, then CW"
+  },
+  "subturnOrder": {
+    "wireEvents": [
+      "event-A",
+      "event-B",
+      "event-C"
+    ],
+    "objectIdsBeforeAdvance": [
+      2,
+      7,
+      10
+    ],
+    "objectIdsMarkedKilledDuringAdvance": [
+      2
+    ],
+    "execution": [
+      "event:event-A",
+      "event:event-B",
+      "event:event-C",
+      "advance:2",
+      "advance:7",
+      "advance:10",
+      "remove:2"
+    ],
+    "avatarCollisionPhase": [
+      "tick activity timer",
+      "advance avatar movement",
+      "skip collision when stunned or invincible",
+      "scan active snowballs by ascending object ID at their pre-advance locations",
+      "advance later snowball objects",
+      "remove all killed objects after the complete object pass"
+    ]
+  },
+  "simultaneousHitOrder": {
+    "avatarObjectIds": [
+      2,
+      7
+    ],
+    "projectileObjectIds": [
+      9,
+      10
+    ],
+    "targetObjectId": 7,
+    "initialHealth": 2,
+    "eventOrder": [
+      "target-7-removes-ball-9",
+      "hit:9->7",
+      "target-7-removes-ball-10",
+      "hit:10->7",
+      "knockout:10->7"
+    ],
+    "finalHealth": 0,
+    "throwerScoreDelta": 7,
+    "rule": "the ascending target avatar scans projectile IDs at pre-advance positions; damage resolves sequentially and the hit point precedes the knockout bonus"
+  },
+  "collisionBoundaries": {
+    "horizontal": [
+      {
+        "distance": 1999,
+        "collides": true
+      },
+      {
+        "distance": 2000,
+        "collides": false
+      },
+      {
+        "distance": 2001,
+        "collides": false
+      }
+    ],
+    "vertical": [
+      {
+        "snowballZ": 4999,
+        "collides": true
+      },
+      {
+        "snowballZ": 5000,
+        "collides": false
+      },
+      {
+        "snowballZ": 5001,
+        "collides": false
+      }
+    ],
+    "ground": [
+      {
+        "snowballZ": 2400,
+        "occupiedHeight": 2399,
+        "collides": false
+      },
+      {
+        "snowballZ": 2400,
+        "occupiedHeight": 2400,
+        "collides": false
+      },
+      {
+        "snowballZ": 2400,
+        "occupiedHeight": 2401,
+        "collides": true
+      }
+    ],
+    "selfCollision": {
+      "physicalCollision": false,
+      "projectileRemoved": false,
+      "damage": 0,
+      "score": 0
+    },
+    "friendlyCollision": {
+      "physicalCollision": true,
+      "projectileRemoved": true,
+      "damage": 1,
+      "score": 0
+    },
+    "enemyCollision": {
+      "physicalCollision": true,
+      "projectileRemoved": true,
+      "damage": 1,
+      "score": 1
+    }
+  },
+  "projectileVectors": {
+    "precedence": "raw bytecode: (offset^2 - temp^2) * multiplier + baseHeight",
+    "cases": [
+      {
+        "name": "quick-cardinal-one-tile",
+        "trajectory": 0,
+        "start": [
+          0,
+          0
+        ],
+        "target": [
+          3200,
+          0
+        ],
+        "direction": 90,
+        "initialTtl": 13,
+        "parabolaOffset": 6,
+        "path": [
+          {
+            "subturn": 1,
+            "worldX": 2007,
+            "worldY": 0,
+            "worldZ": 4108,
+            "ttl": 12,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 2,
+            "worldX": 4014,
+            "worldY": 0,
+            "worldZ": 4108,
+            "ttl": 11,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 3,
+            "worldX": 6021,
+            "worldY": 0,
+            "worldZ": 4108,
+            "ttl": 10,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 4,
+            "worldX": 8028,
+            "worldY": 0,
+            "worldZ": 4108,
+            "ttl": 9,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 5,
+            "worldX": 10035,
+            "worldY": 0,
+            "worldZ": 4108,
+            "ttl": 8,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 6,
+            "worldX": 12042,
+            "worldY": 0,
+            "worldZ": 4108,
+            "ttl": 7,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 7,
+            "worldX": 14049,
+            "worldY": 0,
+            "worldZ": 4108,
+            "ttl": 6,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 8,
+            "worldX": 16056,
+            "worldY": 0,
+            "worldZ": 4108,
+            "ttl": 5,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 9,
+            "worldX": 18063,
+            "worldY": 0,
+            "worldZ": 4108,
+            "ttl": 4,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 10,
+            "worldX": 20070,
+            "worldY": 0,
+            "worldZ": 4108,
+            "ttl": 3,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 11,
+            "worldX": 22077,
+            "worldY": 0,
+            "worldZ": 4080,
+            "ttl": 2,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 12,
+            "worldX": 24084,
+            "worldY": 0,
+            "worldZ": 4044,
+            "ttl": 1,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 13,
+            "worldX": 26091,
+            "worldY": 0,
+            "worldZ": 4000,
+            "ttl": 0,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 14,
+            "worldX": 28098,
+            "worldY": 0,
+            "worldZ": 3948,
+            "ttl": -1,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 15,
+            "worldX": 30105,
+            "worldY": 0,
+            "worldZ": 3888,
+            "ttl": -2,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 16,
+            "worldX": 32112,
+            "worldY": 0,
+            "worldZ": 3820,
+            "ttl": -3,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 17,
+            "worldX": 34119,
+            "worldY": 0,
+            "worldZ": 3744,
+            "ttl": -4,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 18,
+            "worldX": 36126,
+            "worldY": 0,
+            "worldZ": 3660,
+            "ttl": -5,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 19,
+            "worldX": 38133,
+            "worldY": 0,
+            "worldZ": 3568,
+            "ttl": -6,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 20,
+            "worldX": 40140,
+            "worldY": 0,
+            "worldZ": 3468,
+            "ttl": -7,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 21,
+            "worldX": 42147,
+            "worldY": 0,
+            "worldZ": 3360,
+            "ttl": -8,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 22,
+            "worldX": 44154,
+            "worldY": 0,
+            "worldZ": 3244,
+            "ttl": -9,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 23,
+            "worldX": 46161,
+            "worldY": 0,
+            "worldZ": 3120,
+            "ttl": -10,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 24,
+            "worldX": 48168,
+            "worldY": 0,
+            "worldZ": 2988,
+            "ttl": -11,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 25,
+            "worldX": 50175,
+            "worldY": 0,
+            "worldZ": 2848,
+            "ttl": -12,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 26,
+            "worldX": 52182,
+            "worldY": 0,
+            "worldZ": 2700,
+            "ttl": -13,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 27,
+            "worldX": 54189,
+            "worldY": 0,
+            "worldZ": 2544,
+            "ttl": -14,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 28,
+            "worldX": 56196,
+            "worldY": 0,
+            "worldZ": 2380,
+            "ttl": -15,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 29,
+            "worldX": 58203,
+            "worldY": 0,
+            "worldZ": 2208,
+            "ttl": -16,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 30,
+            "worldX": 60210,
+            "worldY": 0,
+            "worldZ": 2028,
+            "ttl": -17,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 31,
+            "worldX": 62217,
+            "worldY": 0,
+            "worldZ": 1840,
+            "ttl": -18,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 32,
+            "worldX": 64224,
+            "worldY": 0,
+            "worldZ": 1644,
+            "ttl": -19,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 33,
+            "worldX": 66231,
+            "worldY": 0,
+            "worldZ": 1440,
+            "ttl": -20,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 34,
+            "worldX": 68238,
+            "worldY": 0,
+            "worldZ": 1228,
+            "ttl": -21,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 35,
+            "worldX": 70245,
+            "worldY": 0,
+            "worldZ": 1008,
+            "ttl": -22,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 36,
+            "worldX": 72252,
+            "worldY": 0,
+            "worldZ": 780,
+            "ttl": -23,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 37,
+            "worldX": 74259,
+            "worldY": 0,
+            "worldZ": 544,
+            "ttl": -24,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 38,
+            "worldX": 76266,
+            "worldY": 0,
+            "worldZ": 300,
+            "ttl": -25,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 39,
+            "worldX": 78273,
+            "worldY": 0,
+            "worldZ": 48,
+            "ttl": -26,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 40,
+            "worldX": 80280,
+            "worldY": 0,
+            "worldZ": -212,
+            "ttl": -27,
+            "occupiedHeight": 0,
+            "removed": true
+          }
+        ],
+        "removalReason": "below-ground"
+      },
+      {
+        "name": "quick-diagonal-one-tile",
+        "trajectory": 0,
+        "start": [
+          0,
+          0
+        ],
+        "target": [
+          3200,
+          3200
+        ],
+        "direction": 135,
+        "initialTtl": 13,
+        "parabolaOffset": 6,
+        "path": [
+          {
+            "subturn": 1,
+            "worldX": 1419,
+            "worldY": 1419,
+            "worldZ": 4108,
+            "ttl": 12,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 2,
+            "worldX": 2838,
+            "worldY": 2838,
+            "worldZ": 4108,
+            "ttl": 11,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 3,
+            "worldX": 4257,
+            "worldY": 4257,
+            "worldZ": 4108,
+            "ttl": 10,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 4,
+            "worldX": 5676,
+            "worldY": 5676,
+            "worldZ": 4108,
+            "ttl": 9,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 5,
+            "worldX": 7095,
+            "worldY": 7095,
+            "worldZ": 4108,
+            "ttl": 8,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 6,
+            "worldX": 8514,
+            "worldY": 8514,
+            "worldZ": 4108,
+            "ttl": 7,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 7,
+            "worldX": 9933,
+            "worldY": 9933,
+            "worldZ": 4108,
+            "ttl": 6,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 8,
+            "worldX": 11352,
+            "worldY": 11352,
+            "worldZ": 4108,
+            "ttl": 5,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 9,
+            "worldX": 12771,
+            "worldY": 12771,
+            "worldZ": 4108,
+            "ttl": 4,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 10,
+            "worldX": 14190,
+            "worldY": 14190,
+            "worldZ": 4108,
+            "ttl": 3,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 11,
+            "worldX": 15609,
+            "worldY": 15609,
+            "worldZ": 4080,
+            "ttl": 2,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 12,
+            "worldX": 17028,
+            "worldY": 17028,
+            "worldZ": 4044,
+            "ttl": 1,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 13,
+            "worldX": 18447,
+            "worldY": 18447,
+            "worldZ": 4000,
+            "ttl": 0,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 14,
+            "worldX": 19866,
+            "worldY": 19866,
+            "worldZ": 3948,
+            "ttl": -1,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 15,
+            "worldX": 21285,
+            "worldY": 21285,
+            "worldZ": 3888,
+            "ttl": -2,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 16,
+            "worldX": 22704,
+            "worldY": 22704,
+            "worldZ": 3820,
+            "ttl": -3,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 17,
+            "worldX": 24123,
+            "worldY": 24123,
+            "worldZ": 3744,
+            "ttl": -4,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 18,
+            "worldX": 25542,
+            "worldY": 25542,
+            "worldZ": 3660,
+            "ttl": -5,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 19,
+            "worldX": 26961,
+            "worldY": 26961,
+            "worldZ": 3568,
+            "ttl": -6,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 20,
+            "worldX": 28380,
+            "worldY": 28380,
+            "worldZ": 3468,
+            "ttl": -7,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 21,
+            "worldX": 29799,
+            "worldY": 29799,
+            "worldZ": 3360,
+            "ttl": -8,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 22,
+            "worldX": 31218,
+            "worldY": 31218,
+            "worldZ": 3244,
+            "ttl": -9,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 23,
+            "worldX": 32637,
+            "worldY": 32637,
+            "worldZ": 3120,
+            "ttl": -10,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 24,
+            "worldX": 34056,
+            "worldY": 34056,
+            "worldZ": 2988,
+            "ttl": -11,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 25,
+            "worldX": 35475,
+            "worldY": 35475,
+            "worldZ": 2848,
+            "ttl": -12,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 26,
+            "worldX": 36894,
+            "worldY": 36894,
+            "worldZ": 2700,
+            "ttl": -13,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 27,
+            "worldX": 38313,
+            "worldY": 38313,
+            "worldZ": 2544,
+            "ttl": -14,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 28,
+            "worldX": 39732,
+            "worldY": 39732,
+            "worldZ": 2380,
+            "ttl": -15,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 29,
+            "worldX": 41151,
+            "worldY": 41151,
+            "worldZ": 2208,
+            "ttl": -16,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 30,
+            "worldX": 42570,
+            "worldY": 42570,
+            "worldZ": 2028,
+            "ttl": -17,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 31,
+            "worldX": 43989,
+            "worldY": 43989,
+            "worldZ": 1840,
+            "ttl": -18,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 32,
+            "worldX": 45408,
+            "worldY": 45408,
+            "worldZ": 1644,
+            "ttl": -19,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 33,
+            "worldX": 46827,
+            "worldY": 46827,
+            "worldZ": 1440,
+            "ttl": -20,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 34,
+            "worldX": 48246,
+            "worldY": 48246,
+            "worldZ": 1228,
+            "ttl": -21,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 35,
+            "worldX": 49665,
+            "worldY": 49665,
+            "worldZ": 1008,
+            "ttl": -22,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 36,
+            "worldX": 51084,
+            "worldY": 51084,
+            "worldZ": 780,
+            "ttl": -23,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 37,
+            "worldX": 52503,
+            "worldY": 52503,
+            "worldZ": 544,
+            "ttl": -24,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 38,
+            "worldX": 53922,
+            "worldY": 53922,
+            "worldZ": 300,
+            "ttl": -25,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 39,
+            "worldX": 55341,
+            "worldY": 55341,
+            "worldZ": 48,
+            "ttl": -26,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 40,
+            "worldX": 56760,
+            "worldY": 56760,
+            "worldZ": -212,
+            "ttl": -27,
+            "occupiedHeight": 0,
+            "removed": true
+          }
+        ],
+        "removalReason": "below-ground"
+      },
+      {
+        "name": "quick-minimum-range",
+        "trajectory": 0,
+        "start": [
+          0,
+          0
+        ],
+        "target": [
+          1,
+          0
+        ],
+        "direction": 180,
+        "initialTtl": 13,
+        "parabolaOffset": 6,
+        "path": [
+          {
+            "subturn": 1,
+            "worldX": 0,
+            "worldY": 2007,
+            "worldZ": 4108,
+            "ttl": 12,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 2,
+            "worldX": 0,
+            "worldY": 4014,
+            "worldZ": 4108,
+            "ttl": 11,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 3,
+            "worldX": 0,
+            "worldY": 6021,
+            "worldZ": 4108,
+            "ttl": 10,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 4,
+            "worldX": 0,
+            "worldY": 8028,
+            "worldZ": 4108,
+            "ttl": 9,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 5,
+            "worldX": 0,
+            "worldY": 10035,
+            "worldZ": 4108,
+            "ttl": 8,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 6,
+            "worldX": 0,
+            "worldY": 12042,
+            "worldZ": 4108,
+            "ttl": 7,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 7,
+            "worldX": 0,
+            "worldY": 14049,
+            "worldZ": 4108,
+            "ttl": 6,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 8,
+            "worldX": 0,
+            "worldY": 16056,
+            "worldZ": 4108,
+            "ttl": 5,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 9,
+            "worldX": 0,
+            "worldY": 18063,
+            "worldZ": 4108,
+            "ttl": 4,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 10,
+            "worldX": 0,
+            "worldY": 20070,
+            "worldZ": 4108,
+            "ttl": 3,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 11,
+            "worldX": 0,
+            "worldY": 22077,
+            "worldZ": 4080,
+            "ttl": 2,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 12,
+            "worldX": 0,
+            "worldY": 24084,
+            "worldZ": 4044,
+            "ttl": 1,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 13,
+            "worldX": 0,
+            "worldY": 26091,
+            "worldZ": 4000,
+            "ttl": 0,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 14,
+            "worldX": 0,
+            "worldY": 28098,
+            "worldZ": 3948,
+            "ttl": -1,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 15,
+            "worldX": 0,
+            "worldY": 30105,
+            "worldZ": 3888,
+            "ttl": -2,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 16,
+            "worldX": 0,
+            "worldY": 32112,
+            "worldZ": 3820,
+            "ttl": -3,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 17,
+            "worldX": 0,
+            "worldY": 34119,
+            "worldZ": 3744,
+            "ttl": -4,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 18,
+            "worldX": 0,
+            "worldY": 36126,
+            "worldZ": 3660,
+            "ttl": -5,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 19,
+            "worldX": 0,
+            "worldY": 38133,
+            "worldZ": 3568,
+            "ttl": -6,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 20,
+            "worldX": 0,
+            "worldY": 40140,
+            "worldZ": 3468,
+            "ttl": -7,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 21,
+            "worldX": 0,
+            "worldY": 42147,
+            "worldZ": 3360,
+            "ttl": -8,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 22,
+            "worldX": 0,
+            "worldY": 44154,
+            "worldZ": 3244,
+            "ttl": -9,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 23,
+            "worldX": 0,
+            "worldY": 46161,
+            "worldZ": 3120,
+            "ttl": -10,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 24,
+            "worldX": 0,
+            "worldY": 48168,
+            "worldZ": 2988,
+            "ttl": -11,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 25,
+            "worldX": 0,
+            "worldY": 50175,
+            "worldZ": 2848,
+            "ttl": -12,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 26,
+            "worldX": 0,
+            "worldY": 52182,
+            "worldZ": 2700,
+            "ttl": -13,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 27,
+            "worldX": 0,
+            "worldY": 54189,
+            "worldZ": 2544,
+            "ttl": -14,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 28,
+            "worldX": 0,
+            "worldY": 56196,
+            "worldZ": 2380,
+            "ttl": -15,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 29,
+            "worldX": 0,
+            "worldY": 58203,
+            "worldZ": 2208,
+            "ttl": -16,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 30,
+            "worldX": 0,
+            "worldY": 60210,
+            "worldZ": 2028,
+            "ttl": -17,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 31,
+            "worldX": 0,
+            "worldY": 62217,
+            "worldZ": 1840,
+            "ttl": -18,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 32,
+            "worldX": 0,
+            "worldY": 64224,
+            "worldZ": 1644,
+            "ttl": -19,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 33,
+            "worldX": 0,
+            "worldY": 66231,
+            "worldZ": 1440,
+            "ttl": -20,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 34,
+            "worldX": 0,
+            "worldY": 68238,
+            "worldZ": 1228,
+            "ttl": -21,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 35,
+            "worldX": 0,
+            "worldY": 70245,
+            "worldZ": 1008,
+            "ttl": -22,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 36,
+            "worldX": 0,
+            "worldY": 72252,
+            "worldZ": 780,
+            "ttl": -23,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 37,
+            "worldX": 0,
+            "worldY": 74259,
+            "worldZ": 544,
+            "ttl": -24,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 38,
+            "worldX": 0,
+            "worldY": 76266,
+            "worldZ": 300,
+            "ttl": -25,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 39,
+            "worldX": 0,
+            "worldY": 78273,
+            "worldZ": 48,
+            "ttl": -26,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 40,
+            "worldX": 0,
+            "worldY": 80280,
+            "worldZ": -212,
+            "ttl": -27,
+            "occupiedHeight": 0,
+            "removed": true
+          }
+        ],
+        "removalReason": "below-ground"
+      },
+      {
+        "name": "quick-map-maximum-diagonal",
+        "trajectory": 0,
+        "start": [
+          0,
+          0
+        ],
+        "target": [
+          156800,
+          156800
+        ],
+        "direction": 135,
+        "initialTtl": 13,
+        "parabolaOffset": 6,
+        "path": [
+          {
+            "subturn": 1,
+            "worldX": 1419,
+            "worldY": 1419,
+            "worldZ": 4108,
+            "ttl": 12,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 2,
+            "worldX": 2838,
+            "worldY": 2838,
+            "worldZ": 4108,
+            "ttl": 11,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 3,
+            "worldX": 4257,
+            "worldY": 4257,
+            "worldZ": 4108,
+            "ttl": 10,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 4,
+            "worldX": 5676,
+            "worldY": 5676,
+            "worldZ": 4108,
+            "ttl": 9,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 5,
+            "worldX": 7095,
+            "worldY": 7095,
+            "worldZ": 4108,
+            "ttl": 8,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 6,
+            "worldX": 8514,
+            "worldY": 8514,
+            "worldZ": 4108,
+            "ttl": 7,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 7,
+            "worldX": 9933,
+            "worldY": 9933,
+            "worldZ": 4108,
+            "ttl": 6,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 8,
+            "worldX": 11352,
+            "worldY": 11352,
+            "worldZ": 4108,
+            "ttl": 5,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 9,
+            "worldX": 12771,
+            "worldY": 12771,
+            "worldZ": 4108,
+            "ttl": 4,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 10,
+            "worldX": 14190,
+            "worldY": 14190,
+            "worldZ": 4108,
+            "ttl": 3,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 11,
+            "worldX": 15609,
+            "worldY": 15609,
+            "worldZ": 4080,
+            "ttl": 2,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 12,
+            "worldX": 17028,
+            "worldY": 17028,
+            "worldZ": 4044,
+            "ttl": 1,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 13,
+            "worldX": 18447,
+            "worldY": 18447,
+            "worldZ": 4000,
+            "ttl": 0,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 14,
+            "worldX": 19866,
+            "worldY": 19866,
+            "worldZ": 3948,
+            "ttl": -1,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 15,
+            "worldX": 21285,
+            "worldY": 21285,
+            "worldZ": 3888,
+            "ttl": -2,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 16,
+            "worldX": 22704,
+            "worldY": 22704,
+            "worldZ": 3820,
+            "ttl": -3,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 17,
+            "worldX": 24123,
+            "worldY": 24123,
+            "worldZ": 3744,
+            "ttl": -4,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 18,
+            "worldX": 25542,
+            "worldY": 25542,
+            "worldZ": 3660,
+            "ttl": -5,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 19,
+            "worldX": 26961,
+            "worldY": 26961,
+            "worldZ": 3568,
+            "ttl": -6,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 20,
+            "worldX": 28380,
+            "worldY": 28380,
+            "worldZ": 3468,
+            "ttl": -7,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 21,
+            "worldX": 29799,
+            "worldY": 29799,
+            "worldZ": 3360,
+            "ttl": -8,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 22,
+            "worldX": 31218,
+            "worldY": 31218,
+            "worldZ": 3244,
+            "ttl": -9,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 23,
+            "worldX": 32637,
+            "worldY": 32637,
+            "worldZ": 3120,
+            "ttl": -10,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 24,
+            "worldX": 34056,
+            "worldY": 34056,
+            "worldZ": 2988,
+            "ttl": -11,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 25,
+            "worldX": 35475,
+            "worldY": 35475,
+            "worldZ": 2848,
+            "ttl": -12,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 26,
+            "worldX": 36894,
+            "worldY": 36894,
+            "worldZ": 2700,
+            "ttl": -13,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 27,
+            "worldX": 38313,
+            "worldY": 38313,
+            "worldZ": 2544,
+            "ttl": -14,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 28,
+            "worldX": 39732,
+            "worldY": 39732,
+            "worldZ": 2380,
+            "ttl": -15,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 29,
+            "worldX": 41151,
+            "worldY": 41151,
+            "worldZ": 2208,
+            "ttl": -16,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 30,
+            "worldX": 42570,
+            "worldY": 42570,
+            "worldZ": 2028,
+            "ttl": -17,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 31,
+            "worldX": 43989,
+            "worldY": 43989,
+            "worldZ": 1840,
+            "ttl": -18,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 32,
+            "worldX": 45408,
+            "worldY": 45408,
+            "worldZ": 1644,
+            "ttl": -19,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 33,
+            "worldX": 46827,
+            "worldY": 46827,
+            "worldZ": 1440,
+            "ttl": -20,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 34,
+            "worldX": 48246,
+            "worldY": 48246,
+            "worldZ": 1228,
+            "ttl": -21,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 35,
+            "worldX": 49665,
+            "worldY": 49665,
+            "worldZ": 1008,
+            "ttl": -22,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 36,
+            "worldX": 51084,
+            "worldY": 51084,
+            "worldZ": 780,
+            "ttl": -23,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 37,
+            "worldX": 52503,
+            "worldY": 52503,
+            "worldZ": 544,
+            "ttl": -24,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 38,
+            "worldX": 53922,
+            "worldY": 53922,
+            "worldZ": 300,
+            "ttl": -25,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 39,
+            "worldX": 55341,
+            "worldY": 55341,
+            "worldZ": 48,
+            "ttl": -26,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 40,
+            "worldX": 56760,
+            "worldY": 56760,
+            "worldZ": -212,
+            "ttl": -27,
+            "occupiedHeight": 0,
+            "removed": true
+          }
+        ],
+        "removalReason": "below-ground"
+      },
+      {
+        "name": "short-cardinal-one-tile",
+        "trajectory": 1,
+        "start": [
+          0,
+          0
+        ],
+        "target": [
+          3200,
+          0
+        ],
+        "direction": 90,
+        "initialTtl": 1,
+        "parabolaOffset": 0,
+        "path": [
+          {
+            "subturn": 1,
+            "worldX": 2007,
+            "worldY": 0,
+            "worldZ": 3000,
+            "ttl": 0,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 2,
+            "worldX": 4014,
+            "worldY": 0,
+            "worldZ": 2990,
+            "ttl": -1,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 3,
+            "worldX": 6021,
+            "worldY": 0,
+            "worldZ": 2960,
+            "ttl": -2,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 4,
+            "worldX": 8028,
+            "worldY": 0,
+            "worldZ": 2910,
+            "ttl": -3,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 5,
+            "worldX": 10035,
+            "worldY": 0,
+            "worldZ": 2840,
+            "ttl": -4,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 6,
+            "worldX": 12042,
+            "worldY": 0,
+            "worldZ": 2750,
+            "ttl": -5,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 7,
+            "worldX": 14049,
+            "worldY": 0,
+            "worldZ": 2640,
+            "ttl": -6,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 8,
+            "worldX": 16056,
+            "worldY": 0,
+            "worldZ": 2510,
+            "ttl": -7,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 9,
+            "worldX": 18063,
+            "worldY": 0,
+            "worldZ": 2360,
+            "ttl": -8,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 10,
+            "worldX": 20070,
+            "worldY": 0,
+            "worldZ": 2190,
+            "ttl": -9,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 11,
+            "worldX": 22077,
+            "worldY": 0,
+            "worldZ": 2000,
+            "ttl": -10,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 12,
+            "worldX": 24084,
+            "worldY": 0,
+            "worldZ": 1790,
+            "ttl": -11,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 13,
+            "worldX": 26091,
+            "worldY": 0,
+            "worldZ": 1560,
+            "ttl": -12,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 14,
+            "worldX": 28098,
+            "worldY": 0,
+            "worldZ": 1310,
+            "ttl": -13,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 15,
+            "worldX": 30105,
+            "worldY": 0,
+            "worldZ": 1040,
+            "ttl": -14,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 16,
+            "worldX": 32112,
+            "worldY": 0,
+            "worldZ": 750,
+            "ttl": -15,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 17,
+            "worldX": 34119,
+            "worldY": 0,
+            "worldZ": 440,
+            "ttl": -16,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 18,
+            "worldX": 36126,
+            "worldY": 0,
+            "worldZ": 110,
+            "ttl": -17,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 19,
+            "worldX": 38133,
+            "worldY": 0,
+            "worldZ": -240,
+            "ttl": -18,
+            "occupiedHeight": 0,
+            "removed": true
+          }
+        ],
+        "removalReason": "below-ground"
+      },
+      {
+        "name": "short-diagonal-one-tile",
+        "trajectory": 1,
+        "start": [
+          0,
+          0
+        ],
+        "target": [
+          3200,
+          3200
+        ],
+        "direction": 135,
+        "initialTtl": 2,
+        "parabolaOffset": 1,
+        "path": [
+          {
+            "subturn": 1,
+            "worldX": 1419,
+            "worldY": 1419,
+            "worldZ": 3010,
+            "ttl": 1,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 2,
+            "worldX": 2838,
+            "worldY": 2838,
+            "worldZ": 3000,
+            "ttl": 0,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 3,
+            "worldX": 4257,
+            "worldY": 4257,
+            "worldZ": 2970,
+            "ttl": -1,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 4,
+            "worldX": 5676,
+            "worldY": 5676,
+            "worldZ": 2920,
+            "ttl": -2,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 5,
+            "worldX": 7095,
+            "worldY": 7095,
+            "worldZ": 2850,
+            "ttl": -3,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 6,
+            "worldX": 8514,
+            "worldY": 8514,
+            "worldZ": 2760,
+            "ttl": -4,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 7,
+            "worldX": 9933,
+            "worldY": 9933,
+            "worldZ": 2650,
+            "ttl": -5,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 8,
+            "worldX": 11352,
+            "worldY": 11352,
+            "worldZ": 2520,
+            "ttl": -6,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 9,
+            "worldX": 12771,
+            "worldY": 12771,
+            "worldZ": 2370,
+            "ttl": -7,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 10,
+            "worldX": 14190,
+            "worldY": 14190,
+            "worldZ": 2200,
+            "ttl": -8,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 11,
+            "worldX": 15609,
+            "worldY": 15609,
+            "worldZ": 2010,
+            "ttl": -9,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 12,
+            "worldX": 17028,
+            "worldY": 17028,
+            "worldZ": 1800,
+            "ttl": -10,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 13,
+            "worldX": 18447,
+            "worldY": 18447,
+            "worldZ": 1570,
+            "ttl": -11,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 14,
+            "worldX": 19866,
+            "worldY": 19866,
+            "worldZ": 1320,
+            "ttl": -12,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 15,
+            "worldX": 21285,
+            "worldY": 21285,
+            "worldZ": 1050,
+            "ttl": -13,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 16,
+            "worldX": 22704,
+            "worldY": 22704,
+            "worldZ": 760,
+            "ttl": -14,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 17,
+            "worldX": 24123,
+            "worldY": 24123,
+            "worldZ": 450,
+            "ttl": -15,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 18,
+            "worldX": 25542,
+            "worldY": 25542,
+            "worldZ": 120,
+            "ttl": -16,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 19,
+            "worldX": 26961,
+            "worldY": 26961,
+            "worldZ": -230,
+            "ttl": -17,
+            "occupiedHeight": 0,
+            "removed": true
+          }
+        ],
+        "removalReason": "below-ground"
+      },
+      {
+        "name": "short-minimum-range",
+        "trajectory": 1,
+        "start": [
+          0,
+          0
+        ],
+        "target": [
+          1,
+          0
+        ],
+        "direction": 180,
+        "initialTtl": 0,
+        "parabolaOffset": 0,
+        "path": [
+          {
+            "subturn": 1,
+            "worldX": 0,
+            "worldY": 2007,
+            "worldZ": 2990,
+            "ttl": -1,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 2,
+            "worldX": 0,
+            "worldY": 4014,
+            "worldZ": 2960,
+            "ttl": -2,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 3,
+            "worldX": 0,
+            "worldY": 6021,
+            "worldZ": 2910,
+            "ttl": -3,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 4,
+            "worldX": 0,
+            "worldY": 8028,
+            "worldZ": 2840,
+            "ttl": -4,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 5,
+            "worldX": 0,
+            "worldY": 10035,
+            "worldZ": 2750,
+            "ttl": -5,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 6,
+            "worldX": 0,
+            "worldY": 12042,
+            "worldZ": 2640,
+            "ttl": -6,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 7,
+            "worldX": 0,
+            "worldY": 14049,
+            "worldZ": 2510,
+            "ttl": -7,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 8,
+            "worldX": 0,
+            "worldY": 16056,
+            "worldZ": 2360,
+            "ttl": -8,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 9,
+            "worldX": 0,
+            "worldY": 18063,
+            "worldZ": 2190,
+            "ttl": -9,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 10,
+            "worldX": 0,
+            "worldY": 20070,
+            "worldZ": 2000,
+            "ttl": -10,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 11,
+            "worldX": 0,
+            "worldY": 22077,
+            "worldZ": 1790,
+            "ttl": -11,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 12,
+            "worldX": 0,
+            "worldY": 24084,
+            "worldZ": 1560,
+            "ttl": -12,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 13,
+            "worldX": 0,
+            "worldY": 26091,
+            "worldZ": 1310,
+            "ttl": -13,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 14,
+            "worldX": 0,
+            "worldY": 28098,
+            "worldZ": 1040,
+            "ttl": -14,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 15,
+            "worldX": 0,
+            "worldY": 30105,
+            "worldZ": 750,
+            "ttl": -15,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 16,
+            "worldX": 0,
+            "worldY": 32112,
+            "worldZ": 440,
+            "ttl": -16,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 17,
+            "worldX": 0,
+            "worldY": 34119,
+            "worldZ": 110,
+            "ttl": -17,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 18,
+            "worldX": 0,
+            "worldY": 36126,
+            "worldZ": -240,
+            "ttl": -18,
+            "occupiedHeight": 0,
+            "removed": true
+          }
+        ],
+        "removalReason": "below-ground"
+      },
+      {
+        "name": "short-map-maximum-diagonal",
+        "trajectory": 1,
+        "start": [
+          0,
+          0
+        ],
+        "target": [
+          156800,
+          156800
+        ],
+        "direction": 135,
+        "initialTtl": 110,
+        "parabolaOffset": 55,
+        "path": [
+          {
+            "subturn": 1,
+            "worldX": 1419,
+            "worldY": 1419,
+            "worldZ": 4090,
+            "ttl": 109,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 2,
+            "worldX": 2838,
+            "worldY": 2838,
+            "worldZ": 5160,
+            "ttl": 108,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 3,
+            "worldX": 4257,
+            "worldY": 4257,
+            "worldZ": 6210,
+            "ttl": 107,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 4,
+            "worldX": 5676,
+            "worldY": 5676,
+            "worldZ": 7240,
+            "ttl": 106,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 5,
+            "worldX": 7095,
+            "worldY": 7095,
+            "worldZ": 8250,
+            "ttl": 105,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 6,
+            "worldX": 8514,
+            "worldY": 8514,
+            "worldZ": 9240,
+            "ttl": 104,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 7,
+            "worldX": 9933,
+            "worldY": 9933,
+            "worldZ": 10210,
+            "ttl": 103,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 8,
+            "worldX": 11352,
+            "worldY": 11352,
+            "worldZ": 11160,
+            "ttl": 102,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 9,
+            "worldX": 12771,
+            "worldY": 12771,
+            "worldZ": 12090,
+            "ttl": 101,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 10,
+            "worldX": 14190,
+            "worldY": 14190,
+            "worldZ": 13000,
+            "ttl": 100,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 11,
+            "worldX": 15609,
+            "worldY": 15609,
+            "worldZ": 13890,
+            "ttl": 99,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 12,
+            "worldX": 17028,
+            "worldY": 17028,
+            "worldZ": 14760,
+            "ttl": 98,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 13,
+            "worldX": 18447,
+            "worldY": 18447,
+            "worldZ": 15610,
+            "ttl": 97,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 14,
+            "worldX": 19866,
+            "worldY": 19866,
+            "worldZ": 16440,
+            "ttl": 96,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 15,
+            "worldX": 21285,
+            "worldY": 21285,
+            "worldZ": 17250,
+            "ttl": 95,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 16,
+            "worldX": 22704,
+            "worldY": 22704,
+            "worldZ": 18040,
+            "ttl": 94,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 17,
+            "worldX": 24123,
+            "worldY": 24123,
+            "worldZ": 18810,
+            "ttl": 93,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 18,
+            "worldX": 25542,
+            "worldY": 25542,
+            "worldZ": 19560,
+            "ttl": 92,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 19,
+            "worldX": 26961,
+            "worldY": 26961,
+            "worldZ": 20290,
+            "ttl": 91,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 20,
+            "worldX": 28380,
+            "worldY": 28380,
+            "worldZ": 21000,
+            "ttl": 90,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 21,
+            "worldX": 29799,
+            "worldY": 29799,
+            "worldZ": 21690,
+            "ttl": 89,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 22,
+            "worldX": 31218,
+            "worldY": 31218,
+            "worldZ": 22360,
+            "ttl": 88,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 23,
+            "worldX": 32637,
+            "worldY": 32637,
+            "worldZ": 23010,
+            "ttl": 87,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 24,
+            "worldX": 34056,
+            "worldY": 34056,
+            "worldZ": 23640,
+            "ttl": 86,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 25,
+            "worldX": 35475,
+            "worldY": 35475,
+            "worldZ": 24250,
+            "ttl": 85,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 26,
+            "worldX": 36894,
+            "worldY": 36894,
+            "worldZ": 24840,
+            "ttl": 84,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 27,
+            "worldX": 38313,
+            "worldY": 38313,
+            "worldZ": 25410,
+            "ttl": 83,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 28,
+            "worldX": 39732,
+            "worldY": 39732,
+            "worldZ": 25960,
+            "ttl": 82,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 29,
+            "worldX": 41151,
+            "worldY": 41151,
+            "worldZ": 26490,
+            "ttl": 81,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 30,
+            "worldX": 42570,
+            "worldY": 42570,
+            "worldZ": 27000,
+            "ttl": 80,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 31,
+            "worldX": 43989,
+            "worldY": 43989,
+            "worldZ": 27490,
+            "ttl": 79,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 32,
+            "worldX": 45408,
+            "worldY": 45408,
+            "worldZ": 27960,
+            "ttl": 78,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 33,
+            "worldX": 46827,
+            "worldY": 46827,
+            "worldZ": 28410,
+            "ttl": 77,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 34,
+            "worldX": 48246,
+            "worldY": 48246,
+            "worldZ": 28840,
+            "ttl": 76,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 35,
+            "worldX": 49665,
+            "worldY": 49665,
+            "worldZ": 29250,
+            "ttl": 75,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 36,
+            "worldX": 51084,
+            "worldY": 51084,
+            "worldZ": 29640,
+            "ttl": 74,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 37,
+            "worldX": 52503,
+            "worldY": 52503,
+            "worldZ": 30010,
+            "ttl": 73,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 38,
+            "worldX": 53922,
+            "worldY": 53922,
+            "worldZ": 30360,
+            "ttl": 72,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 39,
+            "worldX": 55341,
+            "worldY": 55341,
+            "worldZ": 30690,
+            "ttl": 71,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 40,
+            "worldX": 56760,
+            "worldY": 56760,
+            "worldZ": 31000,
+            "ttl": 70,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 41,
+            "worldX": 58179,
+            "worldY": 58179,
+            "worldZ": 31290,
+            "ttl": 69,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 42,
+            "worldX": 59598,
+            "worldY": 59598,
+            "worldZ": 31560,
+            "ttl": 68,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 43,
+            "worldX": 61017,
+            "worldY": 61017,
+            "worldZ": 31810,
+            "ttl": 67,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 44,
+            "worldX": 62436,
+            "worldY": 62436,
+            "worldZ": 32040,
+            "ttl": 66,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 45,
+            "worldX": 63855,
+            "worldY": 63855,
+            "worldZ": 32250,
+            "ttl": 65,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 46,
+            "worldX": 65274,
+            "worldY": 65274,
+            "worldZ": 32440,
+            "ttl": 64,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 47,
+            "worldX": 66693,
+            "worldY": 66693,
+            "worldZ": 32610,
+            "ttl": 63,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 48,
+            "worldX": 68112,
+            "worldY": 68112,
+            "worldZ": 32760,
+            "ttl": 62,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 49,
+            "worldX": 69531,
+            "worldY": 69531,
+            "worldZ": 32890,
+            "ttl": 61,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 50,
+            "worldX": 70950,
+            "worldY": 70950,
+            "worldZ": 33000,
+            "ttl": 60,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 51,
+            "worldX": 72369,
+            "worldY": 72369,
+            "worldZ": 33090,
+            "ttl": 59,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 52,
+            "worldX": 73788,
+            "worldY": 73788,
+            "worldZ": 33160,
+            "ttl": 58,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 53,
+            "worldX": 75207,
+            "worldY": 75207,
+            "worldZ": 33210,
+            "ttl": 57,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 54,
+            "worldX": 76626,
+            "worldY": 76626,
+            "worldZ": 33240,
+            "ttl": 56,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 55,
+            "worldX": 78045,
+            "worldY": 78045,
+            "worldZ": 33250,
+            "ttl": 55,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 56,
+            "worldX": 79464,
+            "worldY": 79464,
+            "worldZ": 33240,
+            "ttl": 54,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 57,
+            "worldX": 80883,
+            "worldY": 80883,
+            "worldZ": 33210,
+            "ttl": 53,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 58,
+            "worldX": 82302,
+            "worldY": 82302,
+            "worldZ": 33160,
+            "ttl": 52,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 59,
+            "worldX": 83721,
+            "worldY": 83721,
+            "worldZ": 33090,
+            "ttl": 51,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 60,
+            "worldX": 85140,
+            "worldY": 85140,
+            "worldZ": 33000,
+            "ttl": 50,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 61,
+            "worldX": 86559,
+            "worldY": 86559,
+            "worldZ": 32890,
+            "ttl": 49,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 62,
+            "worldX": 87978,
+            "worldY": 87978,
+            "worldZ": 32760,
+            "ttl": 48,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 63,
+            "worldX": 89397,
+            "worldY": 89397,
+            "worldZ": 32610,
+            "ttl": 47,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 64,
+            "worldX": 90816,
+            "worldY": 90816,
+            "worldZ": 32440,
+            "ttl": 46,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 65,
+            "worldX": 92235,
+            "worldY": 92235,
+            "worldZ": 32250,
+            "ttl": 45,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 66,
+            "worldX": 93654,
+            "worldY": 93654,
+            "worldZ": 32040,
+            "ttl": 44,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 67,
+            "worldX": 95073,
+            "worldY": 95073,
+            "worldZ": 31810,
+            "ttl": 43,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 68,
+            "worldX": 96492,
+            "worldY": 96492,
+            "worldZ": 31560,
+            "ttl": 42,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 69,
+            "worldX": 97911,
+            "worldY": 97911,
+            "worldZ": 31290,
+            "ttl": 41,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 70,
+            "worldX": 99330,
+            "worldY": 99330,
+            "worldZ": 31000,
+            "ttl": 40,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 71,
+            "worldX": 100749,
+            "worldY": 100749,
+            "worldZ": 30690,
+            "ttl": 39,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 72,
+            "worldX": 102168,
+            "worldY": 102168,
+            "worldZ": 30360,
+            "ttl": 38,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 73,
+            "worldX": 103587,
+            "worldY": 103587,
+            "worldZ": 30010,
+            "ttl": 37,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 74,
+            "worldX": 105006,
+            "worldY": 105006,
+            "worldZ": 29640,
+            "ttl": 36,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 75,
+            "worldX": 106425,
+            "worldY": 106425,
+            "worldZ": 29250,
+            "ttl": 35,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 76,
+            "worldX": 107844,
+            "worldY": 107844,
+            "worldZ": 28840,
+            "ttl": 34,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 77,
+            "worldX": 109263,
+            "worldY": 109263,
+            "worldZ": 28410,
+            "ttl": 33,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 78,
+            "worldX": 110682,
+            "worldY": 110682,
+            "worldZ": 27960,
+            "ttl": 32,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 79,
+            "worldX": 112101,
+            "worldY": 112101,
+            "worldZ": 27490,
+            "ttl": 31,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 80,
+            "worldX": 113520,
+            "worldY": 113520,
+            "worldZ": 27000,
+            "ttl": 30,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 81,
+            "worldX": 114939,
+            "worldY": 114939,
+            "worldZ": 26490,
+            "ttl": 29,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 82,
+            "worldX": 116358,
+            "worldY": 116358,
+            "worldZ": 25960,
+            "ttl": 28,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 83,
+            "worldX": 117777,
+            "worldY": 117777,
+            "worldZ": 25410,
+            "ttl": 27,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 84,
+            "worldX": 119196,
+            "worldY": 119196,
+            "worldZ": 24840,
+            "ttl": 26,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 85,
+            "worldX": 120615,
+            "worldY": 120615,
+            "worldZ": 24250,
+            "ttl": 25,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 86,
+            "worldX": 122034,
+            "worldY": 122034,
+            "worldZ": 23640,
+            "ttl": 24,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 87,
+            "worldX": 123453,
+            "worldY": 123453,
+            "worldZ": 23010,
+            "ttl": 23,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 88,
+            "worldX": 124872,
+            "worldY": 124872,
+            "worldZ": 22360,
+            "ttl": 22,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 89,
+            "worldX": 126291,
+            "worldY": 126291,
+            "worldZ": 21690,
+            "ttl": 21,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 90,
+            "worldX": 127710,
+            "worldY": 127710,
+            "worldZ": 21000,
+            "ttl": 20,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 91,
+            "worldX": 129129,
+            "worldY": 129129,
+            "worldZ": 20290,
+            "ttl": 19,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 92,
+            "worldX": 130548,
+            "worldY": 130548,
+            "worldZ": 19560,
+            "ttl": 18,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 93,
+            "worldX": 131967,
+            "worldY": 131967,
+            "worldZ": 18810,
+            "ttl": 17,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 94,
+            "worldX": 133386,
+            "worldY": 133386,
+            "worldZ": 18040,
+            "ttl": 16,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 95,
+            "worldX": 134805,
+            "worldY": 134805,
+            "worldZ": 17250,
+            "ttl": 15,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 96,
+            "worldX": 136224,
+            "worldY": 136224,
+            "worldZ": 16440,
+            "ttl": 14,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 97,
+            "worldX": 137643,
+            "worldY": 137643,
+            "worldZ": 15610,
+            "ttl": 13,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 98,
+            "worldX": 139062,
+            "worldY": 139062,
+            "worldZ": 14760,
+            "ttl": 12,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 99,
+            "worldX": 140481,
+            "worldY": 140481,
+            "worldZ": 13890,
+            "ttl": 11,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 100,
+            "worldX": 141900,
+            "worldY": 141900,
+            "worldZ": 13000,
+            "ttl": 10,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 101,
+            "worldX": 143319,
+            "worldY": 143319,
+            "worldZ": 12090,
+            "ttl": 9,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 102,
+            "worldX": 144738,
+            "worldY": 144738,
+            "worldZ": 11160,
+            "ttl": 8,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 103,
+            "worldX": 146157,
+            "worldY": 146157,
+            "worldZ": 10210,
+            "ttl": 7,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 104,
+            "worldX": 147576,
+            "worldY": 147576,
+            "worldZ": 9240,
+            "ttl": 6,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 105,
+            "worldX": 148995,
+            "worldY": 148995,
+            "worldZ": 8250,
+            "ttl": 5,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 106,
+            "worldX": 150414,
+            "worldY": 150414,
+            "worldZ": 7240,
+            "ttl": 4,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 107,
+            "worldX": 151833,
+            "worldY": 151833,
+            "worldZ": 6210,
+            "ttl": 3,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 108,
+            "worldX": 153252,
+            "worldY": 153252,
+            "worldZ": 5160,
+            "ttl": 2,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 109,
+            "worldX": 154671,
+            "worldY": 154671,
+            "worldZ": 4090,
+            "ttl": 1,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 110,
+            "worldX": 156090,
+            "worldY": 156090,
+            "worldZ": 3000,
+            "ttl": 0,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 111,
+            "worldX": 157509,
+            "worldY": 157509,
+            "worldZ": 1890,
+            "ttl": -1,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 112,
+            "worldX": 158928,
+            "worldY": 158928,
+            "worldZ": 760,
+            "ttl": -2,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 113,
+            "worldX": 160347,
+            "worldY": 160347,
+            "worldZ": -390,
+            "ttl": -3,
+            "occupiedHeight": 0,
+            "removed": true
+          }
+        ],
+        "removalReason": "below-ground"
+      },
+      {
+        "name": "long-cardinal-one-tile",
+        "trajectory": 2,
+        "start": [
+          0,
+          0
+        ],
+        "target": [
+          3200,
+          0
+        ],
+        "direction": 90,
+        "initialTtl": 1,
+        "parabolaOffset": 0,
+        "path": [
+          {
+            "subturn": 1,
+            "worldX": 2007,
+            "worldY": 0,
+            "worldZ": 3000,
+            "ttl": 0,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 2,
+            "worldX": 4014,
+            "worldY": 0,
+            "worldZ": 2900,
+            "ttl": -1,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 3,
+            "worldX": 6021,
+            "worldY": 0,
+            "worldZ": 2600,
+            "ttl": -2,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 4,
+            "worldX": 8028,
+            "worldY": 0,
+            "worldZ": 2100,
+            "ttl": -3,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 5,
+            "worldX": 10035,
+            "worldY": 0,
+            "worldZ": 1400,
+            "ttl": -4,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 6,
+            "worldX": 12042,
+            "worldY": 0,
+            "worldZ": 500,
+            "ttl": -5,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 7,
+            "worldX": 14049,
+            "worldY": 0,
+            "worldZ": -600,
+            "ttl": -6,
+            "occupiedHeight": 0,
+            "removed": true
+          }
+        ],
+        "removalReason": "below-ground"
+      },
+      {
+        "name": "long-diagonal-one-tile",
+        "trajectory": 2,
+        "start": [
+          0,
+          0
+        ],
+        "target": [
+          3200,
+          3200
+        ],
+        "direction": 135,
+        "initialTtl": 2,
+        "parabolaOffset": 1,
+        "path": [
+          {
+            "subturn": 1,
+            "worldX": 1419,
+            "worldY": 1419,
+            "worldZ": 3100,
+            "ttl": 1,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 2,
+            "worldX": 2838,
+            "worldY": 2838,
+            "worldZ": 3000,
+            "ttl": 0,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 3,
+            "worldX": 4257,
+            "worldY": 4257,
+            "worldZ": 2700,
+            "ttl": -1,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 4,
+            "worldX": 5676,
+            "worldY": 5676,
+            "worldZ": 2200,
+            "ttl": -2,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 5,
+            "worldX": 7095,
+            "worldY": 7095,
+            "worldZ": 1500,
+            "ttl": -3,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 6,
+            "worldX": 8514,
+            "worldY": 8514,
+            "worldZ": 600,
+            "ttl": -4,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 7,
+            "worldX": 9933,
+            "worldY": 9933,
+            "worldZ": -500,
+            "ttl": -5,
+            "occupiedHeight": 0,
+            "removed": true
+          }
+        ],
+        "removalReason": "below-ground"
+      },
+      {
+        "name": "long-minimum-range",
+        "trajectory": 2,
+        "start": [
+          0,
+          0
+        ],
+        "target": [
+          1,
+          0
+        ],
+        "direction": 180,
+        "initialTtl": 0,
+        "parabolaOffset": 0,
+        "path": [
+          {
+            "subturn": 1,
+            "worldX": 0,
+            "worldY": 2007,
+            "worldZ": 2900,
+            "ttl": -1,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 2,
+            "worldX": 0,
+            "worldY": 4014,
+            "worldZ": 2600,
+            "ttl": -2,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 3,
+            "worldX": 0,
+            "worldY": 6021,
+            "worldZ": 2100,
+            "ttl": -3,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 4,
+            "worldX": 0,
+            "worldY": 8028,
+            "worldZ": 1400,
+            "ttl": -4,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 5,
+            "worldX": 0,
+            "worldY": 10035,
+            "worldZ": 500,
+            "ttl": -5,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 6,
+            "worldX": 0,
+            "worldY": 12042,
+            "worldZ": -600,
+            "ttl": -6,
+            "occupiedHeight": 0,
+            "removed": true
+          }
+        ],
+        "removalReason": "below-ground"
+      },
+      {
+        "name": "long-map-maximum-diagonal",
+        "trajectory": 2,
+        "start": [
+          0,
+          0
+        ],
+        "target": [
+          156800,
+          156800
+        ],
+        "direction": 135,
+        "initialTtl": 110,
+        "parabolaOffset": 55,
+        "path": [
+          {
+            "subturn": 1,
+            "worldX": 1419,
+            "worldY": 1419,
+            "worldZ": 13900,
+            "ttl": 109,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 2,
+            "worldX": 2838,
+            "worldY": 2838,
+            "worldZ": 24600,
+            "ttl": 108,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 3,
+            "worldX": 4257,
+            "worldY": 4257,
+            "worldZ": 35100,
+            "ttl": 107,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 4,
+            "worldX": 5676,
+            "worldY": 5676,
+            "worldZ": 45400,
+            "ttl": 106,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 5,
+            "worldX": 7095,
+            "worldY": 7095,
+            "worldZ": 55500,
+            "ttl": 105,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 6,
+            "worldX": 8514,
+            "worldY": 8514,
+            "worldZ": 65400,
+            "ttl": 104,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 7,
+            "worldX": 9933,
+            "worldY": 9933,
+            "worldZ": 75100,
+            "ttl": 103,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 8,
+            "worldX": 11352,
+            "worldY": 11352,
+            "worldZ": 84600,
+            "ttl": 102,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 9,
+            "worldX": 12771,
+            "worldY": 12771,
+            "worldZ": 93900,
+            "ttl": 101,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 10,
+            "worldX": 14190,
+            "worldY": 14190,
+            "worldZ": 103000,
+            "ttl": 100,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 11,
+            "worldX": 15609,
+            "worldY": 15609,
+            "worldZ": 111900,
+            "ttl": 99,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 12,
+            "worldX": 17028,
+            "worldY": 17028,
+            "worldZ": 120600,
+            "ttl": 98,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 13,
+            "worldX": 18447,
+            "worldY": 18447,
+            "worldZ": 129100,
+            "ttl": 97,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 14,
+            "worldX": 19866,
+            "worldY": 19866,
+            "worldZ": 137400,
+            "ttl": 96,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 15,
+            "worldX": 21285,
+            "worldY": 21285,
+            "worldZ": 145500,
+            "ttl": 95,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 16,
+            "worldX": 22704,
+            "worldY": 22704,
+            "worldZ": 153400,
+            "ttl": 94,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 17,
+            "worldX": 24123,
+            "worldY": 24123,
+            "worldZ": 161100,
+            "ttl": 93,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 18,
+            "worldX": 25542,
+            "worldY": 25542,
+            "worldZ": 168600,
+            "ttl": 92,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 19,
+            "worldX": 26961,
+            "worldY": 26961,
+            "worldZ": 175900,
+            "ttl": 91,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 20,
+            "worldX": 28380,
+            "worldY": 28380,
+            "worldZ": 183000,
+            "ttl": 90,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 21,
+            "worldX": 29799,
+            "worldY": 29799,
+            "worldZ": 189900,
+            "ttl": 89,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 22,
+            "worldX": 31218,
+            "worldY": 31218,
+            "worldZ": 196600,
+            "ttl": 88,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 23,
+            "worldX": 32637,
+            "worldY": 32637,
+            "worldZ": 203100,
+            "ttl": 87,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 24,
+            "worldX": 34056,
+            "worldY": 34056,
+            "worldZ": 209400,
+            "ttl": 86,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 25,
+            "worldX": 35475,
+            "worldY": 35475,
+            "worldZ": 215500,
+            "ttl": 85,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 26,
+            "worldX": 36894,
+            "worldY": 36894,
+            "worldZ": 221400,
+            "ttl": 84,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 27,
+            "worldX": 38313,
+            "worldY": 38313,
+            "worldZ": 227100,
+            "ttl": 83,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 28,
+            "worldX": 39732,
+            "worldY": 39732,
+            "worldZ": 232600,
+            "ttl": 82,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 29,
+            "worldX": 41151,
+            "worldY": 41151,
+            "worldZ": 237900,
+            "ttl": 81,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 30,
+            "worldX": 42570,
+            "worldY": 42570,
+            "worldZ": 243000,
+            "ttl": 80,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 31,
+            "worldX": 43989,
+            "worldY": 43989,
+            "worldZ": 247900,
+            "ttl": 79,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 32,
+            "worldX": 45408,
+            "worldY": 45408,
+            "worldZ": 252600,
+            "ttl": 78,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 33,
+            "worldX": 46827,
+            "worldY": 46827,
+            "worldZ": 257100,
+            "ttl": 77,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 34,
+            "worldX": 48246,
+            "worldY": 48246,
+            "worldZ": 261400,
+            "ttl": 76,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 35,
+            "worldX": 49665,
+            "worldY": 49665,
+            "worldZ": 265500,
+            "ttl": 75,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 36,
+            "worldX": 51084,
+            "worldY": 51084,
+            "worldZ": 269400,
+            "ttl": 74,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 37,
+            "worldX": 52503,
+            "worldY": 52503,
+            "worldZ": 273100,
+            "ttl": 73,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 38,
+            "worldX": 53922,
+            "worldY": 53922,
+            "worldZ": 276600,
+            "ttl": 72,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 39,
+            "worldX": 55341,
+            "worldY": 55341,
+            "worldZ": 279900,
+            "ttl": 71,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 40,
+            "worldX": 56760,
+            "worldY": 56760,
+            "worldZ": 283000,
+            "ttl": 70,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 41,
+            "worldX": 58179,
+            "worldY": 58179,
+            "worldZ": 285900,
+            "ttl": 69,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 42,
+            "worldX": 59598,
+            "worldY": 59598,
+            "worldZ": 288600,
+            "ttl": 68,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 43,
+            "worldX": 61017,
+            "worldY": 61017,
+            "worldZ": 291100,
+            "ttl": 67,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 44,
+            "worldX": 62436,
+            "worldY": 62436,
+            "worldZ": 293400,
+            "ttl": 66,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 45,
+            "worldX": 63855,
+            "worldY": 63855,
+            "worldZ": 295500,
+            "ttl": 65,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 46,
+            "worldX": 65274,
+            "worldY": 65274,
+            "worldZ": 297400,
+            "ttl": 64,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 47,
+            "worldX": 66693,
+            "worldY": 66693,
+            "worldZ": 299100,
+            "ttl": 63,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 48,
+            "worldX": 68112,
+            "worldY": 68112,
+            "worldZ": 300600,
+            "ttl": 62,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 49,
+            "worldX": 69531,
+            "worldY": 69531,
+            "worldZ": 301900,
+            "ttl": 61,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 50,
+            "worldX": 70950,
+            "worldY": 70950,
+            "worldZ": 303000,
+            "ttl": 60,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 51,
+            "worldX": 72369,
+            "worldY": 72369,
+            "worldZ": 303900,
+            "ttl": 59,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 52,
+            "worldX": 73788,
+            "worldY": 73788,
+            "worldZ": 304600,
+            "ttl": 58,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 53,
+            "worldX": 75207,
+            "worldY": 75207,
+            "worldZ": 305100,
+            "ttl": 57,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 54,
+            "worldX": 76626,
+            "worldY": 76626,
+            "worldZ": 305400,
+            "ttl": 56,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 55,
+            "worldX": 78045,
+            "worldY": 78045,
+            "worldZ": 305500,
+            "ttl": 55,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 56,
+            "worldX": 79464,
+            "worldY": 79464,
+            "worldZ": 305400,
+            "ttl": 54,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 57,
+            "worldX": 80883,
+            "worldY": 80883,
+            "worldZ": 305100,
+            "ttl": 53,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 58,
+            "worldX": 82302,
+            "worldY": 82302,
+            "worldZ": 304600,
+            "ttl": 52,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 59,
+            "worldX": 83721,
+            "worldY": 83721,
+            "worldZ": 303900,
+            "ttl": 51,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 60,
+            "worldX": 85140,
+            "worldY": 85140,
+            "worldZ": 303000,
+            "ttl": 50,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 61,
+            "worldX": 86559,
+            "worldY": 86559,
+            "worldZ": 301900,
+            "ttl": 49,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 62,
+            "worldX": 87978,
+            "worldY": 87978,
+            "worldZ": 300600,
+            "ttl": 48,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 63,
+            "worldX": 89397,
+            "worldY": 89397,
+            "worldZ": 299100,
+            "ttl": 47,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 64,
+            "worldX": 90816,
+            "worldY": 90816,
+            "worldZ": 297400,
+            "ttl": 46,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 65,
+            "worldX": 92235,
+            "worldY": 92235,
+            "worldZ": 295500,
+            "ttl": 45,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 66,
+            "worldX": 93654,
+            "worldY": 93654,
+            "worldZ": 293400,
+            "ttl": 44,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 67,
+            "worldX": 95073,
+            "worldY": 95073,
+            "worldZ": 291100,
+            "ttl": 43,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 68,
+            "worldX": 96492,
+            "worldY": 96492,
+            "worldZ": 288600,
+            "ttl": 42,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 69,
+            "worldX": 97911,
+            "worldY": 97911,
+            "worldZ": 285900,
+            "ttl": 41,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 70,
+            "worldX": 99330,
+            "worldY": 99330,
+            "worldZ": 283000,
+            "ttl": 40,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 71,
+            "worldX": 100749,
+            "worldY": 100749,
+            "worldZ": 279900,
+            "ttl": 39,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 72,
+            "worldX": 102168,
+            "worldY": 102168,
+            "worldZ": 276600,
+            "ttl": 38,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 73,
+            "worldX": 103587,
+            "worldY": 103587,
+            "worldZ": 273100,
+            "ttl": 37,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 74,
+            "worldX": 105006,
+            "worldY": 105006,
+            "worldZ": 269400,
+            "ttl": 36,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 75,
+            "worldX": 106425,
+            "worldY": 106425,
+            "worldZ": 265500,
+            "ttl": 35,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 76,
+            "worldX": 107844,
+            "worldY": 107844,
+            "worldZ": 261400,
+            "ttl": 34,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 77,
+            "worldX": 109263,
+            "worldY": 109263,
+            "worldZ": 257100,
+            "ttl": 33,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 78,
+            "worldX": 110682,
+            "worldY": 110682,
+            "worldZ": 252600,
+            "ttl": 32,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 79,
+            "worldX": 112101,
+            "worldY": 112101,
+            "worldZ": 247900,
+            "ttl": 31,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 80,
+            "worldX": 113520,
+            "worldY": 113520,
+            "worldZ": 243000,
+            "ttl": 30,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 81,
+            "worldX": 114939,
+            "worldY": 114939,
+            "worldZ": 237900,
+            "ttl": 29,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 82,
+            "worldX": 116358,
+            "worldY": 116358,
+            "worldZ": 232600,
+            "ttl": 28,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 83,
+            "worldX": 117777,
+            "worldY": 117777,
+            "worldZ": 227100,
+            "ttl": 27,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 84,
+            "worldX": 119196,
+            "worldY": 119196,
+            "worldZ": 221400,
+            "ttl": 26,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 85,
+            "worldX": 120615,
+            "worldY": 120615,
+            "worldZ": 215500,
+            "ttl": 25,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 86,
+            "worldX": 122034,
+            "worldY": 122034,
+            "worldZ": 209400,
+            "ttl": 24,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 87,
+            "worldX": 123453,
+            "worldY": 123453,
+            "worldZ": 203100,
+            "ttl": 23,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 88,
+            "worldX": 124872,
+            "worldY": 124872,
+            "worldZ": 196600,
+            "ttl": 22,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 89,
+            "worldX": 126291,
+            "worldY": 126291,
+            "worldZ": 189900,
+            "ttl": 21,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 90,
+            "worldX": 127710,
+            "worldY": 127710,
+            "worldZ": 183000,
+            "ttl": 20,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 91,
+            "worldX": 129129,
+            "worldY": 129129,
+            "worldZ": 175900,
+            "ttl": 19,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 92,
+            "worldX": 130548,
+            "worldY": 130548,
+            "worldZ": 168600,
+            "ttl": 18,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 93,
+            "worldX": 131967,
+            "worldY": 131967,
+            "worldZ": 161100,
+            "ttl": 17,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 94,
+            "worldX": 133386,
+            "worldY": 133386,
+            "worldZ": 153400,
+            "ttl": 16,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 95,
+            "worldX": 134805,
+            "worldY": 134805,
+            "worldZ": 145500,
+            "ttl": 15,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 96,
+            "worldX": 136224,
+            "worldY": 136224,
+            "worldZ": 137400,
+            "ttl": 14,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 97,
+            "worldX": 137643,
+            "worldY": 137643,
+            "worldZ": 129100,
+            "ttl": 13,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 98,
+            "worldX": 139062,
+            "worldY": 139062,
+            "worldZ": 120600,
+            "ttl": 12,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 99,
+            "worldX": 140481,
+            "worldY": 140481,
+            "worldZ": 111900,
+            "ttl": 11,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 100,
+            "worldX": 141900,
+            "worldY": 141900,
+            "worldZ": 103000,
+            "ttl": 10,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 101,
+            "worldX": 143319,
+            "worldY": 143319,
+            "worldZ": 93900,
+            "ttl": 9,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 102,
+            "worldX": 144738,
+            "worldY": 144738,
+            "worldZ": 84600,
+            "ttl": 8,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 103,
+            "worldX": 146157,
+            "worldY": 146157,
+            "worldZ": 75100,
+            "ttl": 7,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 104,
+            "worldX": 147576,
+            "worldY": 147576,
+            "worldZ": 65400,
+            "ttl": 6,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 105,
+            "worldX": 148995,
+            "worldY": 148995,
+            "worldZ": 55500,
+            "ttl": 5,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 106,
+            "worldX": 150414,
+            "worldY": 150414,
+            "worldZ": 45400,
+            "ttl": 4,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 107,
+            "worldX": 151833,
+            "worldY": 151833,
+            "worldZ": 35100,
+            "ttl": 3,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 108,
+            "worldX": 153252,
+            "worldY": 153252,
+            "worldZ": 24600,
+            "ttl": 2,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 109,
+            "worldX": 154671,
+            "worldY": 154671,
+            "worldZ": 13900,
+            "ttl": 1,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 110,
+            "worldX": 156090,
+            "worldY": 156090,
+            "worldZ": 3000,
+            "ttl": 0,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 111,
+            "worldX": 157509,
+            "worldY": 157509,
+            "worldZ": -8100,
+            "ttl": -1,
+            "occupiedHeight": 0,
+            "removed": true
+          }
+        ],
+        "removalReason": "below-ground"
+      }
+    ],
+    "obstacleBoundaryCases": [
+      {
+        "name": "quick-height-equality-survives",
+        "trajectory": 0,
+        "start": [
+          0,
+          0
+        ],
+        "target": [
+          12800,
+          0
+        ],
+        "direction": 90,
+        "initialTtl": 13,
+        "parabolaOffset": 6,
+        "path": [
+          {
+            "subturn": 1,
+            "worldX": 2007,
+            "worldY": 0,
+            "worldZ": 4108,
+            "ttl": 12,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 2,
+            "worldX": 4014,
+            "worldY": 0,
+            "worldZ": 4108,
+            "ttl": 11,
+            "occupiedHeight": 4108,
+            "removed": false
+          },
+          {
+            "subturn": 3,
+            "worldX": 6021,
+            "worldY": 0,
+            "worldZ": 4108,
+            "ttl": 10,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 4,
+            "worldX": 8028,
+            "worldY": 0,
+            "worldZ": 4108,
+            "ttl": 9,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 5,
+            "worldX": 10035,
+            "worldY": 0,
+            "worldZ": 4108,
+            "ttl": 8,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 6,
+            "worldX": 12042,
+            "worldY": 0,
+            "worldZ": 4108,
+            "ttl": 7,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 7,
+            "worldX": 14049,
+            "worldY": 0,
+            "worldZ": 4108,
+            "ttl": 6,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 8,
+            "worldX": 16056,
+            "worldY": 0,
+            "worldZ": 4108,
+            "ttl": 5,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 9,
+            "worldX": 18063,
+            "worldY": 0,
+            "worldZ": 4108,
+            "ttl": 4,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 10,
+            "worldX": 20070,
+            "worldY": 0,
+            "worldZ": 4108,
+            "ttl": 3,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 11,
+            "worldX": 22077,
+            "worldY": 0,
+            "worldZ": 4080,
+            "ttl": 2,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 12,
+            "worldX": 24084,
+            "worldY": 0,
+            "worldZ": 4044,
+            "ttl": 1,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 13,
+            "worldX": 26091,
+            "worldY": 0,
+            "worldZ": 4000,
+            "ttl": 0,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 14,
+            "worldX": 28098,
+            "worldY": 0,
+            "worldZ": 3948,
+            "ttl": -1,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 15,
+            "worldX": 30105,
+            "worldY": 0,
+            "worldZ": 3888,
+            "ttl": -2,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 16,
+            "worldX": 32112,
+            "worldY": 0,
+            "worldZ": 3820,
+            "ttl": -3,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 17,
+            "worldX": 34119,
+            "worldY": 0,
+            "worldZ": 3744,
+            "ttl": -4,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 18,
+            "worldX": 36126,
+            "worldY": 0,
+            "worldZ": 3660,
+            "ttl": -5,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 19,
+            "worldX": 38133,
+            "worldY": 0,
+            "worldZ": 3568,
+            "ttl": -6,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 20,
+            "worldX": 40140,
+            "worldY": 0,
+            "worldZ": 3468,
+            "ttl": -7,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 21,
+            "worldX": 42147,
+            "worldY": 0,
+            "worldZ": 3360,
+            "ttl": -8,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 22,
+            "worldX": 44154,
+            "worldY": 0,
+            "worldZ": 3244,
+            "ttl": -9,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 23,
+            "worldX": 46161,
+            "worldY": 0,
+            "worldZ": 3120,
+            "ttl": -10,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 24,
+            "worldX": 48168,
+            "worldY": 0,
+            "worldZ": 2988,
+            "ttl": -11,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 25,
+            "worldX": 50175,
+            "worldY": 0,
+            "worldZ": 2848,
+            "ttl": -12,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 26,
+            "worldX": 52182,
+            "worldY": 0,
+            "worldZ": 2700,
+            "ttl": -13,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 27,
+            "worldX": 54189,
+            "worldY": 0,
+            "worldZ": 2544,
+            "ttl": -14,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 28,
+            "worldX": 56196,
+            "worldY": 0,
+            "worldZ": 2380,
+            "ttl": -15,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 29,
+            "worldX": 58203,
+            "worldY": 0,
+            "worldZ": 2208,
+            "ttl": -16,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 30,
+            "worldX": 60210,
+            "worldY": 0,
+            "worldZ": 2028,
+            "ttl": -17,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 31,
+            "worldX": 62217,
+            "worldY": 0,
+            "worldZ": 1840,
+            "ttl": -18,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 32,
+            "worldX": 64224,
+            "worldY": 0,
+            "worldZ": 1644,
+            "ttl": -19,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 33,
+            "worldX": 66231,
+            "worldY": 0,
+            "worldZ": 1440,
+            "ttl": -20,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 34,
+            "worldX": 68238,
+            "worldY": 0,
+            "worldZ": 1228,
+            "ttl": -21,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 35,
+            "worldX": 70245,
+            "worldY": 0,
+            "worldZ": 1008,
+            "ttl": -22,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 36,
+            "worldX": 72252,
+            "worldY": 0,
+            "worldZ": 780,
+            "ttl": -23,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 37,
+            "worldX": 74259,
+            "worldY": 0,
+            "worldZ": 544,
+            "ttl": -24,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 38,
+            "worldX": 76266,
+            "worldY": 0,
+            "worldZ": 300,
+            "ttl": -25,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 39,
+            "worldX": 78273,
+            "worldY": 0,
+            "worldZ": 48,
+            "ttl": -26,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 40,
+            "worldX": 80280,
+            "worldY": 0,
+            "worldZ": -212,
+            "ttl": -27,
+            "occupiedHeight": 0,
+            "removed": true
+          }
+        ],
+        "removalReason": "below-ground"
+      },
+      {
+        "name": "quick-height-plus-one-blocks",
+        "trajectory": 0,
+        "start": [
+          0,
+          0
+        ],
+        "target": [
+          12800,
+          0
+        ],
+        "direction": 90,
+        "initialTtl": 13,
+        "parabolaOffset": 6,
+        "path": [
+          {
+            "subturn": 1,
+            "worldX": 2007,
+            "worldY": 0,
+            "worldZ": 4108,
+            "ttl": 12,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 2,
+            "worldX": 4014,
+            "worldY": 0,
+            "worldZ": 4108,
+            "ttl": 11,
+            "occupiedHeight": 4109,
+            "removed": true
+          }
+        ],
+        "removalReason": "occupied-height"
+      },
+      {
+        "name": "short-height-equality-survives",
+        "trajectory": 1,
+        "start": [
+          0,
+          0
+        ],
+        "target": [
+          12800,
+          0
+        ],
+        "direction": 90,
+        "initialTtl": 6,
+        "parabolaOffset": 3,
+        "path": [
+          {
+            "subturn": 1,
+            "worldX": 2007,
+            "worldY": 0,
+            "worldZ": 3050,
+            "ttl": 5,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 2,
+            "worldX": 4014,
+            "worldY": 0,
+            "worldZ": 3080,
+            "ttl": 4,
+            "occupiedHeight": 3080,
+            "removed": false
+          },
+          {
+            "subturn": 3,
+            "worldX": 6021,
+            "worldY": 0,
+            "worldZ": 3090,
+            "ttl": 3,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 4,
+            "worldX": 8028,
+            "worldY": 0,
+            "worldZ": 3080,
+            "ttl": 2,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 5,
+            "worldX": 10035,
+            "worldY": 0,
+            "worldZ": 3050,
+            "ttl": 1,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 6,
+            "worldX": 12042,
+            "worldY": 0,
+            "worldZ": 3000,
+            "ttl": 0,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 7,
+            "worldX": 14049,
+            "worldY": 0,
+            "worldZ": 2930,
+            "ttl": -1,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 8,
+            "worldX": 16056,
+            "worldY": 0,
+            "worldZ": 2840,
+            "ttl": -2,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 9,
+            "worldX": 18063,
+            "worldY": 0,
+            "worldZ": 2730,
+            "ttl": -3,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 10,
+            "worldX": 20070,
+            "worldY": 0,
+            "worldZ": 2600,
+            "ttl": -4,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 11,
+            "worldX": 22077,
+            "worldY": 0,
+            "worldZ": 2450,
+            "ttl": -5,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 12,
+            "worldX": 24084,
+            "worldY": 0,
+            "worldZ": 2280,
+            "ttl": -6,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 13,
+            "worldX": 26091,
+            "worldY": 0,
+            "worldZ": 2090,
+            "ttl": -7,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 14,
+            "worldX": 28098,
+            "worldY": 0,
+            "worldZ": 1880,
+            "ttl": -8,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 15,
+            "worldX": 30105,
+            "worldY": 0,
+            "worldZ": 1650,
+            "ttl": -9,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 16,
+            "worldX": 32112,
+            "worldY": 0,
+            "worldZ": 1400,
+            "ttl": -10,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 17,
+            "worldX": 34119,
+            "worldY": 0,
+            "worldZ": 1130,
+            "ttl": -11,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 18,
+            "worldX": 36126,
+            "worldY": 0,
+            "worldZ": 840,
+            "ttl": -12,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 19,
+            "worldX": 38133,
+            "worldY": 0,
+            "worldZ": 530,
+            "ttl": -13,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 20,
+            "worldX": 40140,
+            "worldY": 0,
+            "worldZ": 200,
+            "ttl": -14,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 21,
+            "worldX": 42147,
+            "worldY": 0,
+            "worldZ": -150,
+            "ttl": -15,
+            "occupiedHeight": 0,
+            "removed": true
+          }
+        ],
+        "removalReason": "below-ground"
+      },
+      {
+        "name": "short-height-plus-one-blocks",
+        "trajectory": 1,
+        "start": [
+          0,
+          0
+        ],
+        "target": [
+          12800,
+          0
+        ],
+        "direction": 90,
+        "initialTtl": 6,
+        "parabolaOffset": 3,
+        "path": [
+          {
+            "subturn": 1,
+            "worldX": 2007,
+            "worldY": 0,
+            "worldZ": 3050,
+            "ttl": 5,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 2,
+            "worldX": 4014,
+            "worldY": 0,
+            "worldZ": 3080,
+            "ttl": 4,
+            "occupiedHeight": 3081,
+            "removed": true
+          }
+        ],
+        "removalReason": "occupied-height"
+      },
+      {
+        "name": "long-height-equality-survives",
+        "trajectory": 2,
+        "start": [
+          0,
+          0
+        ],
+        "target": [
+          12800,
+          0
+        ],
+        "direction": 90,
+        "initialTtl": 6,
+        "parabolaOffset": 3,
+        "path": [
+          {
+            "subturn": 1,
+            "worldX": 2007,
+            "worldY": 0,
+            "worldZ": 3500,
+            "ttl": 5,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 2,
+            "worldX": 4014,
+            "worldY": 0,
+            "worldZ": 3800,
+            "ttl": 4,
+            "occupiedHeight": 3800,
+            "removed": false
+          },
+          {
+            "subturn": 3,
+            "worldX": 6021,
+            "worldY": 0,
+            "worldZ": 3900,
+            "ttl": 3,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 4,
+            "worldX": 8028,
+            "worldY": 0,
+            "worldZ": 3800,
+            "ttl": 2,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 5,
+            "worldX": 10035,
+            "worldY": 0,
+            "worldZ": 3500,
+            "ttl": 1,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 6,
+            "worldX": 12042,
+            "worldY": 0,
+            "worldZ": 3000,
+            "ttl": 0,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 7,
+            "worldX": 14049,
+            "worldY": 0,
+            "worldZ": 2300,
+            "ttl": -1,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 8,
+            "worldX": 16056,
+            "worldY": 0,
+            "worldZ": 1400,
+            "ttl": -2,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 9,
+            "worldX": 18063,
+            "worldY": 0,
+            "worldZ": 300,
+            "ttl": -3,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 10,
+            "worldX": 20070,
+            "worldY": 0,
+            "worldZ": -1000,
+            "ttl": -4,
+            "occupiedHeight": 0,
+            "removed": true
+          }
+        ],
+        "removalReason": "below-ground"
+      },
+      {
+        "name": "long-height-plus-one-blocks",
+        "trajectory": 2,
+        "start": [
+          0,
+          0
+        ],
+        "target": [
+          12800,
+          0
+        ],
+        "direction": 90,
+        "initialTtl": 6,
+        "parabolaOffset": 3,
+        "path": [
+          {
+            "subturn": 1,
+            "worldX": 2007,
+            "worldY": 0,
+            "worldZ": 3500,
+            "ttl": 5,
+            "occupiedHeight": 0,
+            "removed": false
+          },
+          {
+            "subturn": 2,
+            "worldX": 4014,
+            "worldY": 0,
+            "worldZ": 3800,
+            "ttl": 4,
+            "occupiedHeight": 3801,
+            "removed": true
+          }
+        ],
+        "removalReason": "occupied-height"
+      }
+    ],
+    "quickAdditionalTileRangeCap": null
+  },
+  "stateMachine": {
+    "throwCooldown": {
+      "clock": "game-turn",
+      "minimumSubturnDelta": 5,
+      "attemptSubturns": [
+        0,
+        1,
+        4,
+        5,
+        6,
+        10
+      ],
+      "acceptedSubturns": [
+        0,
+        5,
+        10
+      ]
+    },
+    "actionMatrix": [
+      {
+        "state": 0,
+        "walk": true,
+        "throw": true,
+        "make": true,
+        "avatarCollision": true
+      },
+      {
+        "state": 1,
+        "walk": true,
+        "throw": true,
+        "make": false,
+        "avatarCollision": true
+      },
+      {
+        "state": 2,
+        "walk": false,
+        "throw": false,
+        "make": false,
+        "avatarCollision": false
+      },
+      {
+        "state": 3,
+        "walk": true,
+        "throw": true,
+        "make": true,
+        "avatarCollision": false
+      }
+    ],
+    "creatingCompletes": [
+      {
+        "subturn": 1,
+        "activityState": 1,
+        "activityTimer": 19,
+        "health": 4,
+        "ammo": 2
+      },
+      {
+        "subturn": 2,
+        "activityState": 1,
+        "activityTimer": 18,
+        "health": 4,
+        "ammo": 2
+      },
+      {
+        "subturn": 3,
+        "activityState": 1,
+        "activityTimer": 17,
+        "health": 4,
+        "ammo": 2
+      },
+      {
+        "subturn": 4,
+        "activityState": 1,
+        "activityTimer": 16,
+        "health": 4,
+        "ammo": 2
+      },
+      {
+        "subturn": 5,
+        "activityState": 1,
+        "activityTimer": 15,
+        "health": 4,
+        "ammo": 2
+      },
+      {
+        "subturn": 6,
+        "activityState": 1,
+        "activityTimer": 14,
+        "health": 4,
+        "ammo": 2
+      },
+      {
+        "subturn": 7,
+        "activityState": 1,
+        "activityTimer": 13,
+        "health": 4,
+        "ammo": 2
+      },
+      {
+        "subturn": 8,
+        "activityState": 1,
+        "activityTimer": 12,
+        "health": 4,
+        "ammo": 2
+      },
+      {
+        "subturn": 9,
+        "activityState": 1,
+        "activityTimer": 11,
+        "health": 4,
+        "ammo": 2
+      },
+      {
+        "subturn": 10,
+        "activityState": 1,
+        "activityTimer": 10,
+        "health": 4,
+        "ammo": 2
+      },
+      {
+        "subturn": 11,
+        "activityState": 1,
+        "activityTimer": 9,
+        "health": 4,
+        "ammo": 2
+      },
+      {
+        "subturn": 12,
+        "activityState": 1,
+        "activityTimer": 8,
+        "health": 4,
+        "ammo": 2
+      },
+      {
+        "subturn": 13,
+        "activityState": 1,
+        "activityTimer": 7,
+        "health": 4,
+        "ammo": 2
+      },
+      {
+        "subturn": 14,
+        "activityState": 1,
+        "activityTimer": 6,
+        "health": 4,
+        "ammo": 2
+      },
+      {
+        "subturn": 15,
+        "activityState": 1,
+        "activityTimer": 5,
+        "health": 4,
+        "ammo": 2
+      },
+      {
+        "subturn": 16,
+        "activityState": 1,
+        "activityTimer": 4,
+        "health": 4,
+        "ammo": 2
+      },
+      {
+        "subturn": 17,
+        "activityState": 1,
+        "activityTimer": 3,
+        "health": 4,
+        "ammo": 2
+      },
+      {
+        "subturn": 18,
+        "activityState": 1,
+        "activityTimer": 2,
+        "health": 4,
+        "ammo": 2
+      },
+      {
+        "subturn": 19,
+        "activityState": 1,
+        "activityTimer": 1,
+        "health": 4,
+        "ammo": 2
+      },
+      {
+        "subturn": 20,
+        "activityState": 0,
+        "activityTimer": 0,
+        "health": 4,
+        "ammo": 3
+      }
+    ],
+    "creatingCancelledByMove": {
+      "before": {
+        "activityState": 1,
+        "activityTimer": 12,
+        "ammo": 2
+      },
+      "after": {
+        "activityState": 0,
+        "activityTimer": 0,
+        "ammo": 2
+      }
+    },
+    "knockoutLifecycle": {
+      "onKnockout": {
+        "activityState": 2,
+        "activityTimer": 125,
+        "health": 0,
+        "ammo": 0
+      },
+      "timeline": [
+        {
+          "subturn": 1,
+          "activityState": 2,
+          "activityTimer": 124,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 2,
+          "activityState": 2,
+          "activityTimer": 123,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 3,
+          "activityState": 2,
+          "activityTimer": 122,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 4,
+          "activityState": 2,
+          "activityTimer": 121,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 5,
+          "activityState": 2,
+          "activityTimer": 120,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 6,
+          "activityState": 2,
+          "activityTimer": 119,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 7,
+          "activityState": 2,
+          "activityTimer": 118,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 8,
+          "activityState": 2,
+          "activityTimer": 117,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 9,
+          "activityState": 2,
+          "activityTimer": 116,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 10,
+          "activityState": 2,
+          "activityTimer": 115,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 11,
+          "activityState": 2,
+          "activityTimer": 114,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 12,
+          "activityState": 2,
+          "activityTimer": 113,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 13,
+          "activityState": 2,
+          "activityTimer": 112,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 14,
+          "activityState": 2,
+          "activityTimer": 111,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 15,
+          "activityState": 2,
+          "activityTimer": 110,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 16,
+          "activityState": 2,
+          "activityTimer": 109,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 17,
+          "activityState": 2,
+          "activityTimer": 108,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 18,
+          "activityState": 2,
+          "activityTimer": 107,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 19,
+          "activityState": 2,
+          "activityTimer": 106,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 20,
+          "activityState": 2,
+          "activityTimer": 105,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 21,
+          "activityState": 2,
+          "activityTimer": 104,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 22,
+          "activityState": 2,
+          "activityTimer": 103,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 23,
+          "activityState": 2,
+          "activityTimer": 102,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 24,
+          "activityState": 2,
+          "activityTimer": 101,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 25,
+          "activityState": 2,
+          "activityTimer": 100,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 26,
+          "activityState": 2,
+          "activityTimer": 99,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 27,
+          "activityState": 2,
+          "activityTimer": 98,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 28,
+          "activityState": 2,
+          "activityTimer": 97,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 29,
+          "activityState": 2,
+          "activityTimer": 96,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 30,
+          "activityState": 2,
+          "activityTimer": 95,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 31,
+          "activityState": 2,
+          "activityTimer": 94,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 32,
+          "activityState": 2,
+          "activityTimer": 93,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 33,
+          "activityState": 2,
+          "activityTimer": 92,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 34,
+          "activityState": 2,
+          "activityTimer": 91,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 35,
+          "activityState": 2,
+          "activityTimer": 90,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 36,
+          "activityState": 2,
+          "activityTimer": 89,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 37,
+          "activityState": 2,
+          "activityTimer": 88,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 38,
+          "activityState": 2,
+          "activityTimer": 87,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 39,
+          "activityState": 2,
+          "activityTimer": 86,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 40,
+          "activityState": 2,
+          "activityTimer": 85,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 41,
+          "activityState": 2,
+          "activityTimer": 84,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 42,
+          "activityState": 2,
+          "activityTimer": 83,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 43,
+          "activityState": 2,
+          "activityTimer": 82,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 44,
+          "activityState": 2,
+          "activityTimer": 81,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 45,
+          "activityState": 2,
+          "activityTimer": 80,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 46,
+          "activityState": 2,
+          "activityTimer": 79,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 47,
+          "activityState": 2,
+          "activityTimer": 78,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 48,
+          "activityState": 2,
+          "activityTimer": 77,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 49,
+          "activityState": 2,
+          "activityTimer": 76,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 50,
+          "activityState": 2,
+          "activityTimer": 75,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 51,
+          "activityState": 2,
+          "activityTimer": 74,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 52,
+          "activityState": 2,
+          "activityTimer": 73,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 53,
+          "activityState": 2,
+          "activityTimer": 72,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 54,
+          "activityState": 2,
+          "activityTimer": 71,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 55,
+          "activityState": 2,
+          "activityTimer": 70,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 56,
+          "activityState": 2,
+          "activityTimer": 69,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 57,
+          "activityState": 2,
+          "activityTimer": 68,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 58,
+          "activityState": 2,
+          "activityTimer": 67,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 59,
+          "activityState": 2,
+          "activityTimer": 66,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 60,
+          "activityState": 2,
+          "activityTimer": 65,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 61,
+          "activityState": 2,
+          "activityTimer": 64,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 62,
+          "activityState": 2,
+          "activityTimer": 63,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 63,
+          "activityState": 2,
+          "activityTimer": 62,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 64,
+          "activityState": 2,
+          "activityTimer": 61,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 65,
+          "activityState": 2,
+          "activityTimer": 60,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 66,
+          "activityState": 2,
+          "activityTimer": 59,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 67,
+          "activityState": 2,
+          "activityTimer": 58,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 68,
+          "activityState": 2,
+          "activityTimer": 57,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 69,
+          "activityState": 2,
+          "activityTimer": 56,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 70,
+          "activityState": 2,
+          "activityTimer": 55,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 71,
+          "activityState": 2,
+          "activityTimer": 54,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 72,
+          "activityState": 2,
+          "activityTimer": 53,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 73,
+          "activityState": 2,
+          "activityTimer": 52,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 74,
+          "activityState": 2,
+          "activityTimer": 51,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 75,
+          "activityState": 2,
+          "activityTimer": 50,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 76,
+          "activityState": 2,
+          "activityTimer": 49,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 77,
+          "activityState": 2,
+          "activityTimer": 48,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 78,
+          "activityState": 2,
+          "activityTimer": 47,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 79,
+          "activityState": 2,
+          "activityTimer": 46,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 80,
+          "activityState": 2,
+          "activityTimer": 45,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 81,
+          "activityState": 2,
+          "activityTimer": 44,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 82,
+          "activityState": 2,
+          "activityTimer": 43,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 83,
+          "activityState": 2,
+          "activityTimer": 42,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 84,
+          "activityState": 2,
+          "activityTimer": 41,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 85,
+          "activityState": 2,
+          "activityTimer": 40,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 86,
+          "activityState": 2,
+          "activityTimer": 39,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 87,
+          "activityState": 2,
+          "activityTimer": 38,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 88,
+          "activityState": 2,
+          "activityTimer": 37,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 89,
+          "activityState": 2,
+          "activityTimer": 36,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 90,
+          "activityState": 2,
+          "activityTimer": 35,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 91,
+          "activityState": 2,
+          "activityTimer": 34,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 92,
+          "activityState": 2,
+          "activityTimer": 33,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 93,
+          "activityState": 2,
+          "activityTimer": 32,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 94,
+          "activityState": 2,
+          "activityTimer": 31,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 95,
+          "activityState": 2,
+          "activityTimer": 30,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 96,
+          "activityState": 2,
+          "activityTimer": 29,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 97,
+          "activityState": 2,
+          "activityTimer": 28,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 98,
+          "activityState": 2,
+          "activityTimer": 27,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 99,
+          "activityState": 2,
+          "activityTimer": 26,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 100,
+          "activityState": 2,
+          "activityTimer": 25,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 101,
+          "activityState": 2,
+          "activityTimer": 24,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 102,
+          "activityState": 2,
+          "activityTimer": 23,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 103,
+          "activityState": 2,
+          "activityTimer": 22,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 104,
+          "activityState": 2,
+          "activityTimer": 21,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 105,
+          "activityState": 2,
+          "activityTimer": 20,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 106,
+          "activityState": 2,
+          "activityTimer": 19,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 107,
+          "activityState": 2,
+          "activityTimer": 18,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 108,
+          "activityState": 2,
+          "activityTimer": 17,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 109,
+          "activityState": 2,
+          "activityTimer": 16,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 110,
+          "activityState": 2,
+          "activityTimer": 15,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 111,
+          "activityState": 2,
+          "activityTimer": 14,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 112,
+          "activityState": 2,
+          "activityTimer": 13,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 113,
+          "activityState": 2,
+          "activityTimer": 12,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 114,
+          "activityState": 2,
+          "activityTimer": 11,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 115,
+          "activityState": 2,
+          "activityTimer": 10,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 116,
+          "activityState": 2,
+          "activityTimer": 9,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 117,
+          "activityState": 2,
+          "activityTimer": 8,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 118,
+          "activityState": 2,
+          "activityTimer": 7,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 119,
+          "activityState": 2,
+          "activityTimer": 6,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 120,
+          "activityState": 2,
+          "activityTimer": 5,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 121,
+          "activityState": 2,
+          "activityTimer": 4,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 122,
+          "activityState": 2,
+          "activityTimer": 3,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 123,
+          "activityState": 2,
+          "activityTimer": 2,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 124,
+          "activityState": 2,
+          "activityTimer": 1,
+          "health": 0,
+          "ammo": 0
+        },
+        {
+          "subturn": 125,
+          "activityState": 3,
+          "activityTimer": 59,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 126,
+          "activityState": 3,
+          "activityTimer": 58,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 127,
+          "activityState": 3,
+          "activityTimer": 57,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 128,
+          "activityState": 3,
+          "activityTimer": 56,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 129,
+          "activityState": 3,
+          "activityTimer": 55,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 130,
+          "activityState": 3,
+          "activityTimer": 54,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 131,
+          "activityState": 3,
+          "activityTimer": 53,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 132,
+          "activityState": 3,
+          "activityTimer": 52,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 133,
+          "activityState": 3,
+          "activityTimer": 51,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 134,
+          "activityState": 3,
+          "activityTimer": 50,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 135,
+          "activityState": 3,
+          "activityTimer": 49,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 136,
+          "activityState": 3,
+          "activityTimer": 48,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 137,
+          "activityState": 3,
+          "activityTimer": 47,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 138,
+          "activityState": 3,
+          "activityTimer": 46,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 139,
+          "activityState": 3,
+          "activityTimer": 45,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 140,
+          "activityState": 3,
+          "activityTimer": 44,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 141,
+          "activityState": 3,
+          "activityTimer": 43,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 142,
+          "activityState": 3,
+          "activityTimer": 42,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 143,
+          "activityState": 3,
+          "activityTimer": 41,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 144,
+          "activityState": 3,
+          "activityTimer": 40,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 145,
+          "activityState": 3,
+          "activityTimer": 39,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 146,
+          "activityState": 3,
+          "activityTimer": 38,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 147,
+          "activityState": 3,
+          "activityTimer": 37,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 148,
+          "activityState": 3,
+          "activityTimer": 36,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 149,
+          "activityState": 3,
+          "activityTimer": 35,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 150,
+          "activityState": 3,
+          "activityTimer": 34,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 151,
+          "activityState": 3,
+          "activityTimer": 33,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 152,
+          "activityState": 3,
+          "activityTimer": 32,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 153,
+          "activityState": 3,
+          "activityTimer": 31,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 154,
+          "activityState": 3,
+          "activityTimer": 30,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 155,
+          "activityState": 3,
+          "activityTimer": 29,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 156,
+          "activityState": 3,
+          "activityTimer": 28,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 157,
+          "activityState": 3,
+          "activityTimer": 27,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 158,
+          "activityState": 3,
+          "activityTimer": 26,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 159,
+          "activityState": 3,
+          "activityTimer": 25,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 160,
+          "activityState": 3,
+          "activityTimer": 24,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 161,
+          "activityState": 3,
+          "activityTimer": 23,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 162,
+          "activityState": 3,
+          "activityTimer": 22,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 163,
+          "activityState": 3,
+          "activityTimer": 21,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 164,
+          "activityState": 3,
+          "activityTimer": 20,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 165,
+          "activityState": 3,
+          "activityTimer": 19,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 166,
+          "activityState": 3,
+          "activityTimer": 18,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 167,
+          "activityState": 3,
+          "activityTimer": 17,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 168,
+          "activityState": 3,
+          "activityTimer": 16,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 169,
+          "activityState": 3,
+          "activityTimer": 15,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 170,
+          "activityState": 3,
+          "activityTimer": 14,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 171,
+          "activityState": 3,
+          "activityTimer": 13,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 172,
+          "activityState": 3,
+          "activityTimer": 12,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 173,
+          "activityState": 3,
+          "activityTimer": 11,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 174,
+          "activityState": 3,
+          "activityTimer": 10,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 175,
+          "activityState": 3,
+          "activityTimer": 9,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 176,
+          "activityState": 3,
+          "activityTimer": 8,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 177,
+          "activityState": 3,
+          "activityTimer": 7,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 178,
+          "activityState": 3,
+          "activityTimer": 6,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 179,
+          "activityState": 3,
+          "activityTimer": 5,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 180,
+          "activityState": 3,
+          "activityTimer": 4,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 181,
+          "activityState": 3,
+          "activityTimer": 3,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 182,
+          "activityState": 3,
+          "activityTimer": 2,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 183,
+          "activityState": 3,
+          "activityTimer": 1,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 184,
+          "activityState": 0,
+          "activityTimer": 0,
+          "health": 4,
+          "ammo": 0
+        },
+        {
+          "subturn": 185,
+          "activityState": 0,
+          "activityTimer": 0,
+          "health": 4,
+          "ammo": 0
+        }
+      ]
+    }
+  },
+  "scoringVectors": [
+    {
+      "name": "ffa-other-player-hit",
+      "teamCount": 1,
+      "sameAvatar": false,
+      "sameTeam": true,
+      "damage": 1,
+      "hitScore": 1
+    },
+    {
+      "name": "team-enemy-hit",
+      "teamCount": 2,
+      "sameAvatar": false,
+      "sameTeam": false,
+      "damage": 1,
+      "hitScore": 1
+    },
+    {
+      "name": "team-friendly-stray-hit",
+      "teamCount": 2,
+      "sameAvatar": false,
+      "sameTeam": true,
+      "damage": 1,
+      "hitScore": 0
+    },
+    {
+      "name": "self-overlap",
+      "teamCount": 1,
+      "sameAvatar": true,
+      "sameTeam": true,
+      "damage": 0,
+      "hitScore": 0
+    },
+    {
+      "name": "enemy-knockout",
+      "teamCount": 2,
+      "sameAvatar": false,
+      "sameTeam": false,
+      "damage": 1,
+      "hitScore": 1,
+      "knockoutScore": 5
+    }
+  ],
+  "machineVectors": [
+    {
+      "name": "immediate-refill-then-transfer",
+      "collectors": [
+        {
+          "objectId": 7,
+          "ammo": 0,
+          "enterSubturn": 0,
+          "leaveSubturn": 1
+        }
+      ],
+      "result": {
+        "events": [
+          {
+            "subturn": 0,
+            "event": "restock",
+            "machineCount": 1
+          },
+          {
+            "subturn": 0,
+            "event": "transfer",
+            "playerObjectId": 7,
+            "machineCount": 0,
+            "playerCount": 1
+          }
+        ],
+        "finalMachineCount": 0,
+        "finalPlayerCounts": {
+          "7": 1
+        }
+      }
+    },
+    {
+      "name": "sustained-collection",
+      "collectors": [
+        {
+          "objectId": 7,
+          "ammo": 0,
+          "enterSubturn": 0,
+          "leaveSubturn": 151
+        }
+      ],
+      "result": {
+        "events": [
+          {
+            "subturn": 0,
+            "event": "restock",
+            "machineCount": 1
+          },
+          {
+            "subturn": 0,
+            "event": "transfer",
+            "playerObjectId": 7,
+            "machineCount": 0,
+            "playerCount": 1
+          },
+          {
+            "subturn": 50,
+            "event": "restock",
+            "machineCount": 1
+          },
+          {
+            "subturn": 50,
+            "event": "transfer",
+            "playerObjectId": 7,
+            "machineCount": 0,
+            "playerCount": 2
+          },
+          {
+            "subturn": 100,
+            "event": "restock",
+            "machineCount": 1
+          },
+          {
+            "subturn": 100,
+            "event": "transfer",
+            "playerObjectId": 7,
+            "machineCount": 0,
+            "playerCount": 3
+          },
+          {
+            "subturn": 150,
+            "event": "restock",
+            "machineCount": 1
+          },
+          {
+            "subturn": 150,
+            "event": "transfer",
+            "playerObjectId": 7,
+            "machineCount": 0,
+            "playerCount": 4
+          }
+        ],
+        "finalMachineCount": 0,
+        "finalPlayerCounts": {
+          "7": 4
+        }
+      }
+    },
+    {
+      "name": "ascending-avatar-contention",
+      "collectors": [
+        {
+          "objectId": 11,
+          "ammo": 0,
+          "enterSubturn": 0,
+          "leaveSubturn": 1
+        },
+        {
+          "objectId": 7,
+          "ammo": 0,
+          "enterSubturn": 0,
+          "leaveSubturn": 1
+        }
+      ],
+      "result": {
+        "events": [
+          {
+            "subturn": 0,
+            "event": "restock",
+            "machineCount": 1
+          },
+          {
+            "subturn": 0,
+            "event": "transfer",
+            "playerObjectId": 7,
+            "machineCount": 0,
+            "playerCount": 1
+          }
+        ],
+        "finalMachineCount": 0,
+        "finalPlayerCounts": {
+          "11": 0,
+          "7": 1
+        }
+      }
+    },
+    {
+      "name": "no-collector-no-refill",
+      "collectors": [],
+      "result": {
+        "events": [],
+        "finalMachineCount": 0,
+        "finalPlayerCounts": {}
+      }
+    }
+  ]
+}

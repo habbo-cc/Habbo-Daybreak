@@ -15,6 +15,7 @@ import com.eu.habbo.habbohotel.users.Habbo;
 import com.eu.habbo.habbohotel.wired.WiredEffectType;
 import com.eu.habbo.habbohotel.wired.core.WiredManager;
 import com.eu.habbo.habbohotel.wired.core.WiredContext;
+import com.eu.habbo.habbohotel.wired.core.WiredTextTransform;
 import com.eu.habbo.messages.ServerMessage;
 import com.eu.habbo.messages.incoming.wired.WiredSaveException;
 import com.eu.habbo.messages.outgoing.rooms.users.WhisperMessageComposer;
@@ -42,23 +43,25 @@ public class WiredEffectKickHabbo extends InteractionWiredEffect {
     @Override
     public void execute(WiredContext ctx) {
         Room room = ctx.room();
-        Habbo habbo = ctx.actor().map(room::getHabbo).orElse(null);
-
-        if (habbo != null) {
+        for (RoomUnit unit : resolveUserSource(ctx, this.getWiredUserSourceTypes(), 0)) {
+            Habbo habbo = room.getHabbo(unit);
+            if (habbo == null) {
+                continue;
+            }
             if (habbo.hasPermission(Permission.ACC_UNKICKABLE)) {
                 habbo.whisper(Emulator.getTexts().getValue("hotel.wired.kickexception.unkickable"));
-                return;
+                continue;
             }
 
             if (habbo.getHabboInfo().getId() == room.getOwnerId()) {
                 habbo.whisper(Emulator.getTexts().getValue("hotel.wired.kickexception.owner"));
-                return;
+                continue;
             }
 
             room.giveEffect(habbo, 4, 2);
 
             if (!this.message.isEmpty())
-                habbo.getClient().sendResponse(new WhisperMessageComposer(new RoomChatMessage(this.message, habbo, habbo, RoomChatMessageBubbles.ALERT)));
+                habbo.getClient().sendResponse(new WhisperMessageComposer(new RoomChatMessage(WiredTextTransform.apply(ctx, this.message), habbo, habbo, RoomChatMessageBubbles.ALERT)));
 
             Emulator.getThreading().run(new RoomUnitKick(habbo, room, true), 2000);
         }
@@ -115,6 +118,10 @@ public class WiredEffectKickHabbo extends InteractionWiredEffect {
         return type;
     }
 
+    // Wired 2.0 getters
+    @Override
+    protected String getWiredStringParam() { return this.message; }
+
     @Override
     public void serializeWiredData(ServerMessage message, Room room) {
         message.appendBoolean(false);
@@ -164,6 +171,11 @@ public class WiredEffectKickHabbo extends InteractionWiredEffect {
 
     @Override
     public boolean requiresTriggeringUser() {
+        return true;
+    }
+
+    @Override
+    protected boolean supportsUserPicking() {
         return true;
     }
 

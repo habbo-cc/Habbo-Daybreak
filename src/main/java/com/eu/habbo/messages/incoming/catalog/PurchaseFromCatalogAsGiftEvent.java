@@ -288,7 +288,7 @@ public class PurchaseFromCatalogAsGiftEvent extends MessageHandler {
                                         extraData = this.client.getHabbo().getHabboInfo().getUsername() + (char) 9 + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "-" + (Calendar.getInstance().get(Calendar.MONTH) + 1) + "-" + Calendar.getInstance().get(Calendar.YEAR) + (char) 9 + extraData;
                                     }
 
-                                    if (baseItem.getInteractionType().getType() == InteractionTeleport.class || baseItem.getInteractionType().getType() == InteractionTeleportTile.class) {
+                                    if (baseItem.getInteractionType().getType() == InteractionTeleport.class || baseItem.getInteractionType().getType() == InteractionTeleportTile.class || baseItem.getInteractionType().getType() == InteractionRoomLinker.class) {
                                         HabboItem teleportOne = Emulator.getGameEnvironment().getItemManager().createItem(0, baseItem, limitedStack, limitedNumber, extraData);
                                         HabboItem teleportTwo = Emulator.getGameEnvironment().getItemManager().createItem(0, baseItem, limitedStack, limitedNumber, extraData);
                                         Emulator.getGameEnvironment().getItemManager().insertTeleportPair(teleportOne.getId(), teleportTwo.getId());

@@ -3,13 +3,16 @@ package com.eu.habbo.habbohotel.items.interactions;
 import com.eu.habbo.habbohotel.gameclients.GameClient;
 import com.eu.habbo.habbohotel.items.Item;
 import com.eu.habbo.habbohotel.items.interactions.wired.WiredSettings;
+import com.eu.habbo.habbohotel.items.interactions.wired.WiredCategoryType;
 import com.eu.habbo.habbohotel.rooms.Room;
 import com.eu.habbo.habbohotel.rooms.RoomUnit;
 import com.eu.habbo.habbohotel.wired.WiredConditionOperator;
 import com.eu.habbo.habbohotel.wired.WiredConditionType;
 import com.eu.habbo.habbohotel.wired.api.IWiredCondition;
 import com.eu.habbo.habbohotel.wired.core.WiredContext;
+import com.eu.habbo.habbohotel.wired.core.WiredAuthorizationService;
 import com.eu.habbo.messages.outgoing.wired.WiredConditionDataMessageComposer;
+import com.eu.habbo.messages.outgoing.wired.OpenMessageComposer;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -42,15 +45,29 @@ public abstract class InteractionWiredCondition extends InteractionWired impleme
 
     @Override
     public void onClick(GameClient client, Room room, Object[] objects) throws Exception {
-        if (client != null) {
-            if (room.hasRights(client.getHabbo())) {
-                client.sendResponse(new WiredConditionDataMessageComposer(this, room));
-                this.activateBox(room);
-            }
+        if (WiredAuthorizationService.isAuthorized(
+                WiredAuthorizationService.Operation.VIEW_EDITOR,
+                client,
+                room,
+                this,
+                WiredCategoryType.CONDITION)) {
+            client.sendResponse(new OpenMessageComposer(this));
+            this.activateBox(room);
         }
     }
 
     public abstract WiredConditionType getType();
+
+    @Override
+    protected WiredCategoryType getWiredCategory() { return WiredCategoryType.CONDITION; }
+
+    @Override
+    protected int getWiredTypeCode() { return this.getType().code; }
+
+    @Override
+    protected boolean isWiredAdvancedMode() {
+        return getFurniSourceSlotCount() > 0 || getUserSourceSlotCount() > 0;
+    }
 
     public abstract boolean saveData(WiredSettings settings);
 

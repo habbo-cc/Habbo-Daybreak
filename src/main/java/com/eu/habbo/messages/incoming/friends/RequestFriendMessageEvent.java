@@ -86,6 +86,9 @@ public class RequestFriendMessageEvent extends MessageHandler {
             targetHabbo.getClient().sendResponse(new NewFriendRequestMessageComposer(this.client.getHabbo()));
         }
 
-        Messenger.makeFriendRequest(this.client.getHabbo().getHabboInfo().getId(), targetId);
+        if (Messenger.makeFriendRequest(this.client.getHabbo().getHabboInfo().getId(), targetId)
+                && Emulator.getGameEnvironment().getRewardTrackManager() != null) {
+            Emulator.getGameEnvironment().getRewardTrackManager().progress(this.client.getHabbo(), "request_friend");
+        }
     }
 }

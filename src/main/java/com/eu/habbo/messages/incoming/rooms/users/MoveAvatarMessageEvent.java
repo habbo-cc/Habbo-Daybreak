@@ -9,6 +9,8 @@ import com.eu.habbo.habbohotel.rooms.RoomUnitStatus;
 import com.eu.habbo.habbohotel.users.Habbo;
 import com.eu.habbo.habbohotel.users.HabboInfo;
 import com.eu.habbo.habbohotel.users.HabboItem;
+import com.eu.habbo.habbohotel.wired.core.WiredManager;
+import com.eu.habbo.habbohotel.wired.core.WiredMovementAddonRuntime;
 import com.eu.habbo.messages.incoming.MessageHandler;
 import com.eu.habbo.messages.outgoing.rooms.users.SlideObjectBundleMessageComposer;
 import com.eu.habbo.plugin.events.users.UserIdleEvent;
@@ -43,6 +45,18 @@ public class MoveAvatarMessageEvent extends MessageHandler {
     RoomUnit roomUnit = habbo.getRoomUnit();
     HabboInfo habboInfo = habbo.getHabboInfo();
     Room room = habboInfo.getCurrentRoom();
+
+    RoomTile clickedTile = room == null || room.getLayout() == null
+        ? null
+        : room.getLayout().getTile((short) x, (short) y);
+    if (roomUnit != null && clickedTile != null) {
+      for (HabboItem item : room.getItemsAt(clickedTile)) {
+        if (item.getBaseItem() != null
+            && "room_invisible_click_tile".equalsIgnoreCase(item.getBaseItem().getName())) {
+          WiredManager.triggerUserClicksTile(room, roomUnit, item);
+        }
+      }
+    }
 
     try {
       if (roomUnit != null && roomUnit.isInRoom() && roomUnit.canWalk()) {
@@ -111,6 +125,10 @@ public class MoveAvatarMessageEvent extends MessageHandler {
             roomUnit.getMoveBlockingTask().get();
           }
 
+          if (WiredMovementAddonRuntime.queueWalkAfterActiveMovement(
+              room, roomUnit, tile)) {
+            return;
+          }
           roomUnit.setGoalLocation(tile);
         }
       }

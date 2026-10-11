@@ -59,6 +59,9 @@ public class CreateFlatMessageEvent extends MessageHandler {
 
         if (room != null) {
             this.client.sendResponse(new FlatCreatedMessageComposer(room));
+            if (Emulator.getGameEnvironment().getRewardTrackManager() != null) {
+                Emulator.getGameEnvironment().getRewardTrackManager().progress(this.client.getHabbo(), "create_room");
+            }
         }
     }
 }

@@ -98,6 +98,10 @@ public class WiredTriggerAtSetTime extends InteractionWiredTrigger implements Wi
         return type;
     }
 
+    // Wired 2.0 getters
+    @Override
+    protected int[] getWiredIntParams() { return new int[]{ this.executeTime / 500 }; }
+
     @Override
     public void serializeWiredData(ServerMessage message, Room room) {
         message.appendBoolean(false);

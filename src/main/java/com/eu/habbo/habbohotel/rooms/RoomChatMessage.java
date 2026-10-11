@@ -46,6 +46,7 @@ public class RoomChatMessage implements Runnable, ISerialize, DatabaseLoggable {
         } else {
             this.message = message.packet.readString();
         }
+        boolean packetBubbleProvided = message.packet.bytesAvailable() >= 4;
         try {
             this.bubble = RoomChatMessageBubbles.getBubble(message.packet.readInt());
         } catch (Exception e) {
@@ -62,6 +63,13 @@ public class RoomChatMessage implements Runnable, ISerialize, DatabaseLoggable {
         }
 
         this.habbo = message.client.getHabbo();
+
+        // New clients send the selected chat bubble on each live chat packet. Only fall back to the
+        // stored preference for older packets that do not include a style id.
+        if (!packetBubbleProvided && this.bubble.isOverridable() && this.habbo.getHabboStats().chatColor != RoomChatMessageBubbles.NORMAL) {
+            this.bubble = this.habbo.getHabboStats().chatColor;
+        }
+
         this.roomUnitId = this.habbo.getRoomUnit().getId();
         this.unfilteredMessage = this.message;
         this.timestamp = Emulator.getIntUnixTimestamp();

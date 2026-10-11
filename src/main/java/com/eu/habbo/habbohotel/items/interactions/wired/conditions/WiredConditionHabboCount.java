@@ -17,7 +17,7 @@ public class WiredConditionHabboCount extends InteractionWiredCondition {
     public static final WiredConditionType type = WiredConditionType.USER_COUNT;
 
     private int lowerLimit = 0;
-    private int upperLimit = 50;
+    private int upperLimit = 125;
 
     public WiredConditionHabboCount(ResultSet set, Item baseItem) throws SQLException {
         super(set, baseItem);
@@ -50,30 +50,44 @@ public class WiredConditionHabboCount extends InteractionWiredCondition {
 
     @Override
     public void loadWiredData(ResultSet set, Room room) throws SQLException {
-        String wiredData = set.getString("wired_data");
-
-        if (wiredData.startsWith("{")) {
-            JsonData data = WiredManager.getGson().fromJson(wiredData, JsonData.class);
-            this.lowerLimit = data.lowerLimit;
-            this.upperLimit = data.upperLimit;
-        } else {
-            String[] data = wiredData.split(":");
-
-            this.lowerLimit = Integer.parseInt(data[0]);
-            this.upperLimit = Integer.parseInt(data[1]);
+        onPickUp();
+        try {
+            String wiredData = set.getString("wired_data");
+            if (wiredData != null && wiredData.startsWith("{")) {
+                JsonData data = WiredManager.getGson().fromJson(wiredData, JsonData.class);
+                if (data != null) {
+                    this.lowerLimit = clamp(data.lowerLimit);
+                    this.upperLimit = clamp(data.upperLimit);
+                }
+            } else if (wiredData != null) {
+                String[] data = wiredData.split(":");
+                if (data.length >= 2) {
+                    this.lowerLimit = clamp(Integer.parseInt(data[0]));
+                    this.upperLimit = clamp(Integer.parseInt(data[1]));
+                }
+            }
+            if (this.lowerLimit > this.upperLimit) {
+                onPickUp();
+            }
+        } catch (RuntimeException ignored) {
+            onPickUp();
         }
     }
 
     @Override
     public void onPickUp() {
         this.lowerLimit = 0;
-        this.upperLimit = 50;
+        this.upperLimit = 125;
     }
 
     @Override
     public WiredConditionType getType() {
         return type;
     }
+
+    // Wired 2.0 getters
+    @Override
+    protected int[] getWiredIntParams() { return new int[]{ this.lowerLimit, this.upperLimit }; }
 
     @Override
     public void serializeWiredData(ServerMessage message, Room room) {
@@ -95,11 +109,16 @@ public class WiredConditionHabboCount extends InteractionWiredCondition {
     @Override
     public boolean saveData(WiredSettings settings) {
         if(settings.getIntParams().length < 2) return false;
-        this.lowerLimit = settings.getIntParams()[0];
-        this.upperLimit = settings.getIntParams()[1];
+        int lower = settings.getIntParams()[0];
+        int upper = settings.getIntParams()[1];
+        if (lower < 0 || upper < 0 || lower > 125 || upper > 125 || lower > upper) return false;
+        this.lowerLimit = lower;
+        this.upperLimit = upper;
 
         return true;
     }
+
+    private static int clamp(int value) { return Math.max(0, Math.min(125, value)); }
 
     static class JsonData {
         int lowerLimit;

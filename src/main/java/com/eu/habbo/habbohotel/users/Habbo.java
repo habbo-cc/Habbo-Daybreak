@@ -171,6 +171,13 @@ public class Habbo implements Runnable {
 
         this.disconnecting = true;
 
+        if (Emulator.getGameEnvironment().getBattleBallManager() != null) {
+            Emulator.getGameEnvironment().getBattleBallManager().disconnected(this.habboInfo.getId());
+        }
+        if (Emulator.getGameEnvironment().getSnowStormManager() != null) {
+            Emulator.getGameEnvironment().getSnowStormManager().disconnect(this.habboInfo.getId());
+        }
+
         try {
             if (this.getHabboInfo().getCurrentRoom() != null) {
                 Emulator.getGameEnvironment().getRoomManager().leaveRoom(this, this.getHabboInfo().getCurrentRoom());
@@ -482,6 +489,9 @@ public class Habbo implements Runnable {
 
             AchievementManager.progressAchievement(this.client.getHabbo(), Emulator.getGameEnvironment().getAchievementManager().getAchievement("RespectGiven"));
             AchievementManager.progressAchievement(target, Emulator.getGameEnvironment().getAchievementManager().getAchievement("RespectEarned"));
+            if (Emulator.getGameEnvironment().getRewardTrackManager() != null) {
+                Emulator.getGameEnvironment().getRewardTrackManager().progress(this.client.getHabbo(), "give_respect");
+            }
 
             this.client.getHabbo().getHabboInfo().getCurrentRoom().unIdle(this.client.getHabbo());
             this.client.getHabbo().getHabboInfo().getCurrentRoom().dance(this.client.getHabbo().getRoomUnit(), DanceType.NONE);

@@ -46,50 +46,57 @@ public class WiredEffectGiveScore extends InteractionWiredEffect {
     @Override
     public void execute(WiredContext ctx) {
         Room room = ctx.room();
-        Habbo habbo = ctx.actor().map(room::getHabbo).orElse(null);
+        for (RoomUnit unit : resolveUserSource(ctx, this.getWiredUserSourceTypes(), 0)) {
+            Habbo habbo = room.getHabbo(unit);
 
-        if (habbo != null && habbo.getHabboInfo().getCurrentGame() != null) {
-            Game game = room.getGame(habbo.getHabboInfo().getCurrentGame());
+            if (habbo != null && habbo.getHabboInfo().getCurrentGame() != null) {
+                Game game = room.getGame(habbo.getHabboInfo().getCurrentGame());
 
-            if (game == null)
-                return;
+                if (game == null)
+                    continue;
 
-            int gameStartTime = game.getStartTime();
+                int gameStartTime = game.getStartTime();
 
-            TObjectIntMap<Map.Entry<Integer, Integer>> dataClone = new TObjectIntHashMap<>(this.data);
+                TObjectIntMap<Map.Entry<Integer, Integer>> dataClone = new TObjectIntHashMap<>(this.data);
 
-            TObjectIntIterator<Map.Entry<Integer, Integer>> iterator = dataClone.iterator();
+                TObjectIntIterator<Map.Entry<Integer, Integer>> iterator = dataClone.iterator();
 
-            for (int i = dataClone.size(); i-- > 0; ) {
-                iterator.advance();
+                boolean awarded = false;
+                for (int i = dataClone.size(); i-- > 0; ) {
+                    iterator.advance();
 
-                Map.Entry<Integer, Integer> map = iterator.key();
+                    Map.Entry<Integer, Integer> map = iterator.key();
 
-                if (map.getValue() == habbo.getHabboInfo().getId()) {
-                    if (map.getKey() == gameStartTime) {
-                        if (iterator.value() < this.count) {
-                            iterator.setValue(iterator.value() + 1);
+                    if (map.getValue() == habbo.getHabboInfo().getId()) {
+                        if (map.getKey() == gameStartTime) {
+                            if (this.count == 0 || iterator.value() < this.count) {
+                                iterator.setValue(iterator.value() + 1);
 
-                            habbo.getHabboInfo().getGamePlayer().addScore(this.score, true);
+                                habbo.getHabboInfo().getGamePlayer().addScore(this.score, true);
 
-                            return;
+                                awarded = true;
+                                break;
+                            }
+                        } else {
+                            iterator.remove();
                         }
-                    } else {
-                        iterator.remove();
                     }
                 }
-            }
 
-            try {
-                this.data.put(new AbstractMap.SimpleEntry<>(gameStartTime, habbo.getHabboInfo().getId()), 1);
-            }
-            catch(IllegalArgumentException e) {
+                if (awarded) {
+                    continue;
+                }
 
-            }
+                try {
+                    this.data.put(new AbstractMap.SimpleEntry<>(gameStartTime, habbo.getHabboInfo().getId()), 1);
+                }
+                catch(IllegalArgumentException e) {
 
+                }
 
-            if (habbo.getHabboInfo().getGamePlayer() != null) {
-                habbo.getHabboInfo().getGamePlayer().addScore(this.score, true);
+                if (habbo.getHabboInfo().getGamePlayer() != null) {
+                    habbo.getHabboInfo().getGamePlayer().addScore(this.score, true);
+                }
             }
         }
     }
@@ -140,6 +147,10 @@ public class WiredEffectGiveScore extends InteractionWiredEffect {
         return WiredEffectGiveScore.type;
     }
 
+    // Wired 2.0 getters
+    @Override
+    protected int[] getWiredIntParams() { return new int[]{ this.score, this.count }; }
+
     @Override
     public void serializeWiredData(ServerMessage message, Room room) {
         message.appendBoolean(false);
@@ -181,12 +192,12 @@ public class WiredEffectGiveScore extends InteractionWiredEffect {
 
         int score = settings.getIntParams()[0];
 
-        if(score < 1 || score > 100)
+        if(score == 0 || Math.abs(score) > 1000)
             throw new WiredSaveException("Score is invalid");
 
         int timesPerGame = settings.getIntParams()[1];
 
-        if(timesPerGame < 1 || timesPerGame > 10)
+        if(timesPerGame < 0 || timesPerGame > 10)
             throw new WiredSaveException("Times per game is invalid");
 
         int delay = settings.getDelay();
@@ -203,6 +214,11 @@ public class WiredEffectGiveScore extends InteractionWiredEffect {
 
     @Override
     public boolean requiresTriggeringUser() {
+        return true;
+    }
+
+    @Override
+    protected boolean supportsUserPicking() {
         return true;
     }
 

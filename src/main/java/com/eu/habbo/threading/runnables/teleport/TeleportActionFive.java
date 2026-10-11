@@ -39,6 +39,10 @@ class TeleportActionFive implements Runnable {
 
         if (this.room.getLayout() == null || this.currentTeleport == null) return;
 
+        if (Emulator.getGameEnvironment().getRewardTrackManager() != null) {
+            Emulator.getGameEnvironment().getRewardTrackManager().progress(this.client.getHabbo(), "teleport");
+        }
+
         RoomTile currentLocation = this.room.getLayout().getTile(this.currentTeleport.getX(), this.currentTeleport.getY());
         RoomTile tile = this.room.getLayout().getTileInFront(currentLocation, this.currentTeleport.getRotation());
 

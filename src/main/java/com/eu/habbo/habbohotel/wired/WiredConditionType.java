@@ -25,7 +25,28 @@ public enum WiredConditionType {
     NOT_ACTOR_WEARS_EFFECT(23),
     DATE_RANGE(24),
     ACTOR_HAS_HANDITEM(25),
-    MOVEMENT_VALIDATION(26); // i dont know what type it is but its needed
+    TRIGGERER_MATCHES(26),
+    NOT_TRIGGERER_MATCHES(27),
+    TIME_MATCHES(28),
+    DATE_MATCHES(29),
+    NOT_HAS_HANDITEM(30),
+    TEAM_IS_WINNING(31),
+    PERFORMING_ACTION(32),
+    NOT_PERFORMING_ACTION(33),
+    TEAM_HAS_SCORE(34),
+    CLOCK_TIME_MATCHES(35),
+    FURNI_HAS_ALTITUDE(36),
+    USER_DIRECTION(37),
+    INPUT_SOURCE_QUANTITY(38),
+    CAN_PERFORM_MOVE(39),
+    HAS_VARIABLE(40),
+    NOT_HAS_VARIABLE(41),
+    VARIABLE_VALUE(42),
+    VARIABLE_AGE(43),
+    USER_LEVEL(44),
+    CHEST_HAS_ITEMS(45),
+    CHEST_HAS_ITEM_TYPES(46),
+    MOVEMENT_VALIDATION(26); // legacy alias kept for old plugin references
 
     public final int code;
 

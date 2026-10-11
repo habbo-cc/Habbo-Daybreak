@@ -18,7 +18,7 @@ import java.sql.SQLException;
 public class WiredConditionTeamMember extends InteractionWiredCondition {
     public static final WiredConditionType type = WiredConditionType.ACTOR_IN_TEAM;
 
-    private GameTeamColors teamColor = GameTeamColors.RED;
+    private GameTeamColors teamColor = GameTeamColors.NONE;
 
     public WiredConditionTeamMember(ResultSet set, Item baseItem) throws SQLException {
         super(set, baseItem);
@@ -36,7 +36,8 @@ public class WiredConditionTeamMember extends InteractionWiredCondition {
 
         if (habbo != null) {
             if (habbo.getHabboInfo().getGamePlayer() != null) {
-                return habbo.getHabboInfo().getGamePlayer().getTeamColor().equals(this.teamColor);
+                GameTeamColors actual = habbo.getHabboInfo().getGamePlayer().getTeamColor();
+                return this.teamColor == GameTeamColors.NONE ? actual != GameTeamColors.NONE : actual == this.teamColor;
             }
         }
 
@@ -63,25 +64,29 @@ public class WiredConditionTeamMember extends InteractionWiredCondition {
 
             if (wiredData.startsWith("{")) {
                 JsonData data = WiredManager.getGson().fromJson(wiredData, JsonData.class);
-                this.teamColor = data.teamColor;
+                this.teamColor = data == null || data.teamColor == null ? GameTeamColors.NONE : data.teamColor;
             } else {
                 if (!wiredData.equals(""))
                     this.teamColor = GameTeamColors.values()[Integer.parseInt(wiredData)];
             }
         } catch (Exception e) {
-            this.teamColor = GameTeamColors.RED;
+            this.teamColor = GameTeamColors.NONE;
         }
     }
 
     @Override
     public void onPickUp() {
-        this.teamColor = GameTeamColors.RED;
+        this.teamColor = GameTeamColors.NONE;
     }
 
     @Override
     public WiredConditionType getType() {
         return type;
     }
+
+    // Wired 2.0 getters
+    @Override
+    protected int[] getWiredIntParams() { return new int[]{ this.teamColor.type }; }
 
     @Override
     public void serializeWiredData(ServerMessage message, Room room) {
@@ -102,7 +107,10 @@ public class WiredConditionTeamMember extends InteractionWiredCondition {
     @Override
     public boolean saveData(WiredSettings settings) {
         if(settings.getIntParams().length < 1) return false;
-        this.teamColor = GameTeamColors.values()[settings.getIntParams()[0]];
+        int value = settings.getIntParams()[0];
+        if (value < 0 || value > 4) return false;
+        GameTeamColors selected = GameTeamColors.fromType(value);
+        this.teamColor = selected == null ? GameTeamColors.NONE : selected;
 
         return true;
     }

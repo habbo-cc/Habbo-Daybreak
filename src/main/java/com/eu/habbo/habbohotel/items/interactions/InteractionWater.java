@@ -76,9 +76,11 @@ public class InteractionWater extends InteractionDefault {
         super.onWalkOn(roomUnit, room, objects);
 
         Habbo habbo = room.getHabbo(roomUnit);
-
         if (habbo != null) {
             Emulator.getPluginManager().fireEvent(new UserSwimEvent(habbo));
+            if (Emulator.getGameEnvironment().getRewardTrackManager() != null) {
+                Emulator.getGameEnvironment().getRewardTrackManager().progress(habbo, "swim");
+            }
             return;
         }
 

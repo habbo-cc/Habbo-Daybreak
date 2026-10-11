@@ -34,6 +34,10 @@ public class WiredEffectGiveHotelviewBonusRarePoints extends InteractionWiredEff
         super(id, userId, item, extradata, limitedStack, limitedSells);
     }
 
+    // Wired 2.0 getters
+    @Override
+    protected String getWiredStringParam() { return String.valueOf(this.amount); }
+
     @Override
     public void serializeWiredData(ServerMessage message, Room room) {
         message.appendBoolean(false);

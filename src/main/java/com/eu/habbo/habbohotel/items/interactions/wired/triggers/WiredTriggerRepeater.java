@@ -87,6 +87,10 @@ public class WiredTriggerRepeater extends InteractionWiredTrigger implements Wir
         return type;
     }
 
+    // Wired 2.0 getters
+    @Override
+    protected int[] getWiredIntParams() { return new int[]{ this.repeatTime / 500 }; }
+
     @Override
     public void serializeWiredData(ServerMessage message, Room room) {
         message.appendBoolean(false);
@@ -145,9 +149,20 @@ public class WiredTriggerRepeater extends InteractionWiredTrigger implements Wir
         // Fire when elapsed time is a multiple of repeatTime
         if (elapsedMs % this.repeatTime == 0) {
             if (this.getRoomId() != 0 && room.isLoaded()) {
-                WiredManager.triggerTimerRepeat(room, this);
+                this.fireTimerEvent(room);
             }
         }
+    }
+
+    /**
+     * Dispatch the timer event for this repeater variant. Overridden by the short/long
+     * subclasses so each fires the event type that maps to its own trigger type
+     * (PERIODICALLY / PERIOD_SHORT / PERIODICALLY_LONG). Without this, short/long timers
+     * fired a TIMER_REPEAT (PERIODICALLY) event and their own stacks never matched.
+     * See {@link com.eu.habbo.habbohotel.wired.core.WiredEvent.Type} and RoomWiredStackIndex.getStacks.
+     */
+    protected void fireTimerEvent(Room room) {
+        WiredManager.triggerTimerRepeat(room, this);
     }
 
     @Override

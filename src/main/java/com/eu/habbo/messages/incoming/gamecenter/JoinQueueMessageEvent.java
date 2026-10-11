@@ -1,7 +1,6 @@
 package com.eu.habbo.messages.incoming.gamecenter;
 
 import com.eu.habbo.messages.incoming.MessageHandler;
-import com.eu.habbo.messages.outgoing.gamecenter.GameCenterAchievementsConfigurationComposer;
 import com.eu.habbo.messages.outgoing.gamecenter.basejump.JoinedQueueMessageComposer;
 import com.eu.habbo.messages.outgoing.gamecenter.basejump.LoadGameMessageMessageComposer;
 import com.eu.habbo.messages.outgoing.gamecenter.basejump.LoadGameUrlMessageComposer;
@@ -13,7 +12,6 @@ public class JoinQueueMessageEvent extends MessageHandler {
 
         if (gameId == 3) //BaseJump
         {
-            this.client.sendResponse(new GameCenterAchievementsConfigurationComposer());
             this.client.sendResponse(new LoadGameUrlMessageComposer());
             this.client.sendResponse(new LoadGameMessageMessageComposer(this.client, 3));
         } else if (gameId == 4) {

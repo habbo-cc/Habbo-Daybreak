@@ -232,7 +232,7 @@ public class HabboInfo implements Runnable {
         }
     }
 
-    public int getCurrencyAmount(int type) {
+    public synchronized int getCurrencyAmount(int type) {
         return this.currencies.get(type);
     }
 
@@ -240,12 +240,12 @@ public class HabboInfo implements Runnable {
         return this.currencies;
     }
 
-    public void addCurrencyAmount(int type, int amount) {
+    public synchronized void addCurrencyAmount(int type, int amount) {
         this.currencies.adjustOrPutValue(type, amount, amount);
         this.run();
     }
 
-    public void setCurrencyAmount(int type, int amount) {
+    public synchronized void setCurrencyAmount(int type, int amount) {
         this.currencies.put(type, amount);
         this.run();
     }
@@ -338,18 +338,38 @@ public class HabboInfo implements Runnable {
         return this.credits >= item.getCredits() && this.getCurrencies().get(item.getPointsType()) >= item.getPoints();
     }
 
-    public int getCredits() {
+    public synchronized int getCredits() {
         return this.credits;
     }
 
-    public void setCredits(int credits) {
+    public synchronized void setCredits(int credits) {
         this.credits = credits;
         this.run();
     }
 
-    public void addCredits(int credits) {
+    public synchronized void addCredits(int credits) {
         this.credits += credits;
         this.run();
+    }
+
+    /**
+     * Refreshes only the in-memory credit snapshot after a caller has already
+     * committed the authoritative balance in its own database transaction.
+     * Unlike {@link #setCredits(int)}, this must never enqueue HabboInfo's broad
+     * full-row update.
+     */
+    public synchronized void applyCommittedCreditBalance(int credits) {
+        this.credits = Math.max(0, credits);
+    }
+
+    /**
+     * Applies a balance already committed by a wider transaction without
+     * re-saving every currency and the full users row.
+     */
+    public synchronized void applyCommittedCurrencyBalance(int type, int amount) {
+        if (type >= 0) {
+            this.currencies.put(type, Math.max(0, amount));
+        }
     }
 
     public int getPixels() {
@@ -541,7 +561,7 @@ public class HabboInfo implements Runnable {
     public List<MessengerCategory> getMessengerCategories() { return this.messengerCategories; }
 
     @Override
-    public void run() {
+    public synchronized void run() {
         this.saveCurrencies();
 
         try (Connection connection = Emulator.getDatabase().getDataSource().getConnection(); PreparedStatement statement = connection.prepareStatement("UPDATE users SET motto = ?, online = ?, look = ?, gender = ?, credits = ?, last_login = ?, last_online = ?, home_room = ?, ip_current = ?, `rank` = ?, machine_id = ?, username = ? WHERE id = ?")) {

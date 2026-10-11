@@ -1,0 +1,581 @@
+{
+  "algorithm": {
+    "candidateOrder": "cluster-id then y then x; duplicate physical tiles keep lowest cluster id",
+    "maximumAttempts": 64,
+    "maximumPlayers": 12,
+    "metric": "floor-euclidean-tile-distance",
+    "selection": "seeded first candidate, then farthest legal candidate with stable seeded ties",
+    "separation": "maximum of the two source-cluster minimum separations"
+  },
+  "fixtures": [
+    {
+      "attempt": 0,
+      "candidateCount": 517,
+      "mapChecksum": 2027769529,
+      "mapId": 1,
+      "positions": [
+        {
+          "clusterId": 3,
+          "minimumSeparation": 4,
+          "x": 27,
+          "y": 32
+        },
+        {
+          "clusterId": 3,
+          "minimumSeparation": 4,
+          "x": 49,
+          "y": 26
+        },
+        {
+          "clusterId": 1,
+          "minimumSeparation": 4,
+          "x": 31,
+          "y": 49
+        },
+        {
+          "clusterId": 3,
+          "minimumSeparation": 4,
+          "x": 35,
+          "y": 16
+        },
+        {
+          "clusterId": 2,
+          "minimumSeparation": 4,
+          "x": 41,
+          "y": 38
+        },
+        {
+          "clusterId": 1,
+          "minimumSeparation": 4,
+          "x": 22,
+          "y": 42
+        },
+        {
+          "clusterId": 2,
+          "minimumSeparation": 4,
+          "x": 37,
+          "y": 27
+        },
+        {
+          "clusterId": 3,
+          "minimumSeparation": 4,
+          "x": 28,
+          "y": 22
+        },
+        {
+          "clusterId": 1,
+          "minimumSeparation": 4,
+          "x": 32,
+          "y": 40
+        },
+        {
+          "clusterId": 3,
+          "minimumSeparation": 4,
+          "x": 43,
+          "y": 21
+        },
+        {
+          "clusterId": 2,
+          "minimumSeparation": 4,
+          "x": 47,
+          "y": 33
+        },
+        {
+          "clusterId": 1,
+          "minimumSeparation": 4,
+          "x": 35,
+          "y": 34
+        }
+      ],
+      "seed": 730726536
+    },
+    {
+      "attempt": 0,
+      "candidateCount": 603,
+      "mapChecksum": -1392748076,
+      "mapId": 2,
+      "positions": [
+        {
+          "clusterId": 2,
+          "minimumSeparation": 4,
+          "x": 23,
+          "y": 17
+        },
+        {
+          "clusterId": 1,
+          "minimumSeparation": 4,
+          "x": 35,
+          "y": 45
+        },
+        {
+          "clusterId": 3,
+          "minimumSeparation": 4,
+          "x": 4,
+          "y": 26
+        },
+        {
+          "clusterId": 1,
+          "minimumSeparation": 4,
+          "x": 32,
+          "y": 30
+        },
+        {
+          "clusterId": 2,
+          "minimumSeparation": 4,
+          "x": 15,
+          "y": 4
+        },
+        {
+          "clusterId": 3,
+          "minimumSeparation": 4,
+          "x": 17,
+          "y": 33
+        },
+        {
+          "clusterId": 2,
+          "minimumSeparation": 4,
+          "x": 10,
+          "y": 15
+        },
+        {
+          "clusterId": 1,
+          "minimumSeparation": 4,
+          "x": 41,
+          "y": 36
+        },
+        {
+          "clusterId": 2,
+          "minimumSeparation": 4,
+          "x": 25,
+          "y": 7
+        },
+        {
+          "clusterId": 3,
+          "minimumSeparation": 4,
+          "x": 14,
+          "y": 24
+        },
+        {
+          "clusterId": 1,
+          "minimumSeparation": 4,
+          "x": 28,
+          "y": 39
+        },
+        {
+          "clusterId": 2,
+          "minimumSeparation": 4,
+          "x": 18,
+          "y": 11
+        }
+      ],
+      "seed": 4289664997
+    },
+    {
+      "attempt": 0,
+      "candidateCount": 122,
+      "mapChecksum": -721703495,
+      "mapId": 3,
+      "positions": [
+        {
+          "clusterId": 3,
+          "minimumSeparation": 1,
+          "x": 23,
+          "y": 19
+        },
+        {
+          "clusterId": 2,
+          "minimumSeparation": 1,
+          "x": 12,
+          "y": 12
+        },
+        {
+          "clusterId": 1,
+          "minimumSeparation": 1,
+          "x": 12,
+          "y": 24
+        },
+        {
+          "clusterId": 2,
+          "minimumSeparation": 1,
+          "x": 18,
+          "y": 15
+        },
+        {
+          "clusterId": 1,
+          "minimumSeparation": 1,
+          "x": 17,
+          "y": 21
+        },
+        {
+          "clusterId": 2,
+          "minimumSeparation": 1,
+          "x": 13,
+          "y": 17
+        },
+        {
+          "clusterId": 3,
+          "minimumSeparation": 1,
+          "x": 26,
+          "y": 21
+        },
+        {
+          "clusterId": 3,
+          "minimumSeparation": 1,
+          "x": 25,
+          "y": 16
+        },
+        {
+          "clusterId": 2,
+          "minimumSeparation": 1,
+          "x": 16,
+          "y": 12
+        },
+        {
+          "clusterId": 1,
+          "minimumSeparation": 1,
+          "x": 11,
+          "y": 20
+        },
+        {
+          "clusterId": 3,
+          "minimumSeparation": 1,
+          "x": 21,
+          "y": 22
+        },
+        {
+          "clusterId": 3,
+          "minimumSeparation": 1,
+          "x": 21,
+          "y": 16
+        }
+      ],
+      "seed": 2275992456
+    },
+    {
+      "attempt": 1,
+      "candidateCount": 1049,
+      "mapChecksum": 216755197,
+      "mapId": 4,
+      "positions": [
+        {
+          "clusterId": 1,
+          "minimumSeparation": 10,
+          "x": 17,
+          "y": 38
+        },
+        {
+          "clusterId": 1,
+          "minimumSeparation": 10,
+          "x": 24,
+          "y": 1
+        },
+        {
+          "clusterId": 1,
+          "minimumSeparation": 10,
+          "x": 49,
+          "y": 26
+        },
+        {
+          "clusterId": 1,
+          "minimumSeparation": 10,
+          "x": 0,
+          "y": 19
+        },
+        {
+          "clusterId": 1,
+          "minimumSeparation": 10,
+          "x": 29,
+          "y": 21
+        },
+        {
+          "clusterId": 1,
+          "minimumSeparation": 10,
+          "x": 37,
+          "y": 43
+        },
+        {
+          "clusterId": 1,
+          "minimumSeparation": 10,
+          "x": 15,
+          "y": 14
+        },
+        {
+          "clusterId": 1,
+          "minimumSeparation": 10,
+          "x": 10,
+          "y": 27
+        },
+        {
+          "clusterId": 1,
+          "minimumSeparation": 10,
+          "x": 26,
+          "y": 48
+        },
+        {
+          "clusterId": 1,
+          "minimumSeparation": 10,
+          "x": 37,
+          "y": 30
+        },
+        {
+          "clusterId": 1,
+          "minimumSeparation": 10,
+          "x": 40,
+          "y": 17
+        },
+        {
+          "clusterId": 1,
+          "minimumSeparation": 10,
+          "x": 32,
+          "y": 9
+        }
+      ],
+      "seed": 1605903820
+    },
+    {
+      "attempt": 0,
+      "candidateCount": 268,
+      "mapChecksum": -1002442617,
+      "mapId": 5,
+      "positions": [
+        {
+          "clusterId": 1,
+          "minimumSeparation": 2,
+          "x": 16,
+          "y": 12
+        },
+        {
+          "clusterId": 3,
+          "minimumSeparation": 2,
+          "x": 44,
+          "y": 24
+        },
+        {
+          "clusterId": 2,
+          "minimumSeparation": 3,
+          "x": 23,
+          "y": 34
+        },
+        {
+          "clusterId": 2,
+          "minimumSeparation": 3,
+          "x": 30,
+          "y": 18
+        },
+        {
+          "clusterId": 2,
+          "minimumSeparation": 3,
+          "x": 18,
+          "y": 23
+        },
+        {
+          "clusterId": 2,
+          "minimumSeparation": 3,
+          "x": 33,
+          "y": 31
+        },
+        {
+          "clusterId": 3,
+          "minimumSeparation": 2,
+          "x": 39,
+          "y": 16
+        },
+        {
+          "clusterId": 1,
+          "minimumSeparation": 2,
+          "x": 9,
+          "y": 17
+        },
+        {
+          "clusterId": 2,
+          "minimumSeparation": 3,
+          "x": 26,
+          "y": 26
+        },
+        {
+          "clusterId": 2,
+          "minimumSeparation": 3,
+          "x": 34,
+          "y": 24
+        },
+        {
+          "clusterId": 2,
+          "minimumSeparation": 3,
+          "x": 23,
+          "y": 18
+        },
+        {
+          "clusterId": 2,
+          "minimumSeparation": 3,
+          "x": 18,
+          "y": 30
+        }
+      ],
+      "seed": 2540486326
+    },
+    {
+      "attempt": 0,
+      "candidateCount": 596,
+      "mapChecksum": -365320896,
+      "mapId": 6,
+      "positions": [
+        {
+          "clusterId": 5,
+          "minimumSeparation": 3,
+          "x": 40,
+          "y": 27
+        },
+        {
+          "clusterId": 1,
+          "minimumSeparation": 3,
+          "x": 10,
+          "y": 14
+        },
+        {
+          "clusterId": 4,
+          "minimumSeparation": 3,
+          "x": 27,
+          "y": 49
+        },
+        {
+          "clusterId": 3,
+          "minimumSeparation": 3,
+          "x": 30,
+          "y": 7
+        },
+        {
+          "clusterId": 1,
+          "minimumSeparation": 3,
+          "x": 23,
+          "y": 25
+        },
+        {
+          "clusterId": 2,
+          "minimumSeparation": 3,
+          "x": 39,
+          "y": 41
+        },
+        {
+          "clusterId": 4,
+          "minimumSeparation": 3,
+          "x": 23,
+          "y": 38
+        },
+        {
+          "clusterId": 3,
+          "minimumSeparation": 3,
+          "x": 16,
+          "y": 5
+        },
+        {
+          "clusterId": 1,
+          "minimumSeparation": 3,
+          "x": 13,
+          "y": 25
+        },
+        {
+          "clusterId": 1,
+          "minimumSeparation": 3,
+          "x": 24,
+          "y": 15
+        },
+        {
+          "clusterId": 2,
+          "minimumSeparation": 3,
+          "x": 31,
+          "y": 32
+        },
+        {
+          "clusterId": 5,
+          "minimumSeparation": 3,
+          "x": 49,
+          "y": 31
+        }
+      ],
+      "seed": 3110792049
+    },
+    {
+      "attempt": 0,
+      "candidateCount": 331,
+      "mapChecksum": -983747876,
+      "mapId": 7,
+      "positions": [
+        {
+          "clusterId": 2,
+          "minimumSeparation": 3,
+          "x": 29,
+          "y": 13
+        },
+        {
+          "clusterId": 4,
+          "minimumSeparation": 2,
+          "x": 22,
+          "y": 44
+        },
+        {
+          "clusterId": 3,
+          "minimumSeparation": 2,
+          "x": 49,
+          "y": 31
+        },
+        {
+          "clusterId": 1,
+          "minimumSeparation": 3,
+          "x": 8,
+          "y": 14
+        },
+        {
+          "clusterId": 5,
+          "minimumSeparation": 3,
+          "x": 15,
+          "y": 32
+        },
+        {
+          "clusterId": 3,
+          "minimumSeparation": 2,
+          "x": 40,
+          "y": 27
+        },
+        {
+          "clusterId": 1,
+          "minimumSeparation": 3,
+          "x": 16,
+          "y": 10
+        },
+        {
+          "clusterId": 5,
+          "minimumSeparation": 3,
+          "x": 23,
+          "y": 34
+        },
+        {
+          "clusterId": 3,
+          "minimumSeparation": 2,
+          "x": 43,
+          "y": 35
+        },
+        {
+          "clusterId": 5,
+          "minimumSeparation": 3,
+          "x": 17,
+          "y": 39
+        },
+        {
+          "clusterId": 2,
+          "minimumSeparation": 3,
+          "x": 32,
+          "y": 19
+        },
+        {
+          "clusterId": 4,
+          "minimumSeparation": 2,
+          "x": 27,
+          "y": 39
+        }
+      ],
+      "seed": 2517531885
+    }
+  ],
+  "mapManifestSha256": "8E7B09AD23E4E70E568AE1E6BB07E5A439EAFE09C16945FF9374222743FEA120",
+  "schemaVersion": 1
+}

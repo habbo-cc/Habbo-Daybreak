@@ -11,9 +11,10 @@ import com.eu.habbo.habbohotel.wired.WiredEffectType;
 import com.eu.habbo.habbohotel.wired.core.WiredManager;
 import com.eu.habbo.habbohotel.wired.core.WiredContext;
 import com.eu.habbo.habbohotel.wired.core.WiredSimulation;
+import com.eu.habbo.habbohotel.wired.core.WiredMovementAddonRuntime;
 import com.eu.habbo.messages.ServerMessage;
 import com.eu.habbo.messages.incoming.wired.WiredSaveException;
-import com.eu.habbo.messages.outgoing.rooms.items.FloorItemOnRollerComposer;
+import com.eu.habbo.messages.outgoing.rooms.items.WiredMovementsMessageComposer;
 import gnu.trove.set.hash.THashSet;
 
 import java.sql.ResultSet;
@@ -50,7 +51,8 @@ public class WiredEffectMoveFurniAway extends InteractionWiredEffect {
 
         this.items.removeAll(items);
 
-        for (HabboItem item : this.items) {
+        for (HabboItem item : WiredMovementAddonRuntime.furniTargets(ctx,
+                resolveFurniSource(ctx, this.getWiredFurniSourceTypes(), 0, this.items, null))) {
             if (item == null) continue;
 
             RoomTile t = room.getLayout().getTile(item.getX(), item.getY());
@@ -96,8 +98,9 @@ public class WiredEffectMoveFurniAway extends InteractionWiredEffect {
                 double oldZ = item.getZ();
 
                 if(newLocation != null && newLocation.state != RoomTileState.INVALID && newLocation != oldLocation && room.furnitureFitsAt(newLocation, item, item.getRotation(), true) == FurnitureMovementError.NONE) {
-                    if(room.moveFurniTo(item, newLocation, item.getRotation(), null, false) == FurnitureMovementError.NONE) {
-                        room.sendComposer(new FloorItemOnRollerComposer(item, null, oldLocation, oldZ, newLocation, item.getZ(), 0, room).compose());
+                    if(WiredMovementAddonRuntime.move(ctx, room, item, newLocation, item.getRotation(), false) == FurnitureMovementError.NONE) {
+                        // Wired 2.0: stream a smooth WiredMovements slide instead of the legacy roller hop.
+                        WiredMovementAddonRuntime.moved(ctx, room, item, oldLocation, oldZ, newLocation);
                     }
                 }
             }
@@ -208,6 +211,12 @@ public class WiredEffectMoveFurniAway extends InteractionWiredEffect {
         return type;
     }
 
+    // Wired 2.0 getters
+    @Override
+    protected java.util.Collection<HabboItem> getSelectedItems() { return this.items; }
+    @Override
+    protected boolean supportsFurniPicking() { return true; }
+
     @Override
     public void serializeWiredData(ServerMessage message, Room room) {
         THashSet<HabboItem> items = new THashSet<>();
@@ -271,6 +280,11 @@ public class WiredEffectMoveFurniAway extends InteractionWiredEffect {
     @Override
     protected long requiredCooldown() {
         return 495;
+    }
+
+    @Override
+    public boolean bypassExecutionCooldown() {
+        return true; // movement runs every tick (Habbo parity); not gated by the cooldown
     }
 
     static class JsonData {

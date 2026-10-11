@@ -17,6 +17,7 @@ import java.sql.SQLException;
 public class WiredTriggerScoreAchieved extends InteractionWiredTrigger {
     private static final WiredTriggerType type = WiredTriggerType.SCORE_ACHIEVED;
     private int score = 0;
+    private int team = 0;
 
     public WiredTriggerScoreAchieved(ResultSet set, Item baseItem) throws SQLException {
         super(set, baseItem);
@@ -44,7 +45,8 @@ public class WiredTriggerScoreAchieved extends InteractionWiredTrigger {
     @Override
     public String getWiredData() {
         return WiredManager.getGson().toJson(new JsonData(
-            this.score
+            this.score,
+            this.team
         ));
     }
 
@@ -55,6 +57,7 @@ public class WiredTriggerScoreAchieved extends InteractionWiredTrigger {
         if (wiredData.startsWith("{")) {
             JsonData data = WiredManager.getGson().fromJson(wiredData, JsonData.class);
             this.score = data.score;
+            this.team = data.team;
         } else {
             try {
                 this.score = Integer.parseInt(wiredData);
@@ -66,12 +69,17 @@ public class WiredTriggerScoreAchieved extends InteractionWiredTrigger {
     @Override
     public void onPickUp() {
         this.score = 0;
+        this.team = 0;
     }
 
     @Override
     public WiredTriggerType getType() {
         return type;
     }
+
+    // Wired 2.0 getters
+    @Override
+    protected int[] getWiredIntParams() { return new int[]{ this.score, this.team }; }
 
     @Override
     public void serializeWiredData(ServerMessage message, Room room) {
@@ -81,8 +89,9 @@ public class WiredTriggerScoreAchieved extends InteractionWiredTrigger {
         message.appendInt(this.getBaseItem().getSpriteId());
         message.appendInt(this.getRoomVisibleId());
         message.appendString("");
-        message.appendInt(1);
+        message.appendInt(2);
         message.appendInt(this.score);
+        message.appendInt(this.team);
         message.appendInt(0);
         message.appendInt(this.getType().code);
         message.appendInt(0);
@@ -93,6 +102,7 @@ public class WiredTriggerScoreAchieved extends InteractionWiredTrigger {
     public boolean saveData(WiredSettings settings) {
         if(settings.getIntParams().length < 1) return false;
         this.score = settings.getIntParams()[0];
+        this.team = settings.getIntParams().length > 1 ? settings.getIntParams()[1] : 0;
         return true;
     }
 
@@ -103,9 +113,11 @@ public class WiredTriggerScoreAchieved extends InteractionWiredTrigger {
 
     static class JsonData {
         int score;
+        int team;
 
-        public JsonData(int score) {
+        public JsonData(int score, int team) {
             this.score = score;
+            this.team = team;
         }
     }
 }

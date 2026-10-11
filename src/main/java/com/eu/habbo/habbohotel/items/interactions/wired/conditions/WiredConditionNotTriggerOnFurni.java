@@ -30,10 +30,13 @@ public class WiredConditionNotTriggerOnFurni extends WiredConditionTriggerOnFurn
 
         this.refresh();
 
-        if (this.items.isEmpty())
+        java.util.Collection<com.eu.habbo.habbohotel.users.HabboItem> targets = resolveFurniSource(ctx, this.getWiredFurniSourceTypes(), 0, this.items, null);
+
+        if (targets.isEmpty())
             return true;
 
-        return !triggerOnFurni(roomUnit, room);
+        gnu.trove.set.hash.THashSet<com.eu.habbo.habbohotel.users.HabboItem> itemsAtUser = room.getItemsAt(roomUnit.getCurrentLocation());
+        return targets.stream().noneMatch(itemsAtUser::contains);
     }
 
     @Deprecated

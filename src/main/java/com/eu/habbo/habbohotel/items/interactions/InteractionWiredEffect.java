@@ -4,14 +4,18 @@ import com.eu.habbo.Emulator;
 import com.eu.habbo.habbohotel.gameclients.GameClient;
 import com.eu.habbo.habbohotel.items.Item;
 import com.eu.habbo.habbohotel.items.interactions.wired.WiredSettings;
+import com.eu.habbo.habbohotel.items.interactions.wired.WiredCategoryType;
 import com.eu.habbo.habbohotel.rooms.Room;
 import com.eu.habbo.habbohotel.rooms.RoomUnit;
 import com.eu.habbo.habbohotel.users.HabboItem;
 import com.eu.habbo.habbohotel.wired.WiredEffectType;
 import com.eu.habbo.habbohotel.wired.api.IWiredEffect;
 import com.eu.habbo.habbohotel.wired.core.WiredContext;
+import com.eu.habbo.habbohotel.wired.core.WiredAuthorizationService;
+import com.eu.habbo.habbohotel.wired.core.WiredFeatureCapabilityGuard;
 import com.eu.habbo.messages.incoming.wired.WiredSaveException;
 import com.eu.habbo.messages.outgoing.wired.WiredEffectDataMessageComposer;
+import com.eu.habbo.messages.outgoing.wired.OpenMessageComposer;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -77,11 +81,15 @@ public abstract class InteractionWiredEffect extends InteractionWired implements
 
     @Override
     public void onClick(GameClient client, Room room, Object[] objects) throws Exception {
-        if (client != null) {
-            if (room.hasRights(client.getHabbo())) {
-                client.sendResponse(new WiredEffectDataMessageComposer(this, room));
-                this.activateBox(room);
-            }
+        if (WiredFeatureCapabilityGuard.isEditorReady(client, room, this)
+                && WiredAuthorizationService.isAuthorized(
+                WiredAuthorizationService.Operation.VIEW_EDITOR,
+                client,
+                room,
+                this,
+                WiredCategoryType.EFFECT)) {
+            client.sendResponse(new OpenMessageComposer(this));
+            this.activateBox(room);
         }
     }
 
@@ -97,6 +105,20 @@ public abstract class InteractionWiredEffect extends InteractionWired implements
 
     public abstract WiredEffectType getType();
 
+    @Override
+    protected WiredCategoryType getWiredCategory() { return WiredCategoryType.EFFECT; }
+
+    @Override
+    protected int getWiredTypeCode() { return this.getType().code; }
+
+    @Override
+    protected int getWiredDelay() { return this.getDelay(); }
+
+    @Override
+    protected boolean isWiredAdvancedMode() {
+        return getFurniSourceSlotCount() > 0 || getUserSourceSlotCount() > 0;
+    }
+
     // ========== IWiredEffect Implementation ==========
     
     /**
@@ -107,7 +129,22 @@ public abstract class InteractionWiredEffect extends InteractionWired implements
      */
     @Override
     public abstract void execute(WiredContext ctx);
-    
+
+    /**
+     * Legacy execute path (pre-WiredContext). The engine calls
+     * {@link #execute(WiredContext)} for effect execution; this legacy method is
+     * only retained for the old {@link InteractionWired} abstract contract.
+     *
+     * Provided here as a concrete no-op default so NEW effects only need to
+     * implement {@link #execute(WiredContext)}. Existing effects still override
+     * this until they are individually migrated. Without this default, every new
+     * effect would fail to compile (unimplemented abstract from InteractionWired).
+     */
+    @Override
+    public boolean execute(RoomUnit roomUnit, Room room, Object[] stuff) {
+        return false;
+    }
+
     /**
      * Returns whether this effect requires an actor (user) to execute.
      */

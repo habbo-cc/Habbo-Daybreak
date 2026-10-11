@@ -18,6 +18,7 @@ public class WiredTriggerBotReachedHabbo extends InteractionWiredTrigger {
     public final static WiredTriggerType type = WiredTriggerType.BOT_REACHED_AVTR;
 
     private String botName = "";
+    private static final int USER_SOURCE_PICKED_BOT = 100;
 
     public WiredTriggerBotReachedHabbo(ResultSet set, Item baseItem) throws SQLException {
         super(set, baseItem);
@@ -32,33 +33,55 @@ public class WiredTriggerBotReachedHabbo extends InteractionWiredTrigger {
         return type;
     }
 
+    // Wired 2.0 getters
+    @Override
+    protected String getWiredStringParam() { return this.botName; }
+
+    @Override
+    protected int getUserSourceSlotCount() { return 1; }
+
+    @Override
+    protected int[] getAllowedUserSourcesForSlot(int slot) {
+        return new int[] { USER_SOURCE_TRIGGERING_USER, USER_SOURCE_PICKED_BOT, USER_SOURCE_SIGNAL };
+    }
+
+    @Override
+    protected int getDefaultUserSourceForSlot(int slot) { return USER_SOURCE_PICKED_BOT; }
+
     @Override
     public void serializeWiredData(ServerMessage message, Room room) {
-        message.appendBoolean(false);
-        message.appendInt(5);
-        message.appendInt(0);
-        message.appendInt(this.getBaseItem().getSpriteId());
-        message.appendInt(this.getRoomVisibleId());
-        message.appendString(this.botName);
-        message.appendInt(0);
-        message.appendInt(0);
-        message.appendInt(this.getType().code);
-        message.appendInt(0);
-        message.appendInt(0);
+        this.serializeWiredDataV2(message, room);
     }
 
     @Override
     public boolean saveData(WiredSettings settings) {
-        this.botName = settings.getStringParam();
+        if (settings == null || settings.getStringParam() == null
+                || settings.getStringParam().trim().length() > 32) {
+            return false;
+        }
+        this.botName = settings.getStringParam().trim();
 
         return true;
     }
 
     @Override
     public boolean matches(HabboItem triggerItem, WiredEvent event) {
-        RoomUnit roomUnit = event.getActor().orElse(null);
+        RoomUnit botUnit = event.getActor().orElse(null);
+        RoomUnit reachedUser = event.getTargetUnit().orElse(null);
         Room room = event.getRoom();
-        return room.getBots(this.botName).stream().anyMatch(bot -> bot.getRoomUnit() == roomUnit);
+        if (botUnit == null || room.getBot(botUnit) == null
+                || reachedUser == null || room.getHabbo(reachedUser) == null) {
+            return false;
+        }
+        java.util.Collection<RoomUnit> bots = switch (getWiredUserSourceTypes()[0]) {
+            case USER_SOURCE_TRIGGERING_USER -> java.util.List.of(botUnit);
+            case USER_SOURCE_SIGNAL -> event.getSignalPayload().users(room);
+            default -> room.getBots(this.botName).stream()
+                    .map(bot -> bot.getRoomUnit())
+                    .filter(java.util.Objects::nonNull)
+                    .collect(java.util.stream.Collectors.toList());
+        };
+        return bots.contains(botUnit);
     }
 
     @Deprecated
@@ -80,7 +103,7 @@ public class WiredTriggerBotReachedHabbo extends InteractionWiredTrigger {
 
         if (wiredData.startsWith("{")) {
             JsonData data = WiredManager.getGson().fromJson(wiredData, JsonData.class);
-            this.botName = data.botName;
+            this.botName = data == null || data.botName == null ? "" : data.botName.trim();
         } else {
             this.botName = wiredData;
         }

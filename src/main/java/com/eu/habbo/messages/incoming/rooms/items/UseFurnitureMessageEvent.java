@@ -124,6 +124,10 @@ public class UseFurnitureMessageEvent extends MessageHandler {
             }
 
             item.onClick(this.client, room, new Object[]{state});
+
+            if (Emulator.getGameEnvironment().getRewardTrackManager() != null) {
+                Emulator.getGameEnvironment().getRewardTrackManager().progress(this.client.getHabbo(), "switch_item_state");
+            }
         } catch (Exception e) {
             LOGGER.error("Caught exception", e);
         }

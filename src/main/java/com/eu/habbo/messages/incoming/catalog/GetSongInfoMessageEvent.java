@@ -11,12 +11,12 @@ import java.util.List;
 public class GetSongInfoMessageEvent extends MessageHandler {
     @Override
     public void handle() throws Exception {
-        int count = this.packet.readInt();
+        int count = this.packet.readBoundedCount(100, Integer.BYTES);
 
         List<SoundTrack> tracks = new ArrayList<>(count);
 
         for (int i = 0; i < count; i++) {
-            SoundTrack track = Emulator.getGameEnvironment().getItemManager().getSoundTrack(this.packet.readInt());
+            SoundTrack track = Emulator.getGameEnvironment().getItemManager().getSoundTrack(this.packet.readRequiredInt());
 
             if (track != null)
                 tracks.add(track);

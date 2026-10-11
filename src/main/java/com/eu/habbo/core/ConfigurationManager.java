@@ -101,10 +101,11 @@ public class ConfigurationManager {
 
         if (this.loaded) {
             this.loadFromDatabase();
+        } else {
+            LOGGER.debug("Configuration Manager -> Loaded file configuration.");
         }
 
         this.isLoading = false;
-        LOGGER.info("Configuration Manager -> Loaded!");
 
         if (Emulator.getPluginManager() != null) {
             Emulator.getPluginManager().fireEvent(new EmulatorConfigUpdatedEvent());
@@ -112,22 +113,24 @@ public class ConfigurationManager {
     }
 
     public void loadFromDatabase() {
-        LOGGER.info("Loading configuration from database...");
-
         long millis = System.currentTimeMillis();
+        int loadedSettings = 0;
         try (Connection connection = Emulator.getDatabase().getDataSource().getConnection(); Statement statement = connection.createStatement()) {
             if (statement.execute("SELECT * FROM emulator_settings")) {
                 try (ResultSet set = statement.getResultSet()) {
                     while (set.next()) {
                         this.properties.put(set.getString("key"), set.getString("value"));
+                        loadedSettings++;
                     }
                 }
             }
         } catch (SQLException e) {
             LOGGER.error("Caught SQL exception", e);
+            return;
         }
 
-        LOGGER.info("Configuration -> loaded! ({} MS)", System.currentTimeMillis() - millis);
+        LOGGER.info("Configuration Manager -> Loaded! ({} MS, {} database settings)",
+                System.currentTimeMillis() - millis, loadedSettings);
     }
 
     public void saveToDatabase() {
@@ -171,12 +174,8 @@ public class ConfigurationManager {
         if (this.isLoading)
             return defaultValue;
 
-        try {
-            return (this.getValue(key, "0").equals("1")) || (this.getValue(key, "false").equals("true"));
-        } catch (Exception e) {
-            LOGGER.error("Failed to parse key {} with value '{}' to type boolean.", key, this.getValue(key));
-        }
-        return defaultValue;
+        String value = this.getValue(key, Boolean.toString(defaultValue));
+        return value.equals("1") || value.equalsIgnoreCase("true");
     }
 
     public int getInt(String key) {

@@ -25,18 +25,15 @@ public class MakeOfferMessageEvent extends MessageHandler {
         this.packet.readInt(); // unknown - not used
         int itemId = this.packet.readInt();
 
+        if (!MarketPlace.isValidListingPrice(credits)) {
+            this.client.sendResponse(new PurchaseErrorMessageComposer(PurchaseErrorMessageComposer.SERVER_ERROR));
+            return;
+        }
+
         HabboItem item = this.client.getHabbo().getInventory().getItemsComponent().getHabboItem(itemId);
         if (item != null) {
             if (!item.getBaseItem().allowMarketplace()) {
                 String message = Emulator.getTexts().getValue("scripter.warning.marketplace.forbidden").replace("%username%", this.client.getHabbo().getHabboInfo().getUsername()).replace("%itemname%", item.getBaseItem().getName()).replace("%credits%", credits + "");
-                ScripterManager.scripterDetected(this.client, message);
-                LOGGER.info(message);
-                this.client.sendResponse(new PurchaseErrorMessageComposer(PurchaseErrorMessageComposer.SERVER_ERROR));
-                return;
-            }
-
-            if (credits < 0) {
-                String message = Emulator.getTexts().getValue("scripter.warning.marketplace.negative").replace("%username%", this.client.getHabbo().getHabboInfo().getUsername()).replace("%itemname%", item.getBaseItem().getName()).replace("%credits%", credits + "");
                 ScripterManager.scripterDetected(this.client, message);
                 LOGGER.info(message);
                 this.client.sendResponse(new PurchaseErrorMessageComposer(PurchaseErrorMessageComposer.SERVER_ERROR));

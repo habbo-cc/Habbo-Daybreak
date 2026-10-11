@@ -1,13 +1,11 @@
 package com.eu.habbo.messages.incoming.gamecenter;
 
 import com.eu.habbo.messages.incoming.MessageHandler;
+import com.eu.habbo.messages.outgoing.gamecenter.WeeklyGameRewardWinnersMessageComposer;
 
 public class GetWeeklyGameRewardWinnersEvent extends MessageHandler {
     @Override
     public void handle() throws Exception {
-        int gameId = this.packet.readInt();
-
-        if (gameId == 3) {
-        }
+        this.client.sendResponse(new WeeklyGameRewardWinnersMessageComposer(this.packet.readInt()));
     }
 }

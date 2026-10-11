@@ -13,6 +13,7 @@ import com.eu.habbo.habbohotel.items.interactions.*;
 import com.eu.habbo.habbohotel.modtool.ScripterManager;
 import com.eu.habbo.habbohotel.permissions.Permission;
 import com.eu.habbo.habbohotel.pets.Pet;
+import com.eu.habbo.habbohotel.rooms.RoomChatMessageBubbles;
 import com.eu.habbo.habbohotel.users.Habbo;
 import com.eu.habbo.habbohotel.users.HabboBadge;
 import com.eu.habbo.habbohotel.users.HabboGender;
@@ -26,6 +27,7 @@ import com.eu.habbo.messages.outgoing.inventory.PetAddedToInventoryMessageCompos
 import com.eu.habbo.messages.outgoing.inventory.FurniListInvalidateMessageComposer;
 import com.eu.habbo.messages.outgoing.modtool.IssueCloseNotificationMessageComposer;
 import com.eu.habbo.messages.outgoing.users.BadgeReceivedMessageComposer;
+import com.eu.habbo.messages.outgoing.users.PurchasableChatStyleChangedMessageComposer;
 import com.eu.habbo.plugin.events.emulator.EmulatorLoadCatalogManagerEvent;
 import com.eu.habbo.plugin.events.users.catalog.UserCatalogFurnitureBoughtEvent;
 import com.eu.habbo.plugin.events.users.catalog.UserCatalogItemPurchasedEvent;
@@ -197,6 +199,7 @@ public class CatalogManager {
     public final TIntIntHashMap offerDefs;
     public final Item ecotronItem;
     public final THashMap<Integer, CatalogLimitedConfiguration> limitedNumbers;
+    private final Set<Integer> purchasableChatStyles;
     private final List<Voucher> vouchers;
     private BuildersClubCatalogRegistry buildersClubCatalogRegistry;
 
@@ -214,13 +217,15 @@ public class CatalogManager {
         this.offerDefs = new TIntIntHashMap();
         this.vouchers = new ArrayList<>();
         this.limitedNumbers = new THashMap<>();
+        this.purchasableChatStyles = new HashSet<>();
         this.buildersClubCatalogRegistry = new BuildersClubCatalogRegistry();
 
         this.initialize();
 
         this.ecotronItem = Emulator.getGameEnvironment().getItemManager().getItem("ecotron_box");
 
-        LOGGER.info("Catalog Manager -> Loaded! ({} MS)", System.currentTimeMillis() - millis);
+        LOGGER.info("Catalog Manager -> Loaded! ({} MS, {} pages, {} Builder's Club mappings)",
+                System.currentTimeMillis() - millis, this.catalogPages.size(), this.buildersClubCatalogRegistry.size());
     }
 
 
@@ -313,7 +318,7 @@ public class CatalogManager {
 
         this.catalogPages.putAll(pages);
 
-        LOGGER.info("Loaded {} Catalog Pages!", this.catalogPages.size());
+        LOGGER.debug("Catalog Manager -> Loaded {} pages.", this.catalogPages.size());
     }
 
 
@@ -340,6 +345,7 @@ public class CatalogManager {
 
     private synchronized void loadCatalogItems() {
         this.clubItems.clear();
+        this.purchasableChatStyles.clear();
         catalogItemAmount = 0;
 
         try (Connection connection = Emulator.getDatabase().getDataSource().getConnection(); Statement statement = connection.createStatement(); ResultSet set = statement.executeQuery("SELECT * FROM catalog_items")) {
@@ -347,7 +353,7 @@ public class CatalogManager {
             while (set.next()) {
                 CatalogItem loadedItem = new CatalogItem(set);
 
-                if (set.getString("item_ids").equals("0") && !loadedItem.isSubscriptionOffer()) {
+                if (set.getString("item_ids").equals("0") && !loadedItem.isSubscriptionOffer() && !loadedItem.isChatStyleOffer()) {
                     continue;
                 }
 
@@ -379,6 +385,10 @@ public class CatalogManager {
                 if (item.isLimited()) {
                     this.createOrUpdateLimitedConfig(item);
                 }
+
+                if (item.isChatStyleOffer()) {
+                    this.purchasableChatStyles.add(item.getChatStyleId());
+                }
             }
         } catch (SQLException e) {
             LOGGER.error("Caught SQL exception", e);
@@ -397,7 +407,7 @@ public class CatalogManager {
 
     public synchronized void reloadBuildersClubCatalogRegistry() {
         this.buildersClubCatalogRegistry = BuildersClubCatalogRegistry.load(BUILDERS_CLUB_FURNIDATA_URL);
-        LOGGER.info("Loaded {} Builder's Club furnidata mappings", this.buildersClubCatalogRegistry.size());
+        LOGGER.debug("Catalog Manager -> Loaded {} Builder's Club furnidata mappings.", this.buildersClubCatalogRegistry.size());
     }
 
     private void loadClubOffers() {
@@ -998,7 +1008,7 @@ public class CatalogManager {
                 return;
             }
 
-            if (amount <= 0) {
+            if (!CatalogPurchaseLimits.isValidAmount(amount)) {
                 habbo.getClient().sendResponse(new PurchaseNotAllowedMessageComposer(PurchaseNotAllowedMessageComposer.ILLEGAL));
                 return;
             }
@@ -1033,8 +1043,9 @@ public class CatalogManager {
                     if (amount == item.getAmount()) {
                         amount = 1;
                     } else {
-                        if (amount * item.getAmount() > 100) {
-                            habbo.alert("Whoops! You tried to buy this " + (amount * item.getAmount()) + " times. This must've been a mistake.");
+                        long requestedItemCount = (long) amount * item.getAmount();
+                        if (requestedItemCount < 0 || requestedItemCount > CatalogPurchaseLimits.MAXIMUM_QUANTITY) {
+                            habbo.alert("Whoops! You tried to buy this " + requestedItemCount + " times. This must've been a mistake.");
                             habbo.getClient().sendResponse(new PurchaseNotAllowedMessageComposer(PurchaseNotAllowedMessageComposer.ILLEGAL));
                             return;
                         }
@@ -1066,12 +1077,23 @@ public class CatalogManager {
                 int totalCredits = free ? 0 : this.calculateDiscountedPrice(item.getCredits(), amount, item);
                 int totalPoints = free ? 0 : this.calculateDiscountedPrice(item.getPoints(), amount, item);
 
+                if (totalCredits < 0 || totalPoints < 0) {
+                    habbo.getClient().sendResponse(new PurchaseNotAllowedMessageComposer(PurchaseNotAllowedMessageComposer.ILLEGAL));
+                    return;
+                }
+
                 if (totalCredits > 0 && habbo.getHabboInfo().getCredits() - totalCredits < 0) return;
                 if (totalPoints > 0 && habbo.getHabboInfo().getCurrencyAmount(item.getPointsType()) - totalPoints < 0)
                     return;
 
                 if (item.isSubscriptionOffer()) {
-                    int totalDays = item.getSubscriptionDays() * amount;
+                    long totalDaysLong = (long) item.getSubscriptionDays() * amount;
+                    long subscriptionSeconds = totalDaysLong * 86400L;
+                    if (totalDaysLong <= 0 || totalDaysLong > Integer.MAX_VALUE || subscriptionSeconds > Integer.MAX_VALUE) {
+                        habbo.getClient().sendResponse(new PurchaseNotAllowedMessageComposer(PurchaseNotAllowedMessageComposer.ILLEGAL));
+                        return;
+                    }
+                    int totalDays = (int) totalDaysLong;
 
                     if (!free && !habbo.hasPermission(Permission.ACC_INFINITE_CREDITS) && totalCredits > 0) {
                         habbo.giveCredits(-totalCredits);
@@ -1081,13 +1103,45 @@ public class CatalogManager {
                         habbo.givePoints(item.getPointsType(), -totalPoints);
                     }
 
-                    if (habbo.getHabboStats().createSubscription(item.getSubscriptionType(), totalDays * 86400) == null) {
+                    if (habbo.getHabboStats().createSubscription(item.getSubscriptionType(), (int) subscriptionSeconds) == null) {
                         habbo.getClient().sendResponse(new PurchaseErrorMessageComposer(PurchaseErrorMessageComposer.SERVER_ERROR));
                         return;
                     }
 
                     habbo.getClient().sendResponse(new PurchaseOKMessageComposer(item));
                     habbo.getClient().sendResponse(new FurniListInvalidateMessageComposer());
+                    return;
+                }
+
+                if (item.isChatStyleOffer()) {
+                    int styleId = item.getChatStyleId();
+
+                    if (!this.isPurchasableChatStyle(styleId) || RoomChatMessageBubbles.getBubble(styleId) == RoomChatMessageBubbles.NORMAL) {
+                        habbo.getClient().sendResponse(new PurchaseErrorMessageComposer(PurchaseErrorMessageComposer.SERVER_ERROR));
+                        return;
+                    }
+
+                    if (this.habboOwnsChatStyle(habbo, styleId)) {
+                        habbo.getClient().sendResponse(new PurchaseErrorMessageComposer(PurchaseErrorMessageComposer.ALREADY_HAVE_BADGE));
+                        return;
+                    }
+
+                    if (!this.grantChatStyle(habbo, styleId)) {
+                        habbo.getClient().sendResponse(new PurchaseErrorMessageComposer(PurchaseErrorMessageComposer.SERVER_ERROR));
+                        return;
+                    }
+
+                    if (!free && !habbo.hasPermission(Permission.ACC_INFINITE_CREDITS) && totalCredits > 0) {
+                        habbo.giveCredits(-totalCredits);
+                    }
+
+                    if (!free && !habbo.hasPermission(Permission.ACC_INFINITE_POINTS) && totalPoints > 0) {
+                        habbo.givePoints(item.getPointsType(), -totalPoints);
+                    }
+
+                    habbo.getHabboStats().addPurchase(item);
+                    habbo.getClient().sendResponse(new PurchasableChatStyleChangedMessageComposer(styleId, true));
+                    habbo.getClient().sendResponse(new PurchaseOKMessageComposer(item));
                     return;
                 }
 
@@ -1197,7 +1251,7 @@ public class CatalogManager {
                                     extradata = habbo.getClient().getHabbo().getHabboInfo().getUsername() + (char) 9 + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "-" + (Calendar.getInstance().get(Calendar.MONTH) + 1) + "-" + Calendar.getInstance().get(Calendar.YEAR) + (char) 9 + Emulator.getGameEnvironment().getWordFilter().filter(extradata.replace(((char) 9) + "", ""), habbo);
                                 }
 
-                                if (InteractionTeleport.class.isAssignableFrom(baseItem.getInteractionType().getType())) {
+                                if (InteractionTeleport.class.isAssignableFrom(baseItem.getInteractionType().getType()) || InteractionRoomLinker.class.isAssignableFrom(baseItem.getInteractionType().getType())) {
                                     HabboItem teleportOne = Emulator.getGameEnvironment().getItemManager().createItem(habbo.getClient().getHabbo().getHabboInfo().getId(), baseItem, limitedStack, limitedNumber, extradata);
                                     HabboItem teleportTwo = Emulator.getGameEnvironment().getItemManager().createItem(habbo.getClient().getHabbo().getHabboInfo().getId(), baseItem, limitedStack, limitedNumber, extradata);
                                     Emulator.getGameEnvironment().getItemManager().insertTeleportPair(teleportOne.getId(), teleportTwo.getId());
@@ -1316,6 +1370,10 @@ public class CatalogManager {
                 habbo.getClient().sendResponse(new PurchaseOKMessageComposer(purchasedEvent.catalogItem));
                 habbo.getClient().sendResponse(new FurniListInvalidateMessageComposer());
 
+                if (!free && Emulator.getGameEnvironment().getRewardTrackManager() != null) {
+                    Emulator.getGameEnvironment().getRewardTrackManager().progress(habbo, "buy_from_catalogue");
+                }
+
                 THashSet<String> itemIds = new THashSet<>();
 
                 for(HabboItem ix : purchasedEvent.itemsList) {
@@ -1345,6 +1403,56 @@ public class CatalogManager {
         }
     }
 
+    public boolean isPurchasableChatStyle(int styleId) {
+        return this.purchasableChatStyles.contains(styleId);
+    }
+
+    public Set<Integer> getOwnedChatStyles(Habbo habbo) {
+        Set<Integer> styles = new HashSet<>();
+
+        try (Connection connection = Emulator.getDatabase().getDataSource().getConnection(); PreparedStatement statement = connection.prepareStatement("SELECT style_id FROM users_chat_styles WHERE user_id = ?")) {
+            statement.setInt(1, habbo.getHabboInfo().getId());
+
+            try (ResultSet set = statement.executeQuery()) {
+                while (set.next()) {
+                    styles.add(set.getInt("style_id"));
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Caught SQL exception", e);
+        }
+
+        return styles;
+    }
+
+    public boolean habboOwnsChatStyle(Habbo habbo, int styleId) {
+        try (Connection connection = Emulator.getDatabase().getDataSource().getConnection(); PreparedStatement statement = connection.prepareStatement("SELECT 1 FROM users_chat_styles WHERE user_id = ? AND style_id = ? LIMIT 1")) {
+            statement.setInt(1, habbo.getHabboInfo().getId());
+            statement.setInt(2, styleId);
+
+            try (ResultSet set = statement.executeQuery()) {
+                return set.next();
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Caught SQL exception", e);
+        }
+
+        return false;
+    }
+
+    public boolean grantChatStyle(Habbo habbo, int styleId) {
+        try (Connection connection = Emulator.getDatabase().getDataSource().getConnection(); PreparedStatement statement = connection.prepareStatement("INSERT IGNORE INTO users_chat_styles (user_id, style_id) VALUES (?, ?)")) {
+            statement.setInt(1, habbo.getHabboInfo().getId());
+            statement.setInt(2, styleId);
+            statement.execute();
+            return true;
+        } catch (SQLException e) {
+            LOGGER.error("Caught SQL exception", e);
+        }
+
+        return false;
+    }
+
     public List<ClubOffer> getClubOffers() {
         List<ClubOffer> offers = new ArrayList<>();
 
@@ -1362,7 +1470,8 @@ public class CatalogManager {
     }
 
     private int calculateDiscountedPrice(int originalPrice, int amount, CatalogItem item) {
-        if (!CatalogItem.haveOffer(item)) return originalPrice * amount;
+        if (originalPrice < 0 || !CatalogPurchaseLimits.isValidAmount(amount)) return -1;
+        if (!CatalogItem.haveOffer(item)) return CatalogPurchaseLimits.checkedPriceProduct(originalPrice, amount);
 
         int basicDiscount = amount / BundleDiscountRulesetMessageComposer.DISCOUNT_BATCH_SIZE;
 
@@ -1382,6 +1491,6 @@ public class CatalogManager {
 
         int totalDiscountedItems = (basicDiscount * BundleDiscountRulesetMessageComposer.DISCOUNT_AMOUNT_PER_BATCH) + bonusDiscount + additionalDiscounts;
 
-        return Math.max(0, originalPrice * (amount - totalDiscountedItems));
+        return CatalogPurchaseLimits.checkedPriceProduct(originalPrice, Math.max(0, amount - totalDiscountedItems));
     }
 }

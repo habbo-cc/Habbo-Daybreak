@@ -45,7 +45,7 @@ public class WiredEffectGiveScoreToTeam extends InteractionWiredEffect {
             if (game != null && game.state.equals(GameState.RUNNING)) {
                 int c = this.startTimes.get(game.getStartTime());
 
-                if (c < this.count) {
+                if (this.count == 0 || c < this.count) {
                     GameTeam team = game.getTeam(this.teamColor);
 
                     if (team != null) {
@@ -108,6 +108,10 @@ public class WiredEffectGiveScoreToTeam extends InteractionWiredEffect {
         return type;
     }
 
+    // Wired 2.0 getters
+    @Override
+    protected int[] getWiredIntParams() { return new int[]{ this.points, this.count, this.teamColor.type }; }
+
     @Override
     public void serializeWiredData(ServerMessage message, Room room) {
         message.appendBoolean(false);
@@ -132,12 +136,12 @@ public class WiredEffectGiveScoreToTeam extends InteractionWiredEffect {
 
         int points = settings.getIntParams()[0];
 
-        if(points < 1 || points > 100)
+        if(points == 0 || Math.abs(points) > 1000)
             throw new WiredSaveException("Points is invalid");
 
         int timesPerGame = settings.getIntParams()[1];
 
-        if(timesPerGame < 1 || timesPerGame > 10)
+        if(timesPerGame < 0 || timesPerGame > 10)
             throw new WiredSaveException("Times per game is invalid");
 
         int team = settings.getIntParams()[2];
@@ -152,7 +156,7 @@ public class WiredEffectGiveScoreToTeam extends InteractionWiredEffect {
 
         this.points = points;
         this.count = timesPerGame;
-        this.teamColor = GameTeamColors.values()[team];
+        this.teamColor = GameTeamColors.fromType(team);
         this.setDelay(delay);
 
         return true;

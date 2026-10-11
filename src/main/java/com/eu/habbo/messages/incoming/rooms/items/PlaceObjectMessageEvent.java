@@ -1,5 +1,6 @@
 package com.eu.habbo.messages.incoming.rooms.items;
 
+import com.eu.habbo.Emulator;
 import com.eu.habbo.habbohotel.items.FurnitureType;
 import com.eu.habbo.habbohotel.items.interactions.*;
 import com.eu.habbo.habbohotel.modtool.ScripterManager;
@@ -114,5 +115,9 @@ public class PlaceObjectMessageEvent extends MessageHandler {
         this.client.sendResponse(new FurniListRemoveMessageComposer(item.getGiftAdjustedId()));
         this.client.getHabbo().getInventory().getItemsComponent().removeHabboItem(item.getId());
         item.setFromGift(false);
+
+        if (Emulator.getGameEnvironment().getRewardTrackManager() != null) {
+            Emulator.getGameEnvironment().getRewardTrackManager().progress(this.client.getHabbo(), "place_item");
+        }
     }
 }

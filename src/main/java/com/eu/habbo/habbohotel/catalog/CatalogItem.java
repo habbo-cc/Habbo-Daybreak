@@ -17,6 +17,7 @@ import java.util.HashMap;
 
 public class CatalogItem implements ISerialize, Runnable, Comparable<CatalogItem> {
     private static final Logger LOGGER = LoggerFactory.getLogger(CatalogItem.class);
+    private static final String CHAT_STYLE_EXTRADATA_PREFIX = "chat_style:";
     int id;
     int limitedStack;
     private int pageId;
@@ -194,6 +195,14 @@ public class CatalogItem implements ISerialize, Runnable, Comparable<CatalogItem
         return this.subscriptionType != null && !this.subscriptionType.isBlank() && this.subscriptionDays > 0;
     }
 
+    public boolean isChatStyleOffer() {
+        return this.parseChatStyleId() >= 0;
+    }
+
+    public int getChatStyleId() {
+        return this.parseChatStyleId();
+    }
+
     public boolean hasBaseItems() {
         return !this.getBaseItems().isEmpty();
     }
@@ -277,6 +286,18 @@ public class CatalogItem implements ISerialize, Runnable, Comparable<CatalogItem
         return this.bundle;
     }
 
+    private int parseChatStyleId() {
+        if (this.extradata == null || !this.extradata.startsWith(CHAT_STYLE_EXTRADATA_PREFIX)) {
+            return -1;
+        }
+
+        try {
+            return Integer.parseInt(this.extradata.substring(CHAT_STYLE_EXTRADATA_PREFIX.length()));
+        } catch (NumberFormatException e) {
+            return -1;
+        }
+    }
+
     public void loadBundle() {
         if (this.itemId == null || this.itemId.isEmpty() || this.itemId.equals("0")) {
             return;
@@ -329,7 +350,15 @@ public class CatalogItem implements ISerialize, Runnable, Comparable<CatalogItem
 
         THashSet<Item> items = this.getBaseItems();
 
-        message.appendInt(items.size());
+        message.appendInt(this.isChatStyleOffer() ? 1 : items.size());
+
+        if (this.isChatStyleOffer()) {
+            message.appendString("chat_style");
+            message.appendInt(0);
+            message.appendString(String.valueOf(this.getChatStyleId()));
+            message.appendInt(1);
+            message.appendBoolean(false);
+        }
 
         for (Item item : items) {
             message.appendString(item.getType().code.toLowerCase());

@@ -11,12 +11,12 @@ public class ReleaseIssuesMessageEvent extends MessageHandler {
     @Override
     public void handle() throws Exception {
         if (this.client.getHabbo().hasPermission(Permission.ACC_SUPPORTTOOL)) {
-            int count = this.packet.readInt();
+            int count = this.packet.readBoundedCount(1000, Integer.BYTES);
 
             while (count != 0) {
                 count--;
 
-                int ticketId = this.packet.readInt();
+                int ticketId = this.packet.readRequiredInt();
 
                 ModToolIssue issue = Emulator.getGameEnvironment().getModToolManager().getTicket(ticketId);
 

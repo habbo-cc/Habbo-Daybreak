@@ -18,9 +18,9 @@ public class AddItemsToTradeEvent extends MessageHandler {
 
         THashSet<HabboItem> items = new THashSet<>();
 
-        int count = this.packet.readInt();
+        int count = this.packet.readBoundedCount(1000, Integer.BYTES);
         for (int i = 0; i < count; i++) {
-            HabboItem item = this.client.getHabbo().getInventory().getItemsComponent().getHabboItem(this.packet.readInt());
+            HabboItem item = this.client.getHabbo().getInventory().getItemsComponent().getHabboItem(this.packet.readRequiredInt());
             if (item != null && item.getBaseItem().allowTrade()) {
                 items.add(item);
             }

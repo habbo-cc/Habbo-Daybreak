@@ -27,19 +27,22 @@ public class GameTimer implements Runnable {
             return;
         }
 
-        timer.reduceTime();
-        if (timer.getTimeNow() < 0) timer.setTimeNow(0);
+        timer.setHalfTick(!timer.isHalfTick());
+
+        if (!timer.isHalfTick()) {
+            timer.reduceTime();
+            if (timer.getTimeNow() < 0) timer.setTimeNow(0);
+            room.updateItem(timer);
+        }
 
         if (timer.getTimeNow() > 0) {
             timer.setThreadActive(true);
-            Emulator.getThreading().run(this, 1000);
+            Emulator.getThreading().run(this, 500);
         } else {
             timer.setThreadActive(false);
             timer.setTimeNow(0);
             timer.endGame(room);
             WiredManager.triggerGameEnds(room);
         }
-
-        room.updateItem(timer);
     }
 }

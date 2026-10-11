@@ -35,6 +35,8 @@ public class CameraRenderManager {
     private final WallColorResolver wallColorResolver;
 
     public CameraRenderManager() {
+        long millis = System.currentTimeMillis();
+        LOGGER.info("Camera Renderer -> Loading...");
         this.spritesDir = Paths.get(requireConfigValue("camera.assets.sprites.path")).toAbsolutePath().normalize();
         this.framesDir = Paths.get(requireConfigValue("camera.assets.frames.path")).toAbsolutePath().normalize();
         this.binaryDir = Paths.get(requireConfigValue("camera.assets.binary.path")).toAbsolutePath().normalize();
@@ -63,10 +65,15 @@ public class CameraRenderManager {
 
         this.paletteCache = new CameraPaletteCache(this.binaryDir);
 
-        Path wallColorsPath = Paths.get(Emulator.getConfig().getValue("camera.wall.colors.path", "./camera_wall_colors.properties")).toAbsolutePath().normalize();
+        String wallColorsConfig = Emulator.getConfig().containsKey("camera.wall.colors.path")
+                ? Emulator.getConfig().getValue("camera.wall.colors.path")
+                : "./camera_wall_colors.properties";
+        Path wallColorsPath = Paths.get(wallColorsConfig).toAbsolutePath().normalize();
         this.wallColorResolver = new WallColorResolver(wallColorsPath);
 
-        LOGGER.info("Camera renderer initialised. sprites={}, frames={}, binary={}, output={}, thumbnailOutput={}, url={}",
+        LOGGER.info("Camera Renderer -> Loaded! ({} MS, {} palettes, {} wall overrides)",
+                System.currentTimeMillis() - millis, this.paletteCache.size(), this.wallColorResolver.size());
+        LOGGER.debug("Camera Renderer -> Paths: sprites={}, frames={}, binary={}, output={}, thumbnailOutput={}, url={}",
                 this.spritesDir, this.framesDir, this.binaryDir, this.outputDir, this.thumbnailOutputDir, this.urlPrefix);
     }
 

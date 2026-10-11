@@ -18,6 +18,8 @@ import java.sql.SQLException;
 public class WiredTriggerHabboSaysKeyword extends InteractionWiredTrigger {
     private static final WiredTriggerType type = WiredTriggerType.SAY_SOMETHING;
 
+    private boolean hide = false;
+    private int matchType = 0;
     private boolean ownerOnly = false;
     private String key = "";
 
@@ -31,16 +33,43 @@ public class WiredTriggerHabboSaysKeyword extends InteractionWiredTrigger {
 
     @Override
     public boolean matches(HabboItem triggerItem, WiredEvent event) {
-        if (this.key.length() > 0) {
-            String text = event.getText().orElse(null);
-            if (text != null && text.toLowerCase().contains(this.key.toLowerCase())) {
-                RoomUnit roomUnit = event.getActor().orElse(null);
-                Room room = event.getRoom();
-                Habbo habbo = room.getHabbo(roomUnit);
-                return !this.ownerOnly || (habbo != null && room.getOwnerId() == habbo.getHabboInfo().getId());
-            }
+        String text = event.getText().orElse(null);
+        if (text == null) {
+            return false;
         }
-        return false;
+
+        if (!this.matchesText(text)) {
+            return false;
+        }
+
+        return matchesActorGate(event);
+    }
+
+    private boolean matchesText(String text) {
+        if (this.matchType == 2) {
+            return true;
+        }
+
+        if (this.key.length() == 0) {
+            return false;
+        }
+
+        if (this.matchType == 1) {
+            return text.equalsIgnoreCase(this.key);
+        }
+
+        return text.toLowerCase().contains(this.key.toLowerCase());
+    }
+
+    public String getKey() { return this.key; }
+    public int getMatchType() { return this.matchType; }
+
+    public boolean matchesActorGate(WiredEvent event) {
+        if (event == null) return false;
+        RoomUnit roomUnit = event.getActor().orElse(null);
+        Room room = event.getRoom();
+        Habbo habbo = roomUnit == null ? null : room.getHabbo(roomUnit);
+        return !this.ownerOnly || (habbo != null && room.getOwnerId() == habbo.getHabboInfo().getId());
     }
 
     @Deprecated
@@ -52,6 +81,8 @@ public class WiredTriggerHabboSaysKeyword extends InteractionWiredTrigger {
     @Override
     public String getWiredData() {
         return WiredManager.getGson().toJson(new JsonData(
+            this.hide,
+            this.matchType,
             this.ownerOnly,
             this.key
         ));
@@ -63,6 +94,8 @@ public class WiredTriggerHabboSaysKeyword extends InteractionWiredTrigger {
 
         if (wiredData.startsWith("{")) {
             JsonData data = WiredManager.getGson().fromJson(wiredData, JsonData.class);
+            this.hide = data.hide;
+            this.matchType = data.matchType;
             this.ownerOnly = data.ownerOnly;
             this.key = data.key;
         } else {
@@ -78,6 +111,8 @@ public class WiredTriggerHabboSaysKeyword extends InteractionWiredTrigger {
     @Override
     public void onPickUp() {
         this.ownerOnly = false;
+        this.hide = false;
+        this.matchType = 0;
         this.key = "";
     }
 
@@ -87,6 +122,12 @@ public class WiredTriggerHabboSaysKeyword extends InteractionWiredTrigger {
     }
 
     @Override
+    protected String getWiredStringParam() { return this.key; }
+
+    @Override
+    protected int[] getWiredIntParams() { return new int[]{ this.hide ? 1 : 0, this.matchType, this.ownerOnly ? 1 : 0 }; }
+
+    @Override
     public void serializeWiredData(ServerMessage message, Room room) {
         message.appendBoolean(false);
         message.appendInt(5);
@@ -94,8 +135,11 @@ public class WiredTriggerHabboSaysKeyword extends InteractionWiredTrigger {
         message.appendInt(this.getBaseItem().getSpriteId());
         message.appendInt(this.getRoomVisibleId());
         message.appendString(this.key);
+        message.appendInt(3);
+        message.appendInt(this.hide ? 1 : 0);
+        message.appendInt(this.matchType);
+        message.appendInt(this.ownerOnly ? 1 : 0);
         message.appendInt(0);
-        message.appendInt(1);
         message.appendInt(this.getType().code);
         message.appendInt(0);
         message.appendInt(0);
@@ -104,7 +148,9 @@ public class WiredTriggerHabboSaysKeyword extends InteractionWiredTrigger {
     @Override
     public boolean saveData(WiredSettings settings) {
         if(settings.getIntParams().length < 1) return false;
-        this.ownerOnly = settings.getIntParams()[0] == 1;
+        this.hide = settings.getIntParams()[0] == 1;
+        this.matchType = settings.getIntParams().length > 1 ? settings.getIntParams()[1] : 0;
+        this.ownerOnly = settings.getIntParams().length > 2 ? settings.getIntParams()[2] == 1 : settings.getIntParams()[0] == 1;
         this.key = settings.getStringParam();
 
         return true;
@@ -115,11 +161,19 @@ public class WiredTriggerHabboSaysKeyword extends InteractionWiredTrigger {
         return true;
     }
 
+    public boolean shouldHideMessage() {
+        return this.hide;
+    }
+
     static class JsonData {
+        boolean hide;
+        int matchType;
         boolean ownerOnly;
         String key;
 
-        public JsonData(boolean ownerOnly, String key) {
+        public JsonData(boolean hide, int matchType, boolean ownerOnly, String key) {
+            this.hide = hide;
+            this.matchType = matchType;
             this.ownerOnly = ownerOnly;
             this.key = key;
         }

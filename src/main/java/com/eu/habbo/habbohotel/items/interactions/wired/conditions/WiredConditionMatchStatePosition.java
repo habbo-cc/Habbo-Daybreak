@@ -29,6 +29,7 @@ public class WiredConditionMatchStatePosition extends InteractionWiredCondition
     private boolean state;
     private boolean position;
     private boolean direction;
+    private boolean altitude;
 
     public WiredConditionMatchStatePosition(ResultSet set, Item baseItem) throws SQLException {
         super(set, baseItem);
@@ -44,6 +45,50 @@ public class WiredConditionMatchStatePosition extends InteractionWiredCondition
     @Override
     public WiredConditionType getType() {
         return type;
+    }
+
+    // Wired 2.0 getters (settings-backed items resolved against the current room)
+    @Override
+    protected java.util.Collection<HabboItem> getSelectedItems() {
+        Room room = Emulator.getGameEnvironment().getRoomManager()
+                .getRoom(this.getRoomId());
+        if (room == null) {
+            return List.of();
+        }
+        return this.settings.stream()
+                .map(setting -> room.getHabboItemByDatabaseId(setting.item_id))
+                .filter(java.util.Objects::nonNull)
+                .toList();
+    }
+
+    @Override
+    protected boolean sanitizeSelectedItems(Room room) {
+        return room != null && this.settings.removeIf(setting -> {
+            HabboItem item = setting == null ? null : room.getHabboItemByDatabaseId(setting.item_id);
+            return !isCurrentSelectedItem(room, item);
+        });
+    }
+
+    @Override
+    protected int[] getSelectedItemVisibleIds(Room room) {
+        if (room == null) {
+            return new int[0];
+        }
+        return this.settings.stream()
+                .map(setting -> setting == null ? null : room.getHabboItemByDatabaseId(setting.item_id))
+                .filter(item -> isCurrentSelectedItem(room, item))
+                .mapToInt(HabboItem::getRoomVisibleId)
+                .toArray();
+    }
+
+    @Override
+    protected int[] getWiredIntParams() {
+        return new int[]{ this.state ? 1 : 0, this.direction ? 1 : 0, this.position ? 1 : 0, this.altitude ? 1 : 0 };
+    }
+
+    @Override
+    protected boolean supportsFurniPicking() {
+        return true;
     }
 
     @Override
@@ -66,7 +111,7 @@ public class WiredConditionMatchStatePosition extends InteractionWiredCondition
         message.appendInt(this.state ? 1 : 0);
         message.appendInt(this.direction ? 1 : 0);
         message.appendInt(this.position ? 1 : 0);
-        message.appendInt(10);
+        message.appendInt(this.altitude ? 1 : 0);
         message.appendInt(0);
         message.appendInt(this.getType().code);
         message.appendInt(0);
@@ -80,6 +125,7 @@ public class WiredConditionMatchStatePosition extends InteractionWiredCondition
         this.state = settings.getIntParams()[0] == 1;
         this.direction = settings.getIntParams()[1] == 1;
         this.position = settings.getIntParams()[2] == 1;
+        this.altitude = settings.getIntParams().length > 3 && settings.getIntParams()[3] == 1;
 
         Room room = Emulator.getGameEnvironment().getRoomManager().getRoom(this.getRoomId());
 
@@ -98,7 +144,7 @@ public class WiredConditionMatchStatePosition extends InteractionWiredCondition
 
             if (item != null)
                 this.settings.add(new WiredMatchFurniSetting(item.getId(), item.getExtradata(), item.getRotation(),
-                        item.getX(), item.getY()));
+                        item.getX(), item.getY(), item.getZ()));
         }
 
         return true;
@@ -130,6 +176,11 @@ public class WiredConditionMatchStatePosition extends InteractionWiredCondition
                     if (setting.rotation != item.getRotation())
                         return false;
                 }
+
+                if (this.altitude) {
+                    if (Double.compare(setting.z, item.getZ()) != 0)
+                        return false;
+                }
             } else {
                 s.add(setting);
             }
@@ -156,6 +207,7 @@ public class WiredConditionMatchStatePosition extends InteractionWiredCondition
                 this.state,
                 this.position,
                 this.direction,
+                this.altitude,
                 new ArrayList<>(this.settings)));
     }
 
@@ -168,6 +220,7 @@ public class WiredConditionMatchStatePosition extends InteractionWiredCondition
             this.state = data.state;
             this.position = data.position;
             this.direction = data.direction;
+            this.altitude = data.altitude;
             this.settings.addAll(data.settings);
         } else {
             String[] data = wiredData.split(":");
@@ -181,7 +234,8 @@ public class WiredConditionMatchStatePosition extends InteractionWiredCondition
 
                 if (stuff.length >= 5)
                     this.settings.add(new WiredMatchFurniSetting(Integer.parseInt(stuff[0]), stuff[1],
-                            Integer.parseInt(stuff[2]), Integer.parseInt(stuff[3]), Integer.parseInt(stuff[4])));
+                            Integer.parseInt(stuff[2]), Integer.parseInt(stuff[3]), Integer.parseInt(stuff[4]),
+                            stuff.length > 5 ? Double.parseDouble(stuff[5]) : 0));
             }
 
             this.state = data[2].equals("1");
@@ -196,6 +250,7 @@ public class WiredConditionMatchStatePosition extends InteractionWiredCondition
         this.direction = false;
         this.position = false;
         this.state = false;
+        this.altitude = false;
     }
 
     private void refresh() {
@@ -237,16 +292,23 @@ public class WiredConditionMatchStatePosition extends InteractionWiredCondition
         return this.position;
     }
 
+    @Override
+    public boolean shouldMatchAltitude() {
+        return this.altitude;
+    }
+
     static class JsonData {
         boolean state;
         boolean position;
         boolean direction;
+        boolean altitude;
         List<WiredMatchFurniSetting> settings;
 
-        public JsonData(boolean state, boolean position, boolean direction, List<WiredMatchFurniSetting> settings) {
+        public JsonData(boolean state, boolean position, boolean direction, boolean altitude, List<WiredMatchFurniSetting> settings) {
             this.state = state;
             this.position = position;
             this.direction = direction;
+            this.altitude = altitude;
             this.settings = settings;
         }
     }

@@ -1,6 +1,8 @@
 package com.eu.habbo.messages.outgoing;
 
 public class Outgoing {
+    public final static int ConfigurationItemStatesMessageComposer = 2942; // July 2026 AIR
+    public final static int AreaHideMessageComposer = 1131; // July 2026 AIR
     public static final int PetStatusUpdateMessageComposer = 1907;//error 404
 
     public final static int CfhTopicsInitMessageComposer = 325;
@@ -162,6 +164,61 @@ public class Outgoing {
     public final static int MarketPlaceOwnOffersMessageComposer = 3884; // PRODUCTION-201611291003-338511768
     public final static int YouAreOwnerMessageComposer = 339; // PRODUCTION-201611291003-338511768
     public final static int WiredConditionDataMessageComposer = 1108; // PRODUCTION-201611291003-338511768
+
+    // ===== Wired 2.0 — local collision-free outgoing map (server->client). May refs in comments. =====
+    public final static int WiredSelectorDataMessageComposer = 7100;   // July 722
+    public final static int WiredAddonDataMessageComposer = 7101;      // July 2574
+    public final static int WiredVariableDataMessageComposer = 7102;   // July 1501
+    public final static int WiredEnvironmentMessageComposer = 7103;    // July 2827
+    public final static int WiredClickUserResponseMessageComposer = 7104; // July 309
+    public final static int WiredClickSettingsMessageComposer = 7105;  // July 3931
+    public final static int WiredAllVariablesHashMessageComposer = 7106; // July 3287
+    public final static int WiredAllVariablesDiffMessageComposer = 7107; // July 2733
+    public final static int WiredMovementsMessageComposer = 7115;      // May 641/723 runtime room-engine movement
+    public final static int WiredCapabilitiesMessageComposer = 7199;
+    // July Wired Menu semantics on NGH's preserved local IDs.
+    public final static int WiredMenuPermissionsMessageComposer = 7108;
+    public final static int WiredMenuRoomSettingsMessageComposer = 7109;
+    public final static int WiredMenuVariableHoldersMessageComposer = 7110;
+    public final static int WiredMenuObjectInspectionMessageComposer = 7111;
+    public final static int WiredMenuErrorMessageComposer = 7112;
+    public final static int WiredMenuErrorsMessageComposer = 7113;
+    public final static int WiredMenuRoomStatsMessageComposer = 7114;
+    public final static int WiredMenuUserVariablesPageMessageComposer = 7116;
+    public final static int WiredMenuPermanentVariablesMessageComposer = 7117;
+    public final static int WiredMenuPermanentMutationResultMessageComposer = 7118;
+    public final static int WiredMenuLogsPageMessageComposer = 7119;
+    public final static int ChestOpenInstructionComposer = 7120;       // July 1174
+    public final static int ChestFurniContentsComposer = 7121;         // July 2323
+    public final static int ChestFurniContentsUpdateComposer = 7122;   // July 2738
+    public final static int ChestCoinBalanceComposer = 7123;           // July 1022
+    public final static int ChestSettingsResultComposer = 7124;        // July 1957
+    public final static int ChestUpgradeResultComposer = 7125;         // July 2721
+    public final static int WiredTradeCancelledComposer = 7126;        // July 1481
+    public final static int WiredTradeCompletedComposer = 7127;        // July 2137
+    public final static int WiredTradeItemUpdateComposer = 7128;       // July 2488
+    public final static int WiredTradeInitiateComposer = 7129;         // July 3650
+    public final static int ChestContractOpenComposer = 7130;          // July contract open
+    public final static int ChestContractContentsComposer = 7131;      // July contract contents
+    public final static int ChestContractUpdateResultComposer = 7132;  // July contract save result
+    public final static int WiredTransactionSuccessComposer = 7133;    // July 2677
+    public final static int ChestTransactionLogsComposer = 7134;       // July 2910
+    public final static int ChestTransactionDetailsComposer = 7135;    // July 1306
+    // ===== end Wired 2.0 outgoing =====
+    public final static int PurchasableChatStylesMessageComposer = 7200;
+    public final static int PurchasableChatStyleChangedMessageComposer = 7202;
+    public final static int OwnedHabbiconsMessageComposer = 7400;
+    public final static int HabbiconStatusChangedMessageComposer = 7401;
+    public final static int HabbiconShopDataMessageComposer = 7402;
+    public final static int HabbiconInfoMessageComposer = 7403;
+    public final static int RoomUserHabbiconMessageComposer = 7404;
+    public final static int HabbiconInstantMessageComposer = 7405;
+    public final static int HabbiconMessengerHistoryMessageComposer = 7406;
+    public final static int RewardTracksMessageComposer = 3794;
+    public final static int RewardTrackProgressMessageComposer = 2017;
+    public final static int RewardTrackClaimResultMessageComposer = 522;
+    public final static int RewardTrackPremiumResultMessageComposer = 58;
+
     public final static int ModeratorUserInfoMessageComposer = 2866; // PRODUCTION-201611291003-338511768
     public final static int WardrobeMessageComposer = 3315; // PRODUCTION-201611291003-338511768
     public final static int PetExperienceMessageComposer = 2156; // PRODUCTION-201611291003-338511768
@@ -306,6 +363,12 @@ public class Outgoing {
     public final static int StartRoomPollMessageComposer = 5200;
     public final static int RoomPollResultMessageComposer = 5201;
     public final static int PublicRoomObjectsMessageComposer = 5202;
+    public final static int BusDoorMessageComposer = 5203;
+    public final static int CannotEnterBusMessageComposer = 5204;
+    public final static int OpenGameBoardMessageComposer = 5220;
+    public final static int GameBoardUpdateMessageComposer = 5221;
+    public final static int CloseGameBoardMessageComposer = 5222;
+    public final static int OpenLeaderboardMessageComposer = 5224;
     public final static int YouAreNotControllerMessageComposer = 2392; // PRODUCTION-201611291003-338511768
     public final static int GuildEditFailedMessageComposer = 3988; // PRODUCTION-201611291003-338511768
     public final static int MiniMailNewMessageMessageComposer = 1911; // PRODUCTION-201611291003-338511768
@@ -320,7 +383,6 @@ public class Outgoing {
     public final static int FriendFurniOtherLockConfirmedMessageComposer = 382; // PRODUCTION-201611291003-338511768
     public final static int FriendFurniCancelLockMessageComposer = 770; // PRODUCTION-201611291003-338511768
     public final static int OpenPetPackageResultMessageComposer = 546; // PRODUCTION-201611291003-338511768
-    public final static int GameCenterFeaturedPlayersComposer = 3097; // PRODUCTION-201611291003-338511768
     public final static int TargetedOfferNotFoundMessageComposer = 1237; // PRODUCTION-201611291003-338511768
     public final static int TargetedOfferMessageComposer = 119; // PRODUCTION-201611291003-338511768
     public final static int LeprechaunStarterBundleComposer = 2380; // PRODUCTION-201611291003-338511768
@@ -343,7 +405,6 @@ public class Outgoing {
     public final static int RoomSettingsSaveErrorMessageComposer = 1555; // PRODUCTION-201611291003-338511768
     public final static int GuildMemberMgmtFailedMessageComposer = 818; // PRODUCTION-201611291003-338511768
     public final static int PollErrorMessageComposer = 662; // PRODUCTION-201611291003-338511768
-    public final static int AchievementsConfigurationComposer = 1689; // PRODUCTION-201611291003-338511768
     public final static int ConfirmBreedingRequestMessageComposer = 634; // PRODUCTION-201611291003-338511768
     public final static int RoomUserQuestionAnsweredComposer = -1; // PRODUCTION-201611291003-338511768
     public final static int PetBreedingMessageComposer = 1746; // PRODUCTION-201611291003-338511768
@@ -424,7 +485,8 @@ public class Outgoing {
     public final static int AvatarEffectAddedMessageComposer = 2867; // PRODUCTION-201611291003-338511768
     public final static int UnknownComposer_1188 = 1437; // PRODUCTION-201611291003-338511768
     public final static int SubmitCompetitionRoomComposer = 3841; // PRODUCTION-201611291003-338511768
-    public final static int GameAchievementsListComposer = 2265; // PRODUCTION-201611291003-338511768
+    public final static int GameAchievementsMessageComposer = 1689; // PRODUCTION-201611291003-338511768
+    public final static int UserGameAchievementsMessageComposer = 2265; // PRODUCTION-201611291003-338511768
     public final static int TradingOtherNotAllowedMessageComposer = 1254; // PRODUCTION-201611291003-338511768
     public final static int UnloadGameMessageComposer = 1715; // PRODUCTION-201611291003-338511768
     public final static int UnknownComposer_137 = 2897; // PRODUCTION-201611291003-338511768
@@ -434,7 +496,6 @@ public class Outgoing {
     public final static int UnknowComposer_1427 = 3319; // PRODUCTION-201611291003-338511768
     public final static int CampaignCalendarDataMessageComposer = 2531; // PRODUCTION-201611291003-338511768
     public final static int UnknownComposer_152 = 3954; // PRODUCTION-201611291003-338511768
-    public final static int UnknownComposer_1577 = 2641; // PRODUCTION-201611291003-338511768
     public final static int AchievementResolutionCompletedMessageComposer = 740; // PRODUCTION-201611291003-338511768
     public final static int UnknownComposer_1741 = 2246; // PRODUCTION-201611291003-338511768
     public final static int UnknownComposer_1744 = 2873; // PRODUCTION-201611291003-338511768
@@ -526,6 +587,52 @@ public class Outgoing {
     public final static int ExtendedProfileChangedMessageComposer = 876;
 
     public final static int GameStatusMessageComposer = 3805;
+    public final static int WeeklyGameRewardMessageComposer = 2641;
+    public final static int WeeklyGameRewardWinnersMessageComposer = 3097;
+    public final static int WeeklyCompetitiveFriendsLeaderboardMessageComposer = 3560;
+
+    // Original Shockwave BattleBall (protocol version 2). Not Battle Banzai.
+    public static final int BattleBallLoungeInfoComposer = 7600;
+    public static final int BattleBallInstanceListComposer = 7601;
+    public static final int BattleBallGameInstanceComposer = 7602;
+    public static final int BattleBallInstanceNotAvailableComposer = 7603;
+    public static final int BattleBallCreateFailedComposer = 7605;
+    public static final int BattleBallGameDeletedComposer = 7606;
+    public static final int BattleBallJoinParametersComposer = 7607;
+    public static final int BattleBallJoinFailedComposer = 7608;
+    public static final int BattleBallWatchFailedComposer = 7609;
+    public static final int BattleBallGameLocationComposer = 7610;
+    public static final int BattleBallStartFailedComposer = 7611;
+    public static final int BattleBallFullGameStatusComposer = 7612;
+    public static final int BattleBallGameStatusComposer = 7613;
+    public static final int BattleBallPlayerRemovedComposer = 7614;
+    public static final int BattleBallGameStartComposer = 7615;
+    public static final int BattleBallGameEndComposer = 7616;
+    public static final int BattleBallSpectatorCountComposer = 7617;
+    public static final int BattleBallIdleWarningComposer = 7619;
+    public static final int BattleBallSkillLevelChangedComposer = 7620;
+    /** Shared hotel-ticket messages used by classic ticketed public-room games. */
+    public static final int TicketBalanceComposer = 7621;
+    public static final int TicketPurchaseResultComposer = 7622;
+
+    // Original Shockwave r26 SnowStorm (v1); separate from the later AIR SnowWar family below.
+    public static final int ShockwaveSnowStormLoungeInfoComposer = 7800;
+    public static final int ShockwaveSnowStormInstanceListComposer = 7801;
+    public static final int ShockwaveSnowStormGameInstanceComposer = 7802;
+    public static final int ShockwaveSnowStormInstanceRemovedComposer = 7803;
+    public static final int ShockwaveSnowStormJoinParametersComposer = 7804;
+    public static final int ShockwaveSnowStormOperationFailedComposer = 7805;
+    public static final int ShockwaveSnowStormGameLocationComposer = 7806;
+    public static final int ShockwaveSnowStormGameResetComposer = 7807;
+    public static final int ShockwaveSnowStormGameStartComposer = 7808;
+    public static final int ShockwaveSnowStormFullGameStatusComposer = 7809;
+    public static final int ShockwaveSnowStormGameStatusComposer = 7810;
+    public static final int ShockwaveSnowStormGameEndComposer = 7811;
+    public static final int ShockwaveSnowStormPlayerRemovedComposer = 7812;
+    public static final int ShockwaveSnowStormSpectatorCountComposer = 7813;
+    public static final int ShockwaveSnowStormFinishedGameComposer = 7814;
+    public static final int ShockwaveSnowStormSkillLevelChangedComposer = 7815;
+    public static final int ShockwaveSnowStormIdleWarningComposer = 7816;
 
 
     public static final int SnowStormGameStartedComposer = 5000;

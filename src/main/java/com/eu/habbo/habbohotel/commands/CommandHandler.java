@@ -183,6 +183,7 @@ public class CommandHandler {
         addCommand(new BanCommand());
         addCommand(new BlockAlertCommand());
         addCommand(new BotsCommand());
+        addCommand(new BusCommand());
         addCommand(new CalendarCommand());
         addCommand(new ChangeNameCommand());
         addCommand(new ChatTypeCommand());
@@ -288,6 +289,7 @@ public class CommandHandler {
         addCommand(new UpdatePetDataCommand());
         addCommand(new UpdatePluginsCommand());
         addCommand(new UpdatePollsCommand());
+        addCommand(new UpdateRewardTrackCommand());
         addCommand(new UpdateTextsCommand());
         addCommand(new UpdateWordFilterCommand());
         addCommand(new UserInfoCommand());

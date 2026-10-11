@@ -68,6 +68,10 @@ public class WiredConditionNotHabboHasEffect extends InteractionWiredCondition {
         return type;
     }
 
+    // Wired 2.0 getters (legacy serialized effectId into stringParam as text)
+    @Override
+    protected String getWiredStringParam() { return String.valueOf(this.effectId); }
+
     @Override
     public void serializeWiredData(ServerMessage message, Room room) {
         message.appendBoolean(false);

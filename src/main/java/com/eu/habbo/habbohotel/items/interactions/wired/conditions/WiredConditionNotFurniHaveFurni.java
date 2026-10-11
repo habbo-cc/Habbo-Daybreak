@@ -43,14 +43,16 @@ public class WiredConditionNotFurniHaveFurni extends InteractionWiredCondition {
 
         this.refresh();
 
-        if (this.items.isEmpty())
+        java.util.Collection<HabboItem> targets = resolveFurniSource(ctx, this.getWiredFurniSourceTypes(), 0, this.items, null);
+
+        if (targets.isEmpty())
             return true;
 
         if (room.getLayout() == null)
             return true;
 
         if (this.all) {
-            return this.items.stream().allMatch(item -> {
+            return targets.stream().allMatch(item -> {
                 if (item == null)
                     return true;
                 RoomTile baseTile = room.getLayout().getTile(item.getX(), item.getY());
@@ -65,7 +67,7 @@ public class WiredConditionNotFurniHaveFurni extends InteractionWiredCondition {
                         .anyMatch(matchedItem -> matchedItem != item && matchedItem.getZ() >= minZ));
             });
         } else {
-            return this.items.stream().anyMatch(item -> {
+            return targets.stream().anyMatch(item -> {
                 if (item == null)
                     return true;
                 RoomTile baseTile = room.getLayout().getTile(item.getX(), item.getY());
@@ -142,6 +144,16 @@ public class WiredConditionNotFurniHaveFurni extends InteractionWiredCondition {
     public WiredConditionType getType() {
         return type;
     }
+
+    // Wired 2.0 getters
+    @Override
+    protected java.util.Collection<HabboItem> getSelectedItems() { return this.items; }
+
+    @Override
+    protected boolean supportsFurniPicking() { return true; }
+
+    @Override
+    protected int[] getWiredIntParams() { return new int[]{ this.all ? 1 : 0 }; }
 
     @Override
     public void serializeWiredData(ServerMessage message, Room room) {

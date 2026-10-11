@@ -87,7 +87,7 @@ public class YoutubeManager {
         Emulator.getThreading().run(() -> {
             ExecutorService youtubeDataLoaderPool = Executors.newFixedThreadPool(10);
 
-            LOGGER.info("YouTube Manager -> Loading...");
+            LOGGER.debug("YouTube Manager -> Loading...");
 
             try (Connection connection = Emulator.getDatabase().getDataSource().getConnection(); PreparedStatement statement = connection.prepareStatement("SELECT * FROM youtube_playlists")) {
                 try (ResultSet set = statement.executeQuery()) {

@@ -118,6 +118,9 @@ class CameraRenderTest {
         writeSolidSprite("wall_texture_64_3_wall_color_jagged3", 32, 16, 0xFFFFFF);
         Path overrideFile = spritesDir.resolve("camera_wall_colors.properties");
         Files.writeString(overrideFile, "101=0x8844CC\n");
+        WallColorResolver resolver = new WallColorResolver(overrideFile);
+
+        assertEquals(1, resolver.size());
 
         BufferedImage image = renderScene("""
                 {
@@ -139,7 +142,7 @@ class CameraRenderTest {
                   "sprites": [],
                   "filters": []
                 }
-                """.formatted(BLUE_BACKGROUND), "101", new WallColorResolver(overrideFile));
+                """.formatted(BLUE_BACKGROUND), "101", resolver);
 
         assertRgb(0x8844CC, image.getRGB(80, 160));
     }

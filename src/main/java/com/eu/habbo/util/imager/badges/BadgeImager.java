@@ -28,8 +28,6 @@ public class BadgeImager {
         if (Emulator.getConfig().getBoolean("imager.internal.enabled")) {
             if (this.reload()) {
                 LOGGER.info("Badge Imager -> Loaded!");
-            } else {
-                LOGGER.warn("Badge Imager -> Disabled! Please check your configuration!");
             }
         }
     }
@@ -118,7 +116,7 @@ public class BadgeImager {
     public synchronized boolean reload() {
         File file = new File(Emulator.getConfig().getValue("imager.location.badgeparts"));
         if (!file.exists()) {
-            LOGGER.error("BadgeImager output folder: {} does not exist!", Emulator.getConfig().getValue("imager.location.badgeparts"));
+            LOGGER.warn("Badge Imager -> Disabled! Badge parts directory does not exist: {}", file.getPath());
             return false;
         }
 

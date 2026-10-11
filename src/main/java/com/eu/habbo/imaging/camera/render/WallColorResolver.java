@@ -27,10 +27,14 @@ public class WallColorResolver {
         return this.wallpaintMap.get(wallPaint);
     }
 
+    public int size() {
+        return this.wallpaintMap.size();
+    }
+
     private static Map<String, Integer> loadWallpaintMap(Path configFile) {
         Map<String, Integer> map = new HashMap<>();
         if (configFile == null || !Files.isRegularFile(configFile)) {
-            LOGGER.info("No camera wall colour overrides loaded ({} not found)", configFile);
+            LOGGER.debug("Camera Wall Colour Resolver -> No overrides loaded ({} not found).", configFile);
             return map;
         }
 
@@ -53,7 +57,7 @@ public class WallColorResolver {
             }
         }
 
-        LOGGER.info("Loaded {} camera wall colour overrides from {}", map.size(), configFile);
+        LOGGER.debug("Camera Wall Colour Resolver -> Loaded {} overrides from {}.", map.size(), configFile);
         return map;
     }
 }

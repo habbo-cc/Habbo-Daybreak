@@ -8,10 +8,16 @@ import com.eu.habbo.habbohotel.campaign.calendar.CalendarManager;
 import com.eu.habbo.habbohotel.catalog.CatalogManager;
 import com.eu.habbo.habbohotel.commands.CommandHandler;
 import com.eu.habbo.habbohotel.crafting.CraftingManager;
+import com.eu.habbo.habbohotel.leaderboards.LeaderboardManager;
+import com.eu.habbo.habbohotel.games.battleball.BattleBallManager;
+import com.eu.habbo.habbohotel.games.snowstorm.SnowStormManager;
+import com.eu.habbo.habbohotel.tickets.HotelTicketService;
+import com.eu.habbo.habbohotel.habbicons.HabbiconManager;
 import com.eu.habbo.habbohotel.guides.GuideManager;
 import com.eu.habbo.habbohotel.guilds.GuildManager;
 import com.eu.habbo.habbohotel.hotelview.HotelViewManager;
 import com.eu.habbo.habbohotel.items.ItemManager;
+import com.eu.habbo.habbohotel.items.chests.ChestManager;
 import com.eu.habbo.habbohotel.modtool.ModToolManager;
 import com.eu.habbo.habbohotel.modtool.ModToolSanctions;
 import com.eu.habbo.habbohotel.modtool.WordFilter;
@@ -20,6 +26,7 @@ import com.eu.habbo.habbohotel.permissions.PermissionsManager;
 import com.eu.habbo.habbohotel.pets.PetManager;
 import com.eu.habbo.habbohotel.polls.PollManager;
 import com.eu.habbo.habbohotel.polls.infobus.RoomPollManager;
+import com.eu.habbo.habbohotel.rewardtrack.RewardTrackManager;
 import com.eu.habbo.habbohotel.quests.QuestManager;
 import com.eu.habbo.habbohotel.rooms.RoomChatBubbleManager;
 import com.eu.habbo.habbohotel.rooms.RoomManager;
@@ -43,6 +50,7 @@ public class GameEnvironment {
     private NavigatorManager navigatorManager;
     private GuildManager guildManager;
     private ItemManager itemManager;
+    private ChestManager chestManager;
     private CatalogManager catalogManager;
     private HotelViewManager hotelViewManager;
     private RoomManager roomManager;
@@ -61,6 +69,12 @@ public class GameEnvironment {
     private SubscriptionManager subscriptionManager;
     private CalendarManager calendarManager;
     private RoomChatBubbleManager roomChatBubbleManager;
+    private LeaderboardManager leaderboardManager;
+    private HotelTicketService hotelTicketService;
+    private BattleBallManager battleBallManager;
+    private SnowStormManager snowStormManager;
+    private HabbiconManager habbiconManager;
+    private RewardTrackManager rewardTrackManager;
     private QuestManager questManager;
 
     public void load() throws Exception {
@@ -71,6 +85,7 @@ public class GameEnvironment {
         this.hotelViewManager = new HotelViewManager();
         this.itemManager = new ItemManager();
         this.itemManager.load();
+        this.chestManager = new ChestManager();
         this.botManager = new BotManager();
         this.petManager = new PetManager();
         this.guildManager = new GuildManager();
@@ -89,6 +104,12 @@ public class GameEnvironment {
         this.roomPollManager = new RoomPollManager();
         this.calendarManager = new CalendarManager();
         this.roomChatBubbleManager = new RoomChatBubbleManager();
+        this.leaderboardManager = new LeaderboardManager();
+        this.hotelTicketService = new HotelTicketService();
+        this.battleBallManager = new BattleBallManager();
+        this.snowStormManager = new SnowStormManager();
+        this.habbiconManager = new HabbiconManager();
+        this.rewardTrackManager = new RewardTrackManager();
         this.questManager = new QuestManager();
         this.questManager.reload();
 
@@ -125,9 +146,15 @@ public class GameEnvironment {
         this.catalogManager.dispose();
         this.roomManager.dispose();
         this.itemManager.dispose();
+        this.chestManager.clear();
         this.hotelViewManager.dispose();
         this.subscriptionManager.dispose();
         this.calendarManager.dispose();
+        this.leaderboardManager.dispose();
+        this.battleBallManager.dispose();
+        this.snowStormManager.dispose();
+        this.rewardTrackManager.dispose();
+        this.habbiconManager.dispose();
         LOGGER.info("GameEnvironment -> Disposed!");
     }
 
@@ -145,6 +172,10 @@ public class GameEnvironment {
 
     public ItemManager getItemManager() {
         return this.itemManager;
+    }
+
+    public ChestManager getChestManager() {
+        return this.chestManager;
     }
 
     public CatalogManager getCatalogManager() {
@@ -229,6 +260,30 @@ public class GameEnvironment {
 
     public RoomChatBubbleManager getRoomChatBubbleManager() {
         return roomChatBubbleManager;
+    }
+
+    public LeaderboardManager getLeaderboardManager() {
+        return this.leaderboardManager;
+    }
+
+    public HotelTicketService getHotelTicketService() {
+        return this.hotelTicketService;
+    }
+
+    public BattleBallManager getBattleBallManager() {
+        return this.battleBallManager;
+    }
+
+    public SnowStormManager getSnowStormManager() {
+        return this.snowStormManager;
+    }
+
+    public HabbiconManager getHabbiconManager() {
+        return this.habbiconManager;
+    }
+
+    public RewardTrackManager getRewardTrackManager() {
+        return this.rewardTrackManager;
     }
 
     public QuestManager getQuestManager() {

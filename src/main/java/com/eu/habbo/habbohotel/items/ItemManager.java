@@ -42,12 +42,48 @@ import com.eu.habbo.habbohotel.items.interactions.pets.*;
 import com.eu.habbo.habbohotel.items.interactions.totems.InteractionTotemHead;
 import com.eu.habbo.habbohotel.items.interactions.totems.InteractionTotemLegs;
 import com.eu.habbo.habbohotel.items.interactions.totems.InteractionTotemPlanet;
+import com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonExecuteInOrder;
+import com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonConditionEvaluation;
+import com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonRandomEffect;
+import com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonUnseenEffect;
+import com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonExecutionLimit;
+import com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonNoMoveAnimation;
+import com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonMovementPhysics;
+import com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonCarryUsers;
+import com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonAnimationTime;
+import com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonFurniSelectorFilter;
+import com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonUserSelectorFilter;
+import java.util.concurrent.atomic.AtomicInteger;
+import com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonFurniVariableFilter;
+import com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonUserVariableFilter;
+import com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonUsernamePlaceholder;
+import com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonFurniNamePlaceholder;
+import com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonVariableLevelUp;
+import com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonVariablePlaceholder;
+import com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonVariableCapturer;
+import com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonVariableTextConverter;
+import com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonVariableTimeUtility;
+import com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonGlobalPlaceholder;
+import com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonAchievementEnabler;
+import com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonProjectile;
+import com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonJumpStrength;
+import com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonChestItemTypeScanner;
+import com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonCustomContract;
 import com.eu.habbo.habbohotel.items.interactions.wired.conditions.*;
 import com.eu.habbo.habbohotel.items.interactions.wired.effects.*;
 import com.eu.habbo.habbohotel.items.interactions.wired.extra.WiredBlob;
 import com.eu.habbo.habbohotel.items.interactions.wired.extra.WiredExtraOrEval;
 import com.eu.habbo.habbohotel.items.interactions.wired.extra.WiredExtraRandom;
 import com.eu.habbo.habbohotel.items.interactions.wired.extra.WiredExtraUnseen;
+import com.eu.habbo.habbohotel.items.interactions.wired.selectors.*;
+import com.eu.habbo.habbohotel.items.interactions.wired.variables.WiredVariableContext;
+import com.eu.habbo.habbohotel.items.interactions.wired.variables.WiredVariableFurni;
+import com.eu.habbo.habbohotel.items.interactions.wired.variables.WiredVariableGlobal;
+import com.eu.habbo.habbohotel.items.interactions.wired.variables.WiredVariableEcho;
+import com.eu.habbo.habbohotel.items.interactions.wired.variables.WiredVariableQuest;
+import com.eu.habbo.habbohotel.items.interactions.wired.variables.WiredVariableQuestChain;
+import com.eu.habbo.habbohotel.items.interactions.wired.variables.WiredVariableReference;
+import com.eu.habbo.habbohotel.items.interactions.wired.variables.WiredVariableUser;
 import com.eu.habbo.habbohotel.wired.highscores.WiredHighscoreManager;
 import com.eu.habbo.habbohotel.items.interactions.wired.triggers.*;
 import com.eu.habbo.habbohotel.users.Habbo;
@@ -71,6 +107,7 @@ import java.sql.*;
 import java.util.*;
 
 public class ItemManager {
+    private static final AtomicInteger TEMPORARY_ITEM_ID = new AtomicInteger(-1);
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemManager.class);
 
@@ -113,6 +150,15 @@ public class ItemManager {
 
     protected void loadItemInteractions() {
         this.interactionsList.add(new ItemInteraction("default", InteractionDefault.class));
+        this.interactionsList.add(new ItemInteraction("wf_storage_furni", InteractionFurniChest.class));
+        this.interactionsList.add(new ItemInteraction("wf_storage_coins", InteractionCoinChest.class));
+        this.interactionsList.add(new ItemInteraction(InteractionChestContract.PAYMENT, InteractionChestContract.class));
+        this.interactionsList.add(new ItemInteraction(InteractionChestContract.TRADE, InteractionChestContract.class));
+        this.interactionsList.add(new ItemInteraction(InteractionChestContract.REWARD, InteractionChestContract.class));
+        this.interactionsList.add(new ItemInteraction("room_invisible_tile", InteractionInvisibleFurni.class));
+        this.interactionsList.add(new ItemInteraction("conf_invis_control", InteractionInvisControl.class));
+        this.interactionsList.add(new ItemInteraction("conf_handitem_block", InteractionHanditemBlock.class));
+        this.interactionsList.add(new ItemInteraction("area_hide", InteractionAreaHide.class));
         this.interactionsList.add(new ItemInteraction("gate", InteractionGate.class));
         this.interactionsList.add(new ItemInteraction("guild_furni", InteractionGuildFurni.class));
         this.interactionsList.add(new ItemInteraction("guild_gate", InteractionGuildGate.class));
@@ -130,6 +176,7 @@ public class ItemManager {
         this.interactionsList.add(new ItemInteraction("cannon", InteractionCannon.class));
         this.interactionsList.add(new ItemInteraction("teleport", InteractionTeleport.class));
         this.interactionsList.add(new ItemInteraction("teleporttile", InteractionTeleportTile.class));
+        this.interactionsList.add(new ItemInteraction("wf_room_linker", InteractionRoomLinker.class));
         this.interactionsList.add(new ItemInteraction("crackable", InteractionCrackable.class));
         this.interactionsList.add(new ItemInteraction("crackable_master", InteractionCrackableMaster.class));
         this.interactionsList.add(new ItemInteraction("nest", InteractionNest.class));
@@ -216,8 +263,22 @@ public class ItemManager {
         this.interactionsList.add(new ItemInteraction("wf_trg_bot_reached_stf", WiredTriggerBotReachedFurni.class));
         this.interactionsList.add(new ItemInteraction("wf_trg_bot_reached_avtr", WiredTriggerBotReachedHabbo.class));
         this.interactionsList.add(new ItemInteraction("wf_trg_score_achieved", WiredTriggerScoreAchieved.class));
+        this.interactionsList.add(new ItemInteraction("wf_trg_user_performs_action", WiredTriggerUserPerformsAction.class));
+        this.interactionsList.add(new ItemInteraction("wf_trg_recv_signal", WiredTriggerReceiveSignal.class));
         this.interactionsList.add(new ItemInteraction("wf_trg_game_team_win", WiredTriggerTeamWins.class));
         this.interactionsList.add(new ItemInteraction("wf_trg_game_team_lose", WiredTriggerTeamLoses.class));
+
+        // May/July Wired 2.0 triggers.
+        this.interactionsList.add(new ItemInteraction("wf_trg_clock_counter", WiredTriggerClockReachTime.class));
+        this.interactionsList.add(new ItemInteraction("wf_trg_click_furni", WiredTriggerClicksFurni.class));
+        this.interactionsList.add(new ItemInteraction("wf_trg_period_short", WiredTriggerRepeaterShort.class));
+        this.interactionsList.add(new ItemInteraction("wf_trg_stuff_state", WiredTriggerStuffStateChanged.class));
+        this.interactionsList.add(new ItemInteraction("wf_trg_click_tile", WiredTriggerAvatarClicksTile.class));
+        this.interactionsList.add(new ItemInteraction("wf_trg_var_changed", WiredTriggerVariableChanged.class));
+        this.interactionsList.add(new ItemInteraction("wf_trg_leave_room", WiredTriggerAvatarLeavesRoom.class));
+        this.interactionsList.add(new ItemInteraction("wf_trg_click_user", WiredTriggerUserClicksUser.class));
+        this.interactionsList.add(new ItemInteraction("wf_trg_transaction_complete", WiredTriggerTransactionCompleted.class));
+        this.interactionsList.add(new ItemInteraction("wf_trg_transaction_fail", WiredTriggerTransactionFailed.class));
 
         this.interactionsList.add(new ItemInteraction("wf_act_toggle_state", WiredEffectToggleFurni.class));
         this.interactionsList.add(new ItemInteraction("wf_act_reset_timers", WiredEffectResetTimers.class));
@@ -245,6 +306,42 @@ public class ItemManager {
         this.interactionsList.add(new ItemInteraction("wf_act_bot_follow_avatar", WiredEffectBotFollowHabbo.class));
         this.interactionsList.add(new ItemInteraction("wf_act_bot_clothes", WiredEffectBotClothes.class));
         this.interactionsList.add(new ItemInteraction("wf_act_bot_talk_to_avatar", WiredEffectBotTalkToHabbo.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_control_clock", WiredEffectControlClock.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_set_altitude", WiredEffectSetFurniAltitude.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_send_signal", WiredEffectSendSignal.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_send_signal_negative", WiredEffectSendSignalNegative.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_give_var", WiredEffectGiveVariable.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_remove_var", WiredEffectRemoveVariable.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_change_var_val", WiredEffectChangeVariableValue.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_send_signal_neg", WiredEffectSendSignalNegative.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_neg_send_signal", WiredEffectSendSignalNegative.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_freeze", WiredEffectFreezeUser.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_unfreeze", WiredEffectUnfreezeUser.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_rel_mov", WiredEffectRelativeFurniMove.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_furni_to_furni", WiredEffectMoveFurniToFurni.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_furni_to_user", WiredEffectMoveFurniToUser.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_neg_call_stacks", WiredEffectExecuteStacksNegative.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_adjust_clock", WiredEffectAdjustCounterTime.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_move_rotate_user", WiredEffectMoveUser.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_user_to_furni", WiredEffectMoveUserToFurni.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_teleport_to_room", WiredEffectTeleportToRoom.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_give_currency", WiredEffectGiveCurrencyFromChest.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_give_currency_from_chest", WiredEffectGiveCurrencyFromChest.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_give_furni", WiredEffectGiveFurniFromChest.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_give_furni_from_chest", WiredEffectGiveFurniFromChest.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_init_transaction", WiredEffectInitiateTransaction.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_cancel_transaction", WiredEffectCancelTransaction.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_log", WiredEffectWriteToLogs.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_neg_log", WiredEffectWriteToLogsNegative.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_give_achievement", WiredEffectProgressAchievement.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_give_effect", WiredEffectGiveEffect.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_override_height", WiredEffectOverrideHeight.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_click_conf", WiredEffectSetClickConfig.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_place_furni", WiredEffectPlaceFurni.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_remove_furni", WiredEffectRemoveFurni.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_move_furni_as_group", WiredEffectMoveAsGroup.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_progress_reward_track", WiredEffectProgressRewardTrack.class));
+        this.interactionsList.add(new ItemInteraction("wf_act_reset_reward_track", WiredEffectResetRewardTrack.class));
         this.interactionsList.add(new ItemInteraction("wf_act_give_respect", WiredEffectGiveRespect.class));
         this.interactionsList.add(new ItemInteraction("wf_act_alert", WiredEffectAlert.class));
         this.interactionsList.add(new ItemInteraction("wf_act_give_handitem", WiredEffectGiveHandItem.class));
@@ -275,12 +372,85 @@ public class ItemManager {
         this.interactionsList.add(new ItemInteraction("wf_cnd_trggrer_on_frn", WiredConditionTriggerOnFurni.class));
         this.interactionsList.add(new ItemInteraction("wf_cnd_has_handitem", WiredConditionHabboHasHandItem.class));
         this.interactionsList.add(new ItemInteraction("wf_cnd_date_rng_active", WiredConditionDateRangeActive.class));
-        this.interactionsList.add(new ItemInteraction("wf_cnd_valid_moves", WiredConditionMovementValidation.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_movement_validation_legacy", WiredConditionMovementValidation.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_triggerer_match", WiredConditionTriggererMatches.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_not_triggerer_match", WiredConditionNotTriggererMatches.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_match_time", WiredConditionTimeMatches.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_match_date", WiredConditionDateMatches.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_not_has_handitem", WiredConditionNotHasHandItem.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_team_has_rank", WiredConditionTeamIsWinning.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_user_performs_action", WiredConditionPerformingAction.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_not_user_performs_action", WiredConditionNotPerformingAction.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_team_has_score", WiredConditionTeamHasScore.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_counter_time_matches", WiredConditionClockTimeMatches.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_has_altitude", WiredConditionFurniHasAltitude.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_actor_dir", WiredConditionUserDirection.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_slc_quantity", WiredConditionInputSourceQuantity.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_valid_moves", WiredConditionCanPerformMove.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_has_var", WiredConditionHasVariable.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_neg_has_var", WiredConditionNotHasVariable.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_var_val_match", WiredConditionVariableValue.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_var_age_match", WiredConditionVariableAge.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_chest_has_items", WiredConditionChestHasItems.class));
+        this.interactionsList.add(new ItemInteraction("wf_cnd_chest_has_item_type", WiredConditionChestHasItemTypes.class));
 
-        this.interactionsList.add(new ItemInteraction("wf_xtra_random", WiredExtraRandom.class));
-        this.interactionsList.add(new ItemInteraction("wf_xtra_unseen", WiredExtraUnseen.class));
+        this.interactionsList.add(new ItemInteraction("wf_slc_furni_bytype", WiredSelectorFurniByType.class));
+        this.interactionsList.add(new ItemInteraction("wf_slc_furni_picks", WiredSelectorFurniChooser.class));
+        this.interactionsList.add(new ItemInteraction("wf_slc_users_bytype", WiredSelectorUsersByType.class));
+        this.interactionsList.add(new ItemInteraction("wf_slc_users_team", WiredSelectorUsersInTeam.class));
+        this.interactionsList.add(new ItemInteraction("wf_slc_furni_onfurni", WiredSelectorFurniOnFurni.class));
+        this.interactionsList.add(new ItemInteraction("wf_slc_furni_signal", WiredSelectorFurniFromSignal.class));
+        this.interactionsList.add(new ItemInteraction("wf_slc_furni_area", WiredSelectorFurniInArea.class));
+        this.interactionsList.add(new ItemInteraction("wf_slc_users_onfurni", WiredSelectorUsersOnFurni.class));
+        this.interactionsList.add(new ItemInteraction("wf_slc_users_byname", WiredSelectorUsersByName.class));
+        this.interactionsList.add(new ItemInteraction("wf_slc_users_area", WiredSelectorUsersInArea.class));
+        this.interactionsList.add(new ItemInteraction("wf_slc_users_handitem", WiredSelectorUsersWithHanditem.class));
+        this.interactionsList.add(new ItemInteraction("wf_slc_users_group", WiredSelectorUsersInGroup.class));
+        this.interactionsList.add(new ItemInteraction("wf_slc_furni_altitude", WiredSelectorFurniWithAltitude.class));
+        this.interactionsList.add(new ItemInteraction("wf_slc_users_byaction", WiredSelectorUsersByAction.class));
+        this.interactionsList.add(new ItemInteraction("wf_slc_users_signal", WiredSelectorUsersFromSignal.class));
+        this.interactionsList.add(new ItemInteraction("wf_slc_furni_neighborhood", WiredSelectorFurniInNeighborhood.class));
+        this.interactionsList.add(new ItemInteraction("wf_slc_users_neighborhood", WiredSelectorUsersInNeighborhood.class));
+        this.interactionsList.add(new ItemInteraction("wf_slc_furni_with_var", WiredSelectorFurniWithVariable.class));
+        this.interactionsList.add(new ItemInteraction("wf_slc_users_with_var", WiredSelectorUsersWithVariable.class));
+        this.interactionsList.add(new ItemInteraction("wf_slc_remote", WiredSelectorRemote.class));
+
+        this.interactionsList.add(new ItemInteraction("wf_xtra_exec_in_order", WiredAddonExecuteInOrder.class));
+        this.interactionsList.add(new ItemInteraction("wf_xtra_or_eval", WiredAddonConditionEvaluation.class));
+        this.interactionsList.add(new ItemInteraction("wf_xtra_random", WiredAddonRandomEffect.class));
+        this.interactionsList.add(new ItemInteraction("wf_xtra_unseen", WiredAddonUnseenEffect.class));
+        this.interactionsList.add(new ItemInteraction("wf_xtra_execution_limit", WiredAddonExecutionLimit.class));
+        this.interactionsList.add(new ItemInteraction("wf_xtra_mov_no_animation", WiredAddonNoMoveAnimation.class));
+        this.interactionsList.add(new ItemInteraction("wf_xtra_mov_physics", WiredAddonMovementPhysics.class));
+        this.interactionsList.add(new ItemInteraction("wf_xtra_mov_carry_users", WiredAddonCarryUsers.class));
+        this.interactionsList.add(new ItemInteraction("wf_xtra_anim_time", WiredAddonAnimationTime.class));
+        this.interactionsList.add(new ItemInteraction("wf_xtra_filter_furni", WiredAddonFurniSelectorFilter.class));
+        this.interactionsList.add(new ItemInteraction("wf_xtra_filter_users", WiredAddonUserSelectorFilter.class));
+        this.interactionsList.add(new ItemInteraction("wf_xtra_filter_furni_by_var", WiredAddonFurniVariableFilter.class));
+        this.interactionsList.add(new ItemInteraction("wf_xtra_filter_users_by_var", WiredAddonUserVariableFilter.class));
+        this.interactionsList.add(new ItemInteraction("wf_xtra_text_output_username", WiredAddonUsernamePlaceholder.class));
+        this.interactionsList.add(new ItemInteraction("wf_xtra_text_output_furni_name", WiredAddonFurniNamePlaceholder.class));
+        this.interactionsList.add(new ItemInteraction("wf_xtra_var_lvlup_system", WiredAddonVariableLevelUp.class));
+        this.interactionsList.add(new ItemInteraction("wf_xtra_text_output_variable", WiredAddonVariablePlaceholder.class));
+        this.interactionsList.add(new ItemInteraction("wf_xtra_text_input_variable", WiredAddonVariableCapturer.class));
+        this.interactionsList.add(new ItemInteraction("wf_xtra_var_text_connector", WiredAddonVariableTextConverter.class));
+        this.interactionsList.add(new ItemInteraction("wf_xtra_var_time_util", WiredAddonVariableTimeUtility.class));
+        this.interactionsList.add(new ItemInteraction("wf_xtra_global_placeholder", WiredAddonGlobalPlaceholder.class));
+        this.interactionsList.add(new ItemInteraction("wf_xtra_achievement_enabler", WiredAddonAchievementEnabler.class));
+        this.interactionsList.add(new ItemInteraction("wf_xtra_rotate_to_dir", WiredAddonProjectile.class));
+        this.interactionsList.add(new ItemInteraction("wf_xtra_mov_curve", WiredAddonJumpStrength.class));
+        this.interactionsList.add(new ItemInteraction("wf_xtra_scan_chest_furni_by_type", WiredAddonChestItemTypeScanner.class));
+        this.interactionsList.add(new ItemInteraction("wf_xtra_custom_contract", WiredAddonCustomContract.class));
+        this.interactionsList.add(new ItemInteraction("wf_var_furni", WiredVariableFurni.class));
+        this.interactionsList.add(new ItemInteraction("wf_var_user", WiredVariableUser.class));
+        this.interactionsList.add(new ItemInteraction("wf_var_room", WiredVariableGlobal.class));
+        this.interactionsList.add(new ItemInteraction("wf_var_context", WiredVariableContext.class));
+        this.interactionsList.add(new ItemInteraction("wf_var_reference", WiredVariableReference.class));
+        this.interactionsList.add(new ItemInteraction("wf_var_quest", WiredVariableQuest.class));
+        this.interactionsList.add(new ItemInteraction("wf_var_quest_chain", WiredVariableQuestChain.class));
+        this.interactionsList.add(new ItemInteraction("wf_var_echo", WiredVariableEcho.class));
+
         this.interactionsList.add(new ItemInteraction("wf_blob", WiredBlob.class));
-        this.interactionsList.add(new ItemInteraction("wf_xtra_or_eval", WiredExtraOrEval.class));
 
         this.interactionsList.add(new ItemInteraction("wf_highscore", InteractionWiredHighscore.class));
 
@@ -412,18 +582,23 @@ public class ItemManager {
     public void loadCrackable() {
         this.crackableRewards.clear();
         try (Connection connection = Emulator.getDatabase().getDataSource().getConnection();
-                PreparedStatement statement = connection.prepareStatement("SELECT * FROM items_crackable");
+                PreparedStatement statement = connection.prepareStatement("SELECT * FROM items_crackable ORDER BY crackable_id, tier");
                 ResultSet set = statement.executeQuery()) {
             while (set.next()) {
-                CrackableReward reward;
                 try {
-                    reward = new CrackableReward(set);
+                    int crackableId = set.getInt("crackable_id");
+                    CrackableReward reward = this.crackableRewards.get(crackableId);
+                    if (reward == null) {
+                        reward = new CrackableReward(set);
+                        this.crackableRewards.put(crackableId, reward);
+                    } else {
+                        // additional tier/outcome row for an already-loaded crackable
+                        reward.addRow(set);
+                    }
                 } catch (Exception e) {
-                    LOGGER.error("Failed to load items_crackable item_id = {}", set.getInt("item_id"));
+                    LOGGER.error("Failed to load items_crackable row (crackable_id = {})", set.getInt("crackable_id"));
                     LOGGER.error("Caught exception", e);
-                    continue;
                 }
-                this.crackableRewards.put(set.getInt("item_id"), reward);
             }
         } catch (SQLException e) {
             LOGGER.error("Caught SQL exception", e);
@@ -447,8 +622,16 @@ public class ItemManager {
         return this.crackableRewards.get(itemId);
     }
 
-    public Item getCrackableReward(int itemId) {
-        return this.getItem(this.crackableRewards.get(itemId).getRandomReward());
+    /**
+     * Rolls the crackable's rewards: one outcome per tier, union of all winners.
+     * Returns the list of items_base ids to give (empty if the furni has no crackable config).
+     */
+    public List<Integer> getCrackableRewards(int itemId) {
+        CrackableReward reward = this.crackableRewards.get(itemId);
+        if (reward == null) {
+            return Collections.emptyList();
+        }
+        return reward.roll();
     }
 
     public void loadSoundTracks() {
@@ -535,6 +718,18 @@ public class ItemManager {
         return this.createItemInternal(habboId, item, 0, 0, extraData, true);
     }
 
+    public HabboItem createTemporaryItem(int habboId, Item item, String extraData) {
+        if (item == null || item.getInteractionType() == null) return null;
+        Class<? extends HabboItem> itemClass = item.getInteractionType().getType();
+        if (itemClass == null || InteractionWired.class.isAssignableFrom(itemClass)) return null;
+        int id = TEMPORARY_ITEM_ID.getAndDecrement();
+        // Temporary Wired copies are deliberately inert. Instantiating the
+        // catalogue interaction could execute vending/reward/crackable logic
+        // against a non-owned, non-persistent item.
+        return new InteractionDefault(id, habboId, item,
+                extraData == null ? "0" : extraData, 0, 0);
+    }
+
     public void loadNewUserGifts() {
         this.newuserGifts.clear();
 
@@ -567,6 +762,18 @@ public class ItemManager {
     }
 
     public void deleteItem(HabboItem item) {
+        if (item == null) {
+            return;
+        }
+        if (Emulator.getGameEnvironment().getChestManager().isChest(item)) {
+            com.eu.habbo.habbohotel.items.chests.ChestRepository.Result result =
+                    Emulator.getGameEnvironment().getChestManager().deleteChest(item);
+            if (result != com.eu.habbo.habbohotel.items.chests.ChestRepository.Result.OK
+                    && result != com.eu.habbo.habbohotel.items.chests.ChestRepository.Result.NOT_FOUND) {
+                LOGGER.warn("Refusing to delete chest {}: {}", item.getId(), result);
+            }
+            return;
+        }
         try (Connection connection = Emulator.getDatabase().getDataSource().getConnection();
                 PreparedStatement statement = connection.prepareStatement("DELETE FROM items WHERE id = ?")) {
             statement.setInt(1, item.getId());

@@ -10,11 +10,12 @@ import com.eu.habbo.habbohotel.rooms.*;
 import com.eu.habbo.habbohotel.users.HabboItem;
 import com.eu.habbo.habbohotel.wired.WiredEffectType;
 import com.eu.habbo.habbohotel.wired.core.WiredManager;
+import com.eu.habbo.habbohotel.wired.core.WiredMovementAddonRuntime;
 import com.eu.habbo.habbohotel.wired.core.WiredContext;
 import com.eu.habbo.habbohotel.wired.core.WiredSimulation;
 import com.eu.habbo.messages.ServerMessage;
 import com.eu.habbo.messages.incoming.wired.WiredSaveException;
-import com.eu.habbo.messages.outgoing.rooms.items.FloorItemOnRollerComposer;
+import com.eu.habbo.messages.outgoing.rooms.items.WiredMovementsMessageComposer;
 import gnu.trove.set.hash.THashSet;
 
 import java.sql.ResultSet;
@@ -52,7 +53,8 @@ public class WiredEffectMoveRotateFurni extends InteractionWiredEffect implement
         this.items.removeIf(item -> Emulator.getGameEnvironment().getRoomManager().getRoom(this.getRoomId())
                 .getHabboItemByDatabaseId(item.getId()) == null);
 
-        for (HabboItem item : this.items) {
+        for (HabboItem item : WiredMovementAddonRuntime.furniTargets(ctx,
+                resolveFurniSource(ctx, this.getWiredFurniSourceTypes(), 0, this.items, null))) {
             if (this.itemCooldowns.contains(item))
                 continue;
 
@@ -95,12 +97,12 @@ public class WiredEffectMoveRotateFurni extends InteractionWiredEffect implement
                                     || furniMoveTest == FurnitureMovementError.TILE_HAS_PETS)
                                     && newLocation == oldLocation))) {
                 if (room.furnitureFitsAt(newLocation, item, newRotation, false) == FurnitureMovementError.NONE
-                        && room.moveFurniTo(item, newLocation, newRotation, null,
+                        && WiredMovementAddonRuntime.move(ctx, room, item, newLocation, newRotation,
                                 !slideAnimation) == FurnitureMovementError.NONE) {
                     this.itemCooldowns.add(item);
                     if (slideAnimation) {
-                        room.sendComposer(new FloorItemOnRollerComposer(item, null, oldLocation, oldZ, newLocation,
-                                item.getZ(), 0, room).compose());
+                        // Wired 2.0: stream a smooth WiredMovements slide instead of the legacy roller hop.
+                        WiredMovementAddonRuntime.moved(ctx, room, item, oldLocation, oldZ, newLocation);
                     }
                 }
             }
@@ -234,6 +236,14 @@ public class WiredEffectMoveRotateFurni extends InteractionWiredEffect implement
     public WiredEffectType getType() {
         return type;
     }
+
+    // Wired 2.0 getters
+    @Override
+    protected java.util.Collection<HabboItem> getSelectedItems() { return this.items; }
+    @Override
+    protected boolean supportsFurniPicking() { return true; }
+    @Override
+    protected int[] getWiredIntParams() { return new int[]{ this.direction, this.rotation }; }
 
     @Override
     public void serializeWiredData(ServerMessage message, Room room) {

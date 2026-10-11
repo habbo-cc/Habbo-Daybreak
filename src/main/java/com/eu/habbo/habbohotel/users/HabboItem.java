@@ -286,6 +286,11 @@ public abstract class HabboItem implements Runnable, IEventTriggers {
 
     @Override
     public void run() {
+        if (this.id < 0) {
+            this.needsUpdate = false;
+            this.needsDelete = false;
+            return;
+        }
         try (Connection connection = Emulator.getDatabase().getDataSource().getConnection()) {
             if (this.needsDelete) {
                 this.needsUpdate = false;

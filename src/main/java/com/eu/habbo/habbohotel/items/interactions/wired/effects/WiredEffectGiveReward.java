@@ -52,13 +52,12 @@ public class WiredEffectGiveReward extends InteractionWiredEffect {
     @Override
     public void execute(WiredContext ctx) {
         Room room = ctx.room();
-        RoomUnit roomUnit = ctx.actor().orElse(null);
-        if (roomUnit == null) return;
+        for (RoomUnit roomUnit : resolveUserSource(ctx, this.getWiredUserSourceTypes(), 0)) {
+            Habbo habbo = room.getHabbo(roomUnit);
 
-        Habbo habbo = room.getHabbo(roomUnit);
-
-        if (habbo != null) {
-            WiredManager.getReward(habbo, this);
+            if (habbo != null) {
+                WiredManager.getReward(habbo, this);
+            }
         }
     }
 
@@ -143,6 +142,26 @@ public class WiredEffectGiveReward extends InteractionWiredEffect {
         if (client.getHabbo().hasPermission(Permission.ACC_SUPERWIRED)) {
             client.getHabbo().whisper(Emulator.getTexts().getValue("hotel.wired.superwired.info"), RoomChatMessageBubbles.BOT);
         }
+    }
+
+    // Wired 2.0 getters. furniLimit carries the reward count; rewards are packed into
+    // stringParam; no stuffIds. The legacy 5th int (limit>0) rode the dropped
+    // stuffTypeSelectionCode slot and is not carried in 2.0.
+    @Override
+    protected int getMaxFurniSelection() { return this.rewardItems.size(); }
+
+    @Override
+    protected String getWiredStringParam() {
+        StringBuilder s = new StringBuilder();
+        for (WiredGiveRewardItem item : this.rewardItems) {
+            s.append(item.wiredString()).append(";");
+        }
+        return s.toString();
+    }
+
+    @Override
+    protected int[] getWiredIntParams() {
+        return new int[]{ this.rewardTime, this.uniqueRewards ? 1 : 0, this.limit, this.limitationInterval };
     }
 
     @Override
@@ -230,6 +249,11 @@ public class WiredEffectGiveReward extends InteractionWiredEffect {
 
     @Override
     public boolean requiresTriggeringUser() {
+        return true;
+    }
+
+    @Override
+    protected boolean supportsUserPicking() {
         return true;
     }
 

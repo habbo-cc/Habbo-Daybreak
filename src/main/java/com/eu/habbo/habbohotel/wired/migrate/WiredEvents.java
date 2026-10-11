@@ -6,6 +6,7 @@ import com.eu.habbo.habbohotel.rooms.RoomUnit;
 import com.eu.habbo.habbohotel.users.HabboItem;
 import com.eu.habbo.habbohotel.wired.WiredTriggerType;
 import com.eu.habbo.habbohotel.wired.core.WiredEvent;
+import com.eu.habbo.habbohotel.wired.core.WiredHeldDownContext;
 
 /**
  * Factory methods for creating {@link WiredEvent} instances from various room events.
@@ -90,9 +91,15 @@ public final class WiredEvents {
      * @return the event
      */
     public static WiredEvent userSays(Room room, RoomUnit user, String message) {
+        return userSays(room, user, message, -1, -1);
+    }
+
+    public static WiredEvent userSays(
+            Room room, RoomUnit user, String message, int chatType, int chatStyle) {
         return WiredEvent.builder(WiredEvent.Type.USER_SAYS, room)
                 .actor(user)
                 .text(message)
+                .chat(chatType, chatStyle)
                 .tile(user.getCurrentLocation())
                 .build();
     }
@@ -149,6 +156,18 @@ public final class WiredEvents {
      */
     public static WiredEvent timerRepeatLong(Room room, HabboItem timerItem) {
         return WiredEvent.builder(WiredEvent.Type.TIMER_REPEAT_LONG, room)
+                .sourceItem(timerItem)
+                .build();
+    }
+
+    /**
+     * Create an event for a short periodic timer (PERIOD_SHORT / trigger 19).
+     * @param room the room
+     * @param timerItem the timer furniture
+     * @return the event
+     */
+    public static WiredEvent timerRepeatShort(Room room, HabboItem timerItem) {
+        return WiredEvent.builder(WiredEvent.Type.TIMER_REPEAT_SHORT, room)
                 .sourceItem(timerItem)
                 .build();
     }
@@ -312,6 +331,83 @@ public final class WiredEvents {
         return WiredEvent.builder(WiredEvent.Type.USER_STOPS_DANCING, room)
                 .actor(user)
                 .tile(user.getCurrentLocation())
+                .build();
+    }
+
+    // ========== Wired 2.0 event adapters ==========
+
+    /**
+     * Create an event for when a user clicks (uses) furniture.
+     */
+    public static WiredEvent userClicksFurni(Room room, RoomUnit user, HabboItem item) {
+        return userClicksFurni(room, user, item, 0);
+    }
+
+    public static WiredEvent userClicksFurni(
+            Room room, RoomUnit user, HabboItem item, int heldTicks) {
+        return WiredEvent.builder(WiredEvent.Type.USER_CLICKS_FURNI, room)
+                .actor(user)
+                .sourceItem(item)
+                .heldDownContext(WiredHeldDownContext.furni(item, heldTicks))
+                .build();
+    }
+
+    /**
+     * Create an event for when a user leaves the room.
+     */
+    public static WiredEvent userLeavesRoom(Room room, RoomUnit user) {
+        return WiredEvent.builder(WiredEvent.Type.USER_LEAVES_ROOM, room)
+                .actor(user)
+                .build();
+    }
+
+    /**
+     * Create an event for when a user clicks another user.
+     */
+    public static WiredEvent userClicksUser(Room room, RoomUnit user, RoomUnit target) {
+        return WiredEvent.builder(WiredEvent.Type.USER_CLICKS_USER, room)
+                .actor(user)
+                .targetUnit(target)
+                .build();
+    }
+
+    /**
+     * Create an event for when the room wired clock reaches a second boundary.
+     * The total elapsed seconds travel in the score field; the polling clock
+     * trigger passes itself as the source so it only matches its own event.
+     */
+    public static WiredEvent clockReached(Room room, HabboItem clockTrigger, int totalSeconds) {
+        return WiredEvent.builder(WiredEvent.Type.CLOCK_REACHED, room)
+                .sourceItem(clockTrigger)
+                .score(totalSeconds)
+                .build();
+    }
+
+    /** Creates trigger 21's event for the invisible click-tile furni at the clicked coordinate. */
+    public static WiredEvent userClicksTile(Room room, RoomUnit user, HabboItem item) {
+        return userClicksTile(room, user, item, 0);
+    }
+
+    public static WiredEvent userClicksTile(
+            Room room, RoomUnit user, HabboItem item, int heldTicks) {
+        return WiredEvent.builder(WiredEvent.Type.USER_CLICKS_TILE, room)
+                .actor(user)
+                .sourceItem(item)
+                .tile(room.getLayout().getTile(item.getX(), item.getY()))
+                .heldDownContext(WiredHeldDownContext.furni(item, heldTicks))
+                .build();
+    }
+
+    /**
+     * Create an event for when a user performs a May 2026 Wired user action.
+     * The action code travels in score; optional sign/dance detail travels in text.
+     */
+    public static WiredEvent userPerformsAction(Room room, RoomUnit user, int actionCode, String extra) {
+        return WiredEvent.builder(WiredEvent.Type.USER_PERFORMS_ACTION, room)
+                .actor(user)
+                .tile(user.getCurrentLocation())
+                .score(actionCode)
+                .text(extra == null ? "" : extra)
                 .build();
     }
 

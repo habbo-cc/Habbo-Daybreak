@@ -43,10 +43,13 @@ public class WiredConditionTriggerOnFurni extends InteractionWiredCondition {
 
         this.refresh();
 
-        if (this.items.isEmpty())
+        java.util.Collection<HabboItem> targets = resolveFurniSource(ctx, this.getWiredFurniSourceTypes(), 0, this.items, null);
+
+        if (targets.isEmpty())
             return false;
 
-        return triggerOnFurni(roomUnit, room);
+        THashSet<HabboItem> itemsAtUser = room.getItemsAt(roomUnit.getCurrentLocation());
+        return targets.stream().anyMatch(itemsAtUser::contains);
     }
 
     @Deprecated
@@ -104,6 +107,13 @@ public class WiredConditionTriggerOnFurni extends InteractionWiredCondition {
     public WiredConditionType getType() {
         return type;
     }
+
+    // Wired 2.0 getters
+    @Override
+    protected java.util.Collection<HabboItem> getSelectedItems() { return this.items; }
+
+    @Override
+    protected boolean supportsFurniPicking() { return true; }
 
     @Override
     public void serializeWiredData(ServerMessage message, Room room) {

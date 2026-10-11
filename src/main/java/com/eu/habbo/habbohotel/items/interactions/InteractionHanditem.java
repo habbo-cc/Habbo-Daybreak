@@ -36,7 +36,8 @@ public class InteractionHanditem extends InteractionDefault {
         if (!this.getExtradata().equals("0")) return;
 
         HabboItem instance = this;
-        room.giveHandItem(roomUnit, this.getBaseItem().getRandomVendingItem());
+        int handItem = this.getBaseItem().getRandomVendingItem();
+        room.giveHandItem(roomUnit, handItem);
 
         if (this.getBaseItem().getStateCount() > 1) {
             this.setExtradata("1");

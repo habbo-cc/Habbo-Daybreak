@@ -43,5 +43,9 @@ public class SetActivatedBadgesEvent extends MessageHandler {
         } else {
             this.client.sendResponse(new UserBadgesMessageComposer(updatedBadges, this.client.getHabbo().getHabboInfo().getId()));
         }
+
+        if (!updatedBadges.isEmpty() && Emulator.getGameEnvironment().getRewardTrackManager() != null) {
+            Emulator.getGameEnvironment().getRewardTrackManager().progress(this.client.getHabbo(), "wear_badge");
+        }
     }
 }

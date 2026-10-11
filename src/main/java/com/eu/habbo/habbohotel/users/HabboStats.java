@@ -42,6 +42,7 @@ public class HabboStats implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(HabboStats.class);
     private static volatile Boolean usersSettingsHasBuildersClubLimitColumns;
     private static volatile Boolean usersSettingsHasNewNavigatorColumn;
+    private static volatile Boolean usersSettingsHasChatSizePreferenceColumn;
 
     public final TIntArrayList secretRecipes;
     public final HabboNavigatorWindowSettings navigatorWindowSettings;
@@ -68,6 +69,7 @@ public class HabboStats implements Runnable {
     public boolean preferOldChat;
     public boolean blockCameraFollow;
     public RoomChatMessageBubbles chatColor;
+    public int chatSizePreference;
     public int volumeSystem;
     public int volumeFurni;
     public int volumeTrax;
@@ -88,6 +90,7 @@ public class HabboStats implements Runnable {
     public long roomEnterTimestamp;
     public AtomicInteger chatCounter = new AtomicInteger(0);
     public long lastChat;
+    public long lastMessengerChat;
     public long lastUsersSearched;
     public boolean nux;
     public boolean nuxReward;
@@ -157,6 +160,7 @@ public class HabboStats implements Runnable {
         this.volumeFurni = set.getInt("volume_furni");
         this.volumeTrax = set.getInt("volume_trax");
         this.chatColor = RoomChatMessageBubbles.getBubble(set.getInt("chat_color"));
+        this.chatSizePreference = readOptionalInt(set, "chat_size_preference", 0);
         this.hofPoints = set.getInt("hof_points");
         this.blockStaffAlerts = set.getString("block_alerts").equals("1");
         this.citizenshipLevel = set.getInt("talent_track_citizenship_level");
@@ -366,7 +370,9 @@ public class HabboStats implements Runnable {
         try (Connection connection = Emulator.getDatabase().getDataSource().getConnection()) {
             boolean hasBuildersClubLimitColumns = hasUsersSettingsBuildersClubLimitColumns(connection);
             boolean hasNewNavigatorColumn = hasUsersSettingsNewNavigatorColumn(connection);
+            boolean hasChatSizePreferenceColumn = hasUsersSettingsChatSizePreferenceColumn(connection);
             String sql = "UPDATE users_settings SET achievement_score = ?, respects_received = ?, respects_given = ?, daily_respect_points = ?, block_following = ?, block_friendrequests = ?, online_time = online_time + ?, guild_id = ?, daily_pet_respect_points = ?, club_expire_timestamp = ?, login_streak = ?, rent_space_id = ?, rent_space_endtime = ?, volume_system = ?, volume_furni = ?, volume_trax = ?, block_roominvites = ?, old_chat = ?, block_camera_follow = ?, chat_color = ?, hof_points = ?, block_alerts = ?, talent_track_citizenship_level = ?, talent_track_helpers_level = ?, ignore_bots = ?, ignore_pets = ?, nux = ?, mute_end_timestamp = ?, allow_name_change = ?, perk_trade = ?, can_trade = ?, `forums_post_count` = ?, ui_flags = ?, has_gotten_default_saved_searches = ?, max_friends = ?, max_rooms = ?, last_hc_payday = ?, hc_gifts_claimed = ?"
+                    + (hasChatSizePreferenceColumn ? ", chat_size_preference = ?" : "")
                     + (hasBuildersClubLimitColumns ? ", builders_club_furni_limit = ?, builders_club_max_furni_limit = ?" : "")
                     + (hasNewNavigatorColumn ? ", new_navigator_enabled = ?" : "")
                     + " WHERE user_id = ? LIMIT 1";
@@ -410,6 +416,9 @@ public class HabboStats implements Runnable {
                 statement.setInt(37, this.lastHCPayday);
                 statement.setInt(38, this.hcGiftsClaimed);
                 int parameterIndex = 39;
+                if (hasChatSizePreferenceColumn) {
+                    statement.setInt(parameterIndex++, this.chatSizePreference);
+                }
                 if (hasBuildersClubLimitColumns) {
                     statement.setInt(parameterIndex++, this.getStoredBuildersClubFurniLimit());
                     statement.setInt(parameterIndex++, this.getStoredBuildersClubMaxFurniLimit());
@@ -1148,6 +1157,28 @@ public class HabboStats implements Runnable {
 
             usersSettingsHasNewNavigatorColumn = hasColumns;
             return hasColumns;
+        }
+    }
+
+    private static boolean hasUsersSettingsChatSizePreferenceColumn(Connection connection) {
+        if (usersSettingsHasChatSizePreferenceColumn != null) {
+            return usersSettingsHasChatSizePreferenceColumn;
+        }
+
+        synchronized (HabboStats.class) {
+            if (usersSettingsHasChatSizePreferenceColumn != null) {
+                return usersSettingsHasChatSizePreferenceColumn;
+            }
+
+            boolean hasColumn = false;
+            try (ResultSet set = connection.getMetaData().getColumns(connection.getCatalog(), null, "users_settings", "chat_size_preference")) {
+                hasColumn = set.next();
+            } catch (SQLException e) {
+                LOGGER.warn("Failed to inspect users_settings for chat_size_preference column", e);
+            }
+
+            usersSettingsHasChatSizePreferenceColumn = hasColumn;
+            return hasColumn;
         }
     }
 

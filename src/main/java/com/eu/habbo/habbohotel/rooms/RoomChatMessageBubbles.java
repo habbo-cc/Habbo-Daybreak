@@ -53,6 +53,38 @@ public class RoomChatMessageBubbles {
     public static final RoomChatMessageBubbles UNKNOWN_44 = new RoomChatMessageBubbles(44, "UNKNOWN_44", "", true, false);
     public static final RoomChatMessageBubbles UNKNOWN_45 = new RoomChatMessageBubbles(45, "UNKNOWN_45", "", true, false);
 
+    // Modern purchasable/event styles from the May 2026 client chatstyles XML
+    // (120-133, 1000-1026, 10000). Without these, getBubble falls back to NORMAL
+    // and selecting them in the style picker silently does nothing.
+    public static final RoomChatMessageBubbles STYLE_120 = new RoomChatMessageBubbles(120, "STYLE_120", "", true, false);
+    public static final RoomChatMessageBubbles STYLE_121 = new RoomChatMessageBubbles(121, "STYLE_121", "", true, false);
+    public static final RoomChatMessageBubbles STYLE_130 = new RoomChatMessageBubbles(130, "STYLE_130", "", true, false);
+    public static final RoomChatMessageBubbles STYLE_131 = new RoomChatMessageBubbles(131, "STYLE_131", "", true, false);
+    public static final RoomChatMessageBubbles STYLE_132 = new RoomChatMessageBubbles(132, "STYLE_132", "", true, false);
+    public static final RoomChatMessageBubbles STYLE_133 = new RoomChatMessageBubbles(133, "STYLE_133", "", true, false);
+    public static final RoomChatMessageBubbles STYLE_10000 = new RoomChatMessageBubbles(10000, "STYLE_10000", "", true, false);
+
+    // Wired 2.0 Show Message notification styles (May 2026 chatstyles ids).
+    public static final RoomChatMessageBubbles NOTIFICATION_RED = new RoomChatMessageBubbles(200, "NOTIFICATION_RED", "", false, true);
+    public static final RoomChatMessageBubbles NOTIFICATION_GREEN = new RoomChatMessageBubbles(201, "NOTIFICATION_GREEN", "", false, true);
+    public static final RoomChatMessageBubbles NOTIFICATION_BLUE = new RoomChatMessageBubbles(202, "NOTIFICATION_BLUE", "", false, true);
+    public static final RoomChatMessageBubbles NOTIFICATION_ALERT = new RoomChatMessageBubbles(210, "NOTIFICATION_ALERT", "", false, true);
+    public static final RoomChatMessageBubbles NOTIFICATION_INFO = new RoomChatMessageBubbles(211, "NOTIFICATION_INFO", "", false, true);
+    public static final RoomChatMessageBubbles NOTIFICATION_WARNING = new RoomChatMessageBubbles(212, "NOTIFICATION_WARNING", "", false, true);
+    public static final RoomChatMessageBubbles NOTIFICATION_WRONG = new RoomChatMessageBubbles(220, "NOTIFICATION_WRONG", "", false, true);
+    public static final RoomChatMessageBubbles NOTIFICATION_WRONG_CIRCLE = new RoomChatMessageBubbles(221, "NOTIFICATION_WRONG_CIRCLE", "", false, true);
+    public static final RoomChatMessageBubbles NOTIFICATION_CORRECT = new RoomChatMessageBubbles(222, "NOTIFICATION_CORRECT", "", false, true);
+    public static final RoomChatMessageBubbles NOTIFICATION_CORRECT_CIRCLE = new RoomChatMessageBubbles(223, "NOTIFICATION_CORRECT_CIRCLE", "", false, true);
+    public static final RoomChatMessageBubbles NOTIFICATION_QUESTION_MARK = new RoomChatMessageBubbles(224, "NOTIFICATION_QUESTION_MARK", "", false, true);
+    public static final RoomChatMessageBubbles NOTIFICATION_QUESTION_MARK_CIRCLE = new RoomChatMessageBubbles(225, "NOTIFICATION_QUESTION_MARK_CIRCLE", "", false, true);
+    public static final RoomChatMessageBubbles NOTIFICATION_ARROW_UP = new RoomChatMessageBubbles(226, "NOTIFICATION_ARROW_UP", "", false, true);
+    public static final RoomChatMessageBubbles NOTIFICATION_ARROW_UP_CIRCLE = new RoomChatMessageBubbles(227, "NOTIFICATION_ARROW_UP_CIRCLE", "", false, true);
+    public static final RoomChatMessageBubbles NOTIFICATION_ARROW_DOWN = new RoomChatMessageBubbles(228, "NOTIFICATION_ARROW_DOWN", "", false, true);
+    public static final RoomChatMessageBubbles NOTIFICATION_ARROW_DOWN_CIRCLE = new RoomChatMessageBubbles(229, "NOTIFICATION_ARROW_DOWN_CIRCLE", "", false, true);
+    public static final RoomChatMessageBubbles NOTIFICATION_SKULL = new RoomChatMessageBubbles(250, "NOTIFICATION_SKULL", "", false, true);
+    public static final RoomChatMessageBubbles NOTIFICATION_SKULL_2 = new RoomChatMessageBubbles(251, "NOTIFICATION_SKULL_2", "", false, true);
+    public static final RoomChatMessageBubbles NOTIFICATION_MAGNIFIER = new RoomChatMessageBubbles(252, "NOTIFICATION_MAGNIFIER", "", false, true);
+
     static {
         registerBubble(NORMAL);
         registerBubble(ALERT);
@@ -100,6 +132,35 @@ public class RoomChatMessageBubbles {
         registerBubble(UNKNOWN_43);
         registerBubble(UNKNOWN_44);
         registerBubble(UNKNOWN_45);
+        registerBubble(STYLE_120);
+        registerBubble(STYLE_121);
+        registerBubble(STYLE_130);
+        registerBubble(STYLE_131);
+        registerBubble(STYLE_132);
+        registerBubble(STYLE_133);
+        registerBubble(STYLE_10000);
+        for (int id = 1000; id <= 1026; id++) {
+            registerBubble(new RoomChatMessageBubbles(id, "STYLE_" + id, "", true, false));
+        }
+        registerBubble(NOTIFICATION_RED);
+        registerBubble(NOTIFICATION_GREEN);
+        registerBubble(NOTIFICATION_BLUE);
+        registerBubble(NOTIFICATION_ALERT);
+        registerBubble(NOTIFICATION_INFO);
+        registerBubble(NOTIFICATION_WARNING);
+        registerBubble(NOTIFICATION_WRONG);
+        registerBubble(NOTIFICATION_WRONG_CIRCLE);
+        registerBubble(NOTIFICATION_CORRECT);
+        registerBubble(NOTIFICATION_CORRECT_CIRCLE);
+        registerBubble(NOTIFICATION_QUESTION_MARK);
+        registerBubble(NOTIFICATION_QUESTION_MARK_CIRCLE);
+        registerBubble(NOTIFICATION_ARROW_UP);
+        registerBubble(NOTIFICATION_ARROW_UP_CIRCLE);
+        registerBubble(NOTIFICATION_ARROW_DOWN);
+        registerBubble(NOTIFICATION_ARROW_DOWN_CIRCLE);
+        registerBubble(NOTIFICATION_SKULL);
+        registerBubble(NOTIFICATION_SKULL_2);
+        registerBubble(NOTIFICATION_MAGNIFIER);
     }
 
     private final int type;
@@ -150,8 +211,15 @@ public class RoomChatMessageBubbles {
 
     public static void removeDynamicBubbles() {
         synchronized (BUBBLES) {
-            BUBBLES.entrySet().removeIf(entry -> entry.getKey() > 45);
+            BUBBLES.entrySet().removeIf(entry -> entry.getKey() > 45 && !isWiredNotificationBubble(entry.getKey()));
         }
+    }
+
+    private static boolean isWiredNotificationBubble(int type) {
+        return (type >= 200 && type <= 202)
+                || (type >= 210 && type <= 212)
+                || (type >= 220 && type <= 229)
+                || (type >= 250 && type <= 252);
     }
 
     public static RoomChatMessageBubbles[] values() {

@@ -35,6 +35,12 @@ public class MarketPlace {
     //Currency to use.
     public static int MARKETPLACE_CURRENCY = 0;
 
+    /**
+     * Keep prices practical while leaving room for the 1% commission in a signed int.
+     * The maximum listing costs 2,020,000,000 credits/points after commission.
+     */
+    public static final int MAX_LISTING_PRICE = 2_000_000_000;
+
 
     public static THashSet<MarketPlaceOffer> getOwnOffers(Habbo habbo) {
         THashSet<MarketPlaceOffer> offers = new THashSet<>();
@@ -251,44 +257,63 @@ public class MarketPlace {
                                 itemSet.first();
 
                                 if (itemSet.getRow() > 0) {
-                                    int price = MarketPlace.calculateCommision(set.getInt("price"));
+                                    int listingPrice = set.getInt("price");
                                     if (set.getInt("state") != 1) {
                                         sendErrorMessage(client, set.getInt("item_id"), offerId);
-                                    } else if ((MARKETPLACE_CURRENCY == 0 && price > client.getHabbo().getHabboInfo().getCredits()) || (MARKETPLACE_CURRENCY > 0 && price > client.getHabbo().getHabboInfo().getCurrencyAmount(MARKETPLACE_CURRENCY))) {
-                                        client.sendResponse(new MarketplaceBuyOfferResultMessageComposer(MarketplaceBuyOfferResultMessageComposer.NOT_ENOUGH_CREDITS, 0, offerId, price));
+                                    } else if (!isValidListingPrice(listingPrice)) {
+                                        LOGGER.warn("Rejected marketplace offer {} with invalid listing price {}", offerId, listingPrice);
                                     } else {
-                                        try (PreparedStatement updateOffer = connection.prepareStatement("UPDATE marketplace_items SET state = 2, sold_timestamp = ? WHERE id = ?")) {
-                                            updateOffer.setInt(1, Emulator.getIntUnixTimestamp());
-                                            updateOffer.setInt(2, offerId);
-                                            updateOffer.execute();
-                                        }
                                         Habbo habbo = Emulator.getGameServer().getGameClientManager().getHabbo(set.getInt("user_id"));
                                         HabboItem item = Emulator.getGameEnvironment().getItemManager().loadHabboItem(itemSet);
 
-                                        MarketPlaceItemSoldEvent event = new MarketPlaceItemSoldEvent(habbo, client.getHabbo(), item, set.getInt("price"));
+                                        MarketPlaceItemSoldEvent event = new MarketPlaceItemSoldEvent(habbo, client.getHabbo(), item, listingPrice);
                                         if (Emulator.getPluginManager().fireEvent(event).isCancelled()) {
                                             return;
                                         }
-                                        event.price = calculateCommision(event.price);
 
-                                        item.setUserId(client.getHabbo().getHabboInfo().getId());
-                                        item.needsUpdate(true);
-                                        Emulator.getThreading().run(item);
-
-                                        client.getHabbo().getInventory().getItemsComponent().addItem(item);
-
-                                        if (MARKETPLACE_CURRENCY == 0) {
-                                            client.getHabbo().giveCredits(-event.price);
-                                        } else {
-                                            client.getHabbo().givePoints(MARKETPLACE_CURRENCY, -event.price);
+                                        if (!isValidListingPrice(event.price)) {
+                                            LOGGER.warn("Rejected marketplace offer {} with invalid post-event listing price {}", offerId, event.price);
+                                            return;
                                         }
 
-                                        client.sendResponse(new UnseenItemsMessageComposer(item));
-                                        client.sendResponse(new FurniListInvalidateMessageComposer());
-                                        client.sendResponse(new MarketplaceBuyOfferResultMessageComposer(MarketplaceBuyOfferResultMessageComposer.REFRESH, 0, offerId, price));
+                                        int price = calculateCommision(event.price);
+                                        if (price <= 0) {
+                                            LOGGER.warn("Rejected marketplace offer {} with invalid final price {}", offerId, event.price);
+                                            return;
+                                        }
 
-                                        if (habbo != null) {
-                                            habbo.getInventory().getOffer(offerId).setState(MarketPlaceState.SOLD);
+                                        event.price = price;
+                                        if ((MARKETPLACE_CURRENCY == 0 && price > client.getHabbo().getHabboInfo().getCredits()) || (MARKETPLACE_CURRENCY > 0 && price > client.getHabbo().getHabboInfo().getCurrencyAmount(MARKETPLACE_CURRENCY))) {
+                                            client.sendResponse(new MarketplaceBuyOfferResultMessageComposer(MarketplaceBuyOfferResultMessageComposer.NOT_ENOUGH_CREDITS, 0, offerId, price));
+                                        } else {
+                                            try (PreparedStatement updateOffer = connection.prepareStatement("UPDATE marketplace_items SET state = 2, sold_timestamp = ? WHERE id = ? AND state = 1")) {
+                                                updateOffer.setInt(1, Emulator.getIntUnixTimestamp());
+                                                updateOffer.setInt(2, offerId);
+                                                if (updateOffer.executeUpdate() == 0) {
+                                                    sendErrorMessage(client, set.getInt("item_id"), offerId);
+                                                    return;
+                                                }
+                                            }
+
+                                            item.setUserId(client.getHabbo().getHabboInfo().getId());
+                                            item.needsUpdate(true);
+                                            Emulator.getThreading().run(item);
+
+                                            client.getHabbo().getInventory().getItemsComponent().addItem(item);
+
+                                            if (MARKETPLACE_CURRENCY == 0) {
+                                                client.getHabbo().giveCredits(-event.price);
+                                            } else {
+                                                client.getHabbo().givePoints(MARKETPLACE_CURRENCY, -event.price);
+                                            }
+
+                                            client.sendResponse(new UnseenItemsMessageComposer(item));
+                                            client.sendResponse(new FurniListInvalidateMessageComposer());
+                                            client.sendResponse(new MarketplaceBuyOfferResultMessageComposer(MarketplaceBuyOfferResultMessageComposer.REFRESH, 0, offerId, price));
+
+                                            if (habbo != null) {
+                                                habbo.getInventory().getOffer(offerId).setState(MarketPlaceState.SOLD);
+                                            }
                                         }
                                     }
                                 }
@@ -334,13 +359,16 @@ public class MarketPlace {
         if (item == null || client == null)
             return false;
 
-        if (!item.getBaseItem().allowMarketplace() || price < 0)
+        if (!item.getBaseItem().allowMarketplace() || !isValidListingPrice(price))
             return false;
 
         MarketPlaceItemOfferedEvent event = new MarketPlaceItemOfferedEvent(client.getHabbo(), item, price);
         if (Emulator.getPluginManager().fireEvent(event).isCancelled()) {
             return false;
         }
+
+        if (!isValidListingPrice(event.price))
+            return false;
 
         GetMarketplaceOffersMessageEvent.cachedResults.clear();
 
@@ -399,6 +427,17 @@ public class MarketPlace {
 
 
     public static int calculateCommision(int price) {
-        return price + (int) Math.ceil(price / 100.0);
+        if (!isValidListingPrice(price))
+            return 0;
+
+        long commission = (long) price + ((long) price + 99L) / 100L;
+        if (commission <= 0 || commission > Integer.MAX_VALUE)
+            return 0;
+
+        return Math.toIntExact(commission);
+    }
+
+    public static boolean isValidListingPrice(int price) {
+        return price > 0 && price <= MAX_LISTING_PRICE;
     }
 }

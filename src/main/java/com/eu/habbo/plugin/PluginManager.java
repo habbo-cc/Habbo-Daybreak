@@ -28,6 +28,7 @@ import com.eu.habbo.habbohotel.users.subscriptions.SubscriptionHabboClub;
 import com.eu.habbo.habbohotel.users.subscriptions.SubscriptionBuildersClub;
 import com.eu.habbo.habbohotel.wired.core.WiredEngine;
 import com.eu.habbo.habbohotel.wired.core.WiredManager;
+import com.eu.habbo.habbohotel.wired.variables.WiredVariableManager;
 import com.eu.habbo.habbohotel.wired.highscores.WiredHighscoreManager;
 import com.eu.habbo.messages.PacketManager;
 import com.eu.habbo.messages.incoming.camera.PublishPhotoMessageEvent;
@@ -94,6 +95,7 @@ public class PluginManager {
         MarketPlace.MARKETPLACE_ENABLED = Emulator.getConfig().getBoolean("hotel.marketplace.enabled");
         MarketPlace.MARKETPLACE_CURRENCY = Emulator.getConfig().getInt("hotel.marketplace.currency");
         Messenger.SAVE_PRIVATE_CHATS = Emulator.getConfig().getBoolean("save.private.chats", false);
+        Messenger.CHAT_DELAY_MILLIS = Emulator.getConfig().getInt("messenger.chat.delay.millis", 100);
         PacketManager.DEBUG_SHOW_PACKETS = Emulator.getConfig().getBoolean("debug.show.packets");
         PacketManager.MULTI_THREADED_PACKET_HANDLING = Emulator.getConfig()
                 .getBoolean("io.client.multithreaded.handler");
@@ -143,10 +145,21 @@ public class PluginManager {
         RoomManager.HOME_ROOM_ID = Emulator.getConfig().getInt("hotel.home.room");
         WiredManager.MAXIMUM_FURNI_SELECTION = Emulator.getConfig().getInt("hotel.wired.furni.selection.count");
         WiredManager.TELEPORT_DELAY = Emulator.getConfig().getInt("wired.effect.teleport.delay", 500);
+        WiredEngine.ABUSE_PROTECTION_ENABLED = Emulator.getConfig().getBoolean("wired.abuse.protection.enabled", true);
         WiredEngine.MAX_RECURSION_DEPTH = Emulator.getConfig().getInt("wired.abuse.max.recursion.depth", 10);
         WiredEngine.MAX_EVENTS_PER_WINDOW = Emulator.getConfig().getInt("wired.abuse.max.events.per.window", 100);
         WiredEngine.RATE_LIMIT_WINDOW_MS = Emulator.getConfig().getInt("wired.abuse.rate.limit.window.ms", 10000);
         WiredEngine.WIRED_BAN_DURATION_MS = Emulator.getConfig().getInt("wired.abuse.ban.duration.ms", 600000);
+        // Clamped to at least 1: a zero or negative limit would disable the cap and produce a
+        // degenerate LIMIT clause in WiredVariableRepository's load queries.
+        WiredVariableManager.MAX_DEFINITIONS = Math.max(1,
+                Emulator.getConfig().getInt("wired.variables.max.definitions.per.room", 512));
+        WiredVariableManager.MAX_VALUES_PER_ROOM = Math.max(1,
+                Emulator.getConfig().getInt("wired.variables.max.values.per.room", 50000));
+        WiredVariableManager.MAX_VALUES_PER_DEFINITION = Math.max(1,
+                Emulator.getConfig().getInt("wired.variables.max.values.per.definition", 10000));
+        WiredVariableManager.MAX_DIFF_HASHES = Math.max(1,
+                Emulator.getConfig().getInt("wired.variables.max.diff.hashes", 2048));
         NavigatorManager.MAXIMUM_RESULTS_PER_PAGE = Emulator.getConfig().getInt("hotel.navigator.search.maxresults");
         NavigatorManager.CATEGORY_SORT_USING_ORDER_NUM = Emulator.getConfig()
                 .getBoolean("hotel.navigator.sort.ordernum");
