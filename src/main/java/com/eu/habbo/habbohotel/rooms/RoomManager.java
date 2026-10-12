@@ -510,9 +510,6 @@ public class RoomManager {
             try (ResultSet set = statement.executeQuery()) {
                 while (set.next()) {
                     room = new Room(set);
-                    if (loadData) {
-                        room.loadData();
-                    }
                 }
             }
 
@@ -523,6 +520,12 @@ public class RoomManager {
             LOGGER.error("Caught SQL exception", e);
         }
 
+        // Release the metadata query's connection before waiting for a loader,
+        // which needs its own connection. Otherwise cold entries can consume
+        // every connection while all loaders wait to borrow one.
+        if (room != null && loadData) {
+            room.loadData();
+        }
         return room;
     }
 
