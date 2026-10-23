@@ -1,6 +1,9 @@
 package com.eu.habbo.habbohotel.games;
 
 import com.eu.habbo.habbohotel.users.Habbo;
+import com.eu.habbo.habbohotel.rooms.Room;
+import com.eu.habbo.habbohotel.rooms.RoomUnit;
+import com.eu.habbo.habbohotel.wired.core.WiredManager;
 import gnu.trove.set.hash.THashSet;
 
 public class GameTeam {
@@ -8,6 +11,7 @@ public class GameTeam {
     public final GameTeamColors teamColor;
     private final THashSet<GamePlayer> members;
     private int teamScore;
+    private Room room;
 
 
     public GameTeam(GameTeamColors teamColor) {
@@ -17,7 +21,7 @@ public class GameTeam {
     }
 
 
-    public void initialise() {
+    public synchronized void initialise() {
         for (GamePlayer player : this.members) {
             player.reset();
         }
@@ -26,17 +30,34 @@ public class GameTeam {
     }
 
 
-    public void reset() {
+    public synchronized void reset() {
         this.members.clear();
     }
 
 
     public void addTeamScore(int teamScore) {
-        this.teamScore += teamScore;
+        addTeamScore(teamScore, null);
+    }
+
+    public void addTeamScore(int amount, RoomUnit actor) {
+        int previous, current;
+        synchronized (this) {
+            previous = getTotalScore();
+            this.teamScore += amount;
+            current = getTotalScore();
+        }
+        // Dispatch outside the score lock: Wired effects can award more points.
+        if (room != null) {
+            WiredManager.triggerScoreAchieved(room, actor, teamColor, previous, current);
+        }
+    }
+
+    void setRoom(Room room) {
+        this.room = room;
     }
 
 
-    public int getTeamScore() {
+    public synchronized int getTeamScore() {
         return this.teamScore;
     }
 
@@ -52,20 +73,16 @@ public class GameTeam {
     }
 
 
-    public void addMember(GamePlayer gamePlayer) {
-        synchronized (this.members) {
-            this.members.add(gamePlayer);
-        }
+    public synchronized void addMember(GamePlayer gamePlayer) {
+        this.members.add(gamePlayer);
     }
 
 
-    public void removeMember(GamePlayer gamePlayer) {
-        synchronized (this.members) {
-            this.members.remove(gamePlayer);
-        }
+    public synchronized void removeMember(GamePlayer gamePlayer) {
+        this.members.remove(gamePlayer);
     }
 
-    public void clearMembers() {
+    public synchronized void clearMembers() {
         for (GamePlayer player : this.members) {
             if (player == null || player.getHabbo() == null) continue;
 
@@ -77,7 +94,7 @@ public class GameTeam {
         this.members.clear();
     }
 
-    public void resetScores() {
+    public synchronized void resetScores() {
         for (GamePlayer player : this.members) {
             if (player == null) continue;
 
@@ -93,7 +110,7 @@ public class GameTeam {
     }
 
 
-    public boolean isMember(Habbo habbo) {
+    public synchronized boolean isMember(Habbo habbo) {
         for (GamePlayer p : this.members) {
             if (p.getHabbo().equals(habbo)) {
                 return true;

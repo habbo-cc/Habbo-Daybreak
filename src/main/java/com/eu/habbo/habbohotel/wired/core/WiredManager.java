@@ -2,6 +2,7 @@ package com.eu.habbo.habbohotel.wired.core;
 
 import com.eu.habbo.Emulator;
 import com.eu.habbo.habbohotel.catalog.CatalogItem;
+import com.eu.habbo.habbohotel.games.GameTeamColors;
 import com.eu.habbo.habbohotel.items.Item;
 import com.eu.habbo.habbohotel.items.chests.ChestTransactionFailure;
 import com.eu.habbo.habbohotel.items.interactions.InteractionWiredEffect;
@@ -574,12 +575,22 @@ public final class WiredManager {
      * @param scoreAdded the amount of score just added
      */
     public static boolean triggerScoreAchieved(Room room, RoomUnit user, int score, int scoreAdded) {
-        if (!isEnabled() || room == null || user == null) {
+        if (!isEnabled() || room == null) {
             return false;
         }
         
         WiredEvent event = WiredEvents.scoreAchieved(room, user, score, scoreAdded);
         return handleEvent(event);
+    }
+
+    /** Dispatch a captured team score transition; direct team awards may have no actor. */
+    public static boolean triggerScoreAchieved(
+            Room room, RoomUnit user, GameTeamColors team,
+            int previous, int current) {
+        if (!isEnabled() || room == null || team == null || previous == current) {
+            return false;
+        }
+        return handleEvent(WiredEvents.scoreAchieved(room, user, team, previous, current));
     }
 
     /**

@@ -271,6 +271,7 @@ public abstract class Game implements Runnable {
 
     public void addTeam(GameTeam team) {
         synchronized (this.teams) {
+            team.setRoom(this.room);
             this.teams.put(team.teamColor, team);
         }
     }

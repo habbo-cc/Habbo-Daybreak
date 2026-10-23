@@ -49,7 +49,7 @@ public class WiredEffectGiveScoreToTeam extends InteractionWiredEffect {
                     GameTeam team = game.getTeam(this.teamColor);
 
                     if (team != null) {
-                        team.addTeamScore(this.points);
+                        team.addTeamScore(this.points, ctx.actor().orElse(null));
 
                         this.startTimes.put(game.getStartTime(), c + 1);
                     }
