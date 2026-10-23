@@ -905,6 +905,8 @@ public class RoomManager {
             return;
         }
 
+        // Initialize before admitting the first user or serializing object state.
+        if (!room.initializeWiredForEntry()) return;
         habbo.getRoomUnit().removeStatus(RoomUnitStatus.FLAT_CONTROL);
         habbo.getHabboInfo().setLoadingRoom(0);
         habbo.getHabboInfo().setCurrentRoom(room);

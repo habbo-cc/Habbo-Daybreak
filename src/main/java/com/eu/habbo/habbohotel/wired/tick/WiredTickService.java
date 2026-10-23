@@ -2,6 +2,7 @@ package com.eu.habbo.habbohotel.wired.tick;
 
 import com.eu.habbo.Emulator;
 import com.eu.habbo.habbohotel.rooms.Room;
+import com.eu.habbo.habbohotel.wired.core.WiredManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -415,6 +416,9 @@ public final class WiredTickService {
             // Get the room - skip if not loaded
             Room room = Emulator.getGameEnvironment().getRoomManager().getRoom(roomId);
             if (room == null || !room.isLoaded()) {
+                continue;
+            }
+            if (!WiredManager.isRoomInitializationReady(room)) {
                 continue;
             }
             
