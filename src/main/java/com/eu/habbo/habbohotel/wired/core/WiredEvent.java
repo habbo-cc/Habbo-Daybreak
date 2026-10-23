@@ -169,6 +169,7 @@ public final class WiredEvent {
     private final RoomUnit targetUnit;  // nullable - target user (e.g., for bot reached habbo)
     private final int score;            // score value for score achieved events
     private final int scoreAdded;       // amount added for score achieved events
+    private final WiredScoreChange scoreChange;
     private final boolean triggeredByEffect; // true if triggered by a wired effect (to prevent loops)
     private final int callStackDepth;   // recursion depth for trigger stacks effect
     private final WiredSignalPayload signalPayload;
@@ -190,6 +191,7 @@ public final class WiredEvent {
         this.targetUnit = builder.targetUnit;
         this.score = builder.score;
         this.scoreAdded = builder.scoreAdded;
+        this.scoreChange = builder.scoreChange;
         this.triggeredByEffect = builder.triggeredByEffect;
         this.callStackDepth = builder.callStackDepth;
         this.signalPayload = builder.signalPayload;
@@ -277,6 +279,10 @@ public final class WiredEvent {
      */
     public int getScoreAdded() {
         return scoreAdded;
+    }
+
+    public Optional<WiredScoreChange> getScoreChange() {
+        return Optional.ofNullable(scoreChange);
     }
 
     /**
@@ -380,6 +386,7 @@ public final class WiredEvent {
         private RoomUnit targetUnit;
         private int score;
         private int scoreAdded;
+        private WiredScoreChange scoreChange;
         private boolean triggeredByEffect;
         private int callStackDepth;
         private WiredSignalPayload signalPayload = WiredSignalPayload.empty();
@@ -465,6 +472,11 @@ public final class WiredEvent {
          */
         public Builder scoreAdded(int scoreAdded) {
             this.scoreAdded = scoreAdded;
+            return this;
+        }
+
+        public Builder scoreChange(WiredScoreChange scoreChange) {
+            this.scoreChange = scoreChange;
             return this;
         }
 

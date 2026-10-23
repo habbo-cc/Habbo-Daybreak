@@ -1,11 +1,14 @@
 package com.eu.habbo.habbohotel.wired.migrate;
 
 import com.eu.habbo.habbohotel.rooms.Room;
+import com.eu.habbo.habbohotel.games.GameTeamColors;
+import com.eu.habbo.habbohotel.users.Habbo;
 import com.eu.habbo.habbohotel.rooms.RoomTile;
 import com.eu.habbo.habbohotel.rooms.RoomUnit;
 import com.eu.habbo.habbohotel.users.HabboItem;
 import com.eu.habbo.habbohotel.wired.WiredTriggerType;
 import com.eu.habbo.habbohotel.wired.core.WiredEvent;
+import com.eu.habbo.habbohotel.wired.core.WiredScoreChange;
 import com.eu.habbo.habbohotel.wired.core.WiredHeldDownContext;
 
 /**
@@ -227,10 +230,26 @@ public final class WiredEvents {
      * @return the event
      */
     public static WiredEvent scoreAchieved(Room room, RoomUnit user, int score, int scoreAdded) {
+        Habbo habbo = user == null ? null : room.getHabbo(user);
+        GameTeamColors team = habbo != null && habbo.getHabboInfo().getGamePlayer() != null
+                ? habbo.getHabboInfo().getGamePlayer().getTeamColor() : GameTeamColors.NONE;
+        // Retain the legacy total/delta API. Internal game mutations use the
+        // explicit team/before/after overload, including actorless team awards.
         return WiredEvent.builder(WiredEvent.Type.SCORE_ACHIEVED, room)
                 .actor(user)
                 .score(score)
                 .scoreAdded(scoreAdded)
+                .scoreChange(new WiredScoreChange(team, (long) score - scoreAdded, score))
+                .build();
+    }
+
+    public static WiredEvent scoreAchieved(
+            Room room, RoomUnit user, GameTeamColors team, int previous, int current) {
+        return WiredEvent.builder(WiredEvent.Type.SCORE_ACHIEVED, room)
+                .actor(user)
+                .score(current)
+                .scoreAdded(current - previous)
+                .scoreChange(new WiredScoreChange(team, previous, current))
                 .build();
     }
 

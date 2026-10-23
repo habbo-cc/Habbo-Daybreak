@@ -29,11 +29,19 @@ public class WiredTriggerScoreAchieved extends InteractionWiredTrigger {
 
     @Override
     public boolean matches(HabboItem triggerItem, WiredEvent event) {
+        if (this.score <= 0 || event.getType() != WiredEvent.Type.SCORE_ACHIEVED) {
+            return false;
+        }
+        if (event.getScoreChange().isPresent()) {
+            var change = event.getScoreChange().get();
+            return (this.team == 0 || this.team == change.team().type) && change.crosses(this.score);
+        }
+        // Legacy plugins may still build an event with only score/delta.
+        // With no team evidence only an any-team trigger can match.
         int points = event.getScore();
         int amountAdded = event.getScoreAdded();
 
-        // Check if this score addition crossed the threshold
-        return points - amountAdded < this.score && points >= this.score;
+        return this.team == 0 && (long) points - amountAdded < this.score && points >= this.score;
     }
 
     @Deprecated
@@ -100,10 +108,20 @@ public class WiredTriggerScoreAchieved extends InteractionWiredTrigger {
 
     @Override
     public boolean saveData(WiredSettings settings) {
-        if(settings.getIntParams().length < 1) return false;
-        this.score = settings.getIntParams()[0];
-        this.team = settings.getIntParams().length > 1 ? settings.getIntParams()[1] : 0;
+        if (settings == null || settings.getIntParams() == null
+                || settings.getIntParams().length < 1 || settings.getIntParams().length > 2) return false;
+        int score = settings.getIntParams()[0];
+        int team = settings.getIntParams().length > 1 ? settings.getIntParams()[1] : 0;
+        if (score < 1 || score > 1000 || team < 0 || team > 4) return false;
+        this.score = score;
+        this.team = team;
         return true;
+    }
+
+    @Override
+    public boolean requiresActor() {
+        // Predefined team awards and score-variable writes can have no user.
+        return false;
     }
 
     @Override

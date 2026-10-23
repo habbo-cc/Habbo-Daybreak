@@ -1,6 +1,7 @@
 package com.eu.habbo.habbohotel.games;
 
 import com.eu.habbo.habbohotel.users.Habbo;
+import com.eu.habbo.habbohotel.rooms.Room;
 import com.eu.habbo.habbohotel.wired.core.WiredManager;
 
 public class GamePlayer {
@@ -26,12 +27,24 @@ public class GamePlayer {
         this.wiredScore = 0;
     }
 
-    public synchronized void addScore(int amount) {
+    public void addScore(int amount) {
         addScore(amount, false);
     }
 
-    public synchronized void addScore(int amount, boolean isWired) {
-        if (habbo.getHabboInfo().getGamePlayer() != null && this.habbo.getHabboInfo().getCurrentGame() != null && this.habbo.getHabboInfo().getCurrentRoom().getGame(this.habbo.getHabboInfo().getCurrentGame()).getTeamForHabbo(this.habbo) != null) {
+    public void addScore(int amount, boolean isWired) {
+        Room room = this.habbo.getHabboInfo().getCurrentRoom();
+        if (room == null || this.habbo.getHabboInfo().getGamePlayer() != this
+                || this.habbo.getHabboInfo().getCurrentGame() == null) {
+            return;
+        }
+        Game game = room.getGame(this.habbo.getHabboInfo().getCurrentGame());
+        GameTeam team = game == null ? null : game.getTeamForHabbo(this.habbo);
+        if (team == null) {
+            return;
+        }
+        int previous, current;
+        synchronized (team) {
+            previous = team.getTotalScore();
             this.score += amount;
 
             if (this.score < 0) this.score = 0;
@@ -40,8 +53,9 @@ public class GamePlayer {
                 this.wiredScore += amount;
             }
 
-            WiredManager.triggerScoreAchieved(this.habbo.getHabboInfo().getCurrentRoom(), this.habbo.getRoomUnit(), this.score, amount);
+            current = team.getTotalScore();
         }
+        WiredManager.triggerScoreAchieved(room, this.habbo.getRoomUnit(), team.teamColor, previous, current);
     }
 
     public Habbo getHabbo() {
