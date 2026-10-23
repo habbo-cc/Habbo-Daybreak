@@ -286,11 +286,25 @@ public final class WiredManager {
      * @return true if any stack was triggered
      */
     public static boolean handleEvent(WiredEvent event) {
-        if (!isEnabled() || engine == null) {
+        if (!isEnabled() || engine == null || event == null || !isRoomInitializationReady(event.getRoom())) {
             return false;
         }
         
         return engine.handleEvent(event);
+    }
+
+    /** Existing rooms without an initialization box keep their load-time behavior. */
+    public static boolean isRoomInitializationReady(Room room) {
+        if (room == null) return false;
+        WiredRoomInitialization state = room.getWiredInitialization();
+        if (state == null || room.getRoomSpecialTypes() == null) return true;
+        var triggers = room.getRoomSpecialTypes().getTriggers(WiredTriggerType.ROOM_INITIALIZED);
+        return triggers == null || triggers.isEmpty() || state.allowsDispatch();
+    }
+
+    public static boolean triggerRoomInitialized(Room room) {
+        if (!isEnabled() || room == null || !room.isLoaded()) return false;
+        return handleEvent(WiredEvent.builder(WiredEvent.Type.ROOM_INITIALIZED, room).build());
     }
 
     /**

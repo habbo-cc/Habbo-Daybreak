@@ -108,6 +108,14 @@ class ItemManagerWiredAddonRegistrationTest {
                 manager.getItemInteraction("wf_slc_remote").getType());
     }
 
+    @Test
+    void initializationFurnitureNameHasItsOwnTriggerRegistration() {
+        TestItemManager manager = new TestItemManager();
+        manager.registerInteractions();
+        assertEquals(com.eu.habbo.habbohotel.items.interactions.wired.triggers.WiredTriggerRoomInitialized.class,
+                manager.getItemInteraction("wf_trg_room_initializes").getType());
+    }
+
     private static final class TestItemManager extends ItemManager {
         private void registerInteractions() {
             super.loadItemInteractions();

@@ -236,7 +236,10 @@ public class RoomUnitManager {
         }
 
         synchronized (this.room.roomUnitLock) {
-            this.currentHabbos.remove(habbo.getHabboInfo().getId());
+            Habbo removed = this.currentHabbos.remove(habbo.getHabboInfo().getId());
+            if (removed != null && this.currentHabbos.isEmpty() && this.room.getWiredInitialization() != null) {
+                this.room.getWiredInitialization().becameEmpty();
+            }
         }
 
         if (sendRemovePacket && habbo.getRoomUnit() != null && !habbo.getRoomUnit().isTeleporting) {

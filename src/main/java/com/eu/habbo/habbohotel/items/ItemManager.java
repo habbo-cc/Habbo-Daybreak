@@ -279,6 +279,7 @@ public class ItemManager {
         this.interactionsList.add(new ItemInteraction("wf_trg_click_user", WiredTriggerUserClicksUser.class));
         this.interactionsList.add(new ItemInteraction("wf_trg_transaction_complete", WiredTriggerTransactionCompleted.class));
         this.interactionsList.add(new ItemInteraction("wf_trg_transaction_fail", WiredTriggerTransactionFailed.class));
+        this.interactionsList.add(new ItemInteraction("wf_trg_room_initializes", WiredTriggerRoomInitialized.class));
 
         this.interactionsList.add(new ItemInteraction("wf_act_toggle_state", WiredEffectToggleFurni.class));
         this.interactionsList.add(new ItemInteraction("wf_act_reset_timers", WiredEffectResetTimers.class));

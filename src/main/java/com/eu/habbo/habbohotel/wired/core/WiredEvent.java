@@ -61,6 +61,7 @@ public final class WiredEvent {
 
         /** User enters the room */
         USER_ENTERS_ROOM(WiredTriggerType.ENTER_ROOM),
+        ROOM_INITIALIZED(WiredTriggerType.ROOM_INITIALIZED),
         
         /** Game starts */
         GAME_STARTS(WiredTriggerType.GAME_STARTS),

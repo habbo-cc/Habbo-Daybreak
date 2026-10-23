@@ -47,6 +47,7 @@ import com.eu.habbo.habbohotel.users.Habbo;
 import com.eu.habbo.habbohotel.users.HabboItem;
 import com.eu.habbo.habbohotel.wired.WiredUserAction;
 import com.eu.habbo.habbohotel.wired.core.WiredManager;
+import com.eu.habbo.habbohotel.wired.core.WiredRoomInitialization;
 import com.eu.habbo.messages.ISerialize;
 import com.eu.habbo.messages.ServerMessage;
 import com.eu.habbo.messages.outgoing.guilds.HabboGroupDetailsMessageComposer;
@@ -82,6 +83,16 @@ import gnu.trove.set.hash.THashSet;
 public class Room implements Comparable<Room>, ISerialize, Runnable {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(Room.class);
+  private final WiredRoomInitialization wiredInitialization = new WiredRoomInitialization();
+
+  public WiredRoomInitialization getWiredInitialization() {
+    return this.wiredInitialization;
+  }
+
+  public boolean initializeWiredForEntry() {
+    if (!this.isLoaded()) return false;
+    return this.getWiredInitialization().beforeEntry(() -> WiredManager.triggerRoomInitialized(this));
+  }
 
   // Manager instances for better separation of concerns
   private RoomTileManager tileManager;
@@ -1020,6 +1031,7 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
       if (this.loaded) {
         // Set loaded to false FIRST to prevent re-entry and ensure cycle stops
         this.loaded = false;
+        this.wiredInitialization.reset();
 
         try {
           if (this.traxManager != null && !this.traxManager.disposed()) {

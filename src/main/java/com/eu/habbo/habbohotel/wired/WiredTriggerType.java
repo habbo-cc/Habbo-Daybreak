@@ -30,6 +30,7 @@ public enum WiredTriggerType {
     CLICK_USER(24),
     TRANSACTION_COMPLETED(25),
     TRANSACTION_FAILED(26),
+    ROOM_INITIALIZED(28),
     SAY_COMMAND(0),
     IDLES(11),
     UNIDLES(11),
