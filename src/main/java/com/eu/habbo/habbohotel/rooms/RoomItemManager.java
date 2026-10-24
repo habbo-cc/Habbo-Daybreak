@@ -935,6 +935,7 @@ public class RoomItemManager {
 
             // Unregister from special types
             this.unregisterItemFromSpecialTypes(i);
+            com.eu.habbo.habbohotel.wired.variablefx.WiredVariableFxRuntime.refresh(this.room, true);
         }
     }
 

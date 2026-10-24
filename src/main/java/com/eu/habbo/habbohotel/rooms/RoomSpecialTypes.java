@@ -65,6 +65,12 @@ public class RoomSpecialTypes {
     private final ConcurrentHashMap<Integer, InteractionWiredAddon> wiredAddonsById;
     private final ConcurrentHashMap<Integer, InteractionWiredVariable> wiredVariablesById;
     private final WiredVariableManager wiredVariableManager;
+    private final com.eu.habbo.habbohotel.wired.variablefx.WiredVariableFxRuntime variableFxRuntime =
+            new com.eu.habbo.habbohotel.wired.variablefx.WiredVariableFxRuntime();
+
+    public com.eu.habbo.habbohotel.wired.variablefx.WiredVariableFxRuntime getVariableFxRuntime() {
+        return variableFxRuntime;
+    }
     private final ConcurrentHashMap<Integer, InteractionWiredExtra> wiredExtras;
     
     // Spatial index for O(1) coordinate-based lookups of wired components
@@ -1292,6 +1298,7 @@ public class RoomSpecialTypes {
     }
 
     public synchronized void dispose() {
+        variableFxRuntime.close();
         if (this.wiredVariableManager != null) {
             this.wiredVariableManager.close();
         }

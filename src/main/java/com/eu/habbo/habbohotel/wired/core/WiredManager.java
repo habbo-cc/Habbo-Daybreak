@@ -323,6 +323,7 @@ public final class WiredManager {
         boolean handled = false;
         for (var notification : com.eu.habbo.habbohotel.wired.variables.WiredVariableAliasOperations.notificationsAcrossRooms(room, mutation)) {
             com.eu.habbo.habbohotel.wired.variables.WiredInternalVariableObserver.record(notification.room(), notification.mutation());
+            com.eu.habbo.habbohotel.wired.variablefx.WiredVariableFxRuntime.refresh(notification.room(), false);
             handled |= handleEvent(WiredEvent.builder(WiredEvent.Type.VARIABLE_CHANGED, notification.room())
                 .actor(notification.room() == room ? currentActor : null)
                 .variableMutation(notification.mutation())
@@ -814,6 +815,7 @@ public final class WiredManager {
      * Call this when wired items are added/removed/moved.
      */
     public static void invalidateRoom(Room room) {
+        com.eu.habbo.habbohotel.wired.variablefx.WiredVariableFxRuntime.refresh(room, true);
         if (stackIndex != null && room != null) {
             stackIndex.invalidateAll(room);
             if (debugEnabled) {
@@ -827,6 +829,7 @@ public final class WiredManager {
      * Invalidate the wired index for a specific tile.
      */
     public static void invalidateTile(Room room, RoomTile tile) {
+        com.eu.habbo.habbohotel.wired.variablefx.WiredVariableFxRuntime.refresh(room, true);
         if (stackIndex != null && room != null && tile != null) {
             stackIndex.invalidate(room, tile);
         }

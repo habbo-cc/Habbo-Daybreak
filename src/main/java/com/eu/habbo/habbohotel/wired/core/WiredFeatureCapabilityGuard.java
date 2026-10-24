@@ -38,6 +38,9 @@ public final class WiredFeatureCapabilityGuard {
     }
 
     static int requiredRoomCapability(InteractionWired wired) {
+        if (wired instanceof com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonVariableFx) {
+            return WiredCapabilityService.CAPABILITY_VARIABLE_FX;
+        }
         if (wired instanceof InteractionWiredTrigger trigger
                 && trigger.getType() == WiredTriggerType.RECEIVE_SIGNAL) {
             return WiredCapabilityService.CAPABILITY_SIGNALS;

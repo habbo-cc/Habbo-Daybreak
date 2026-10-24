@@ -37,6 +37,10 @@ public class RequestWiredCapabilitiesMessageEvent extends MessageHandler {
 
         this.client.setWiredCapabilityState(state);
         this.client.sendResponse(new WiredCapabilitiesMessageComposer(state));
+        if (validatedRoomId > 0) {
+            com.eu.habbo.habbohotel.wired.variablefx.WiredVariableFxRuntime.refresh(
+                    this.client.getHabbo().getHabboInfo().getCurrentRoom(), true);
+        }
     }
 
     private int validateCurrentRoom(int requestedRoomId) {

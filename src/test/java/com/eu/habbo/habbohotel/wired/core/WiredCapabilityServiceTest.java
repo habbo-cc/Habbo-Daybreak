@@ -9,6 +9,22 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class WiredCapabilityServiceTest {
     @Test
+    void variableFxRequiresExplicitOptInAndEveryDependencyInTheExactRoom() {
+        int bit=WiredCapabilityService.CAPABILITY_VARIABLE_FX;
+        int dependencies=WiredCapabilityService.CAPABILITY_ADDONS | WiredCapabilityService.CAPABILITY_VARIABLES
+                | WiredCapabilityService.CAPABILITY_VARIABLE_SYNC;
+        int full=WiredCapabilityService.CAPABILITY_PROTOCOL | dependencies | bit;
+        assertTrue(WiredCapabilityService.negotiate(true,1,full,42).supportsRoom(bit,42));
+        assertFalse(WiredCapabilityService.negotiate(true,1,full,42).supportsRoom(bit,43));
+        for(int missing:new int[]{WiredCapabilityService.CAPABILITY_ADDONS,WiredCapabilityService.CAPABILITY_VARIABLES,
+                WiredCapabilityService.CAPABILITY_VARIABLE_SYNC,bit})
+            assertFalse(WiredCapabilityService.negotiate(true,1,full & ~missing,42).supportsRoom(bit,42));
+        assertFalse(WiredCapabilityService.negotiate(true,1,full,42,
+                WiredCapabilityService.availableRoomCapabilityMask(false)).supportsRoom(bit,42));
+        var addon=new com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonVariableFxProgress(1,1,null,"0",0,0);
+        assertEquals(bit,WiredFeatureCapabilityGuard.requiredRoomCapability(addon));
+    }
+    @Test
     void disabledMasterSwitchNegotiatesNothing() {
         WiredCapabilityState state = WiredCapabilityService.negotiate(false, 1, 1, 42);
 
@@ -152,7 +168,8 @@ class WiredCapabilityServiceTest {
                 | WiredCapabilityService.CAPABILITY_WIRED_MOVEMENTS
                 | WiredCapabilityService.CAPABILITY_CHESTS
                 | WiredCapabilityService.CAPABILITY_CHEST_WIRED
-                | WiredCapabilityService.CAPABILITY_CONTRACTS;
+                | WiredCapabilityService.CAPABILITY_CONTRACTS
+                | WiredCapabilityService.CAPABILITY_VARIABLE_FX;
 
         assertEquals(expected, WiredCapabilityService.FUNCTIONAL_ROOM_CAPABILITY_MASK);
         assertEquals(WiredCapabilityService.CAPABILITY_PROTOCOL | expected,

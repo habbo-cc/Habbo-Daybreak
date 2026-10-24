@@ -238,6 +238,10 @@ public class RoomUnitManager {
         synchronized (this.room.roomUnitLock) {
             this.currentHabbos.remove(habbo.getHabboInfo().getId());
         }
+        if (specialTypes != null) {
+            specialTypes.getVariableFxRuntime().forget(habbo.getClient());
+            com.eu.habbo.habbohotel.wired.variablefx.WiredVariableFxRuntime.refresh(this.room, true);
+        }
 
         if (sendRemovePacket && habbo.getRoomUnit() != null && !habbo.getRoomUnit().isTeleporting) {
             this.room.sendComposer(new UserRemoveMessageComposer(habbo.getRoomUnit()).compose());

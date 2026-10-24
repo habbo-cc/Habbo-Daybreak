@@ -431,6 +431,13 @@ public class ItemManager {
         this.interactionsList.add(new ItemInteraction("wf_xtra_text_output_username", WiredAddonUsernamePlaceholder.class));
         this.interactionsList.add(new ItemInteraction("wf_xtra_text_output_furni_name", WiredAddonFurniNamePlaceholder.class));
         this.interactionsList.add(new ItemInteraction("wf_xtra_var_lvlup_system", WiredAddonVariableLevelUp.class));
+        // Local opt-in aliases; these names do not assert official catalogue availability.
+        this.interactionsList.add(new ItemInteraction("wf_xtra_variable_fx_health", com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonVariableFxHealth.class));
+        this.interactionsList.add(new ItemInteraction("wf_xtra_variable_fx_progress", com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonVariableFxProgress.class));
+        this.interactionsList.add(new ItemInteraction("wf_xtra_variable_fx_level", com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonVariableFxLevel.class));
+        this.interactionsList.add(new ItemInteraction("wf_xtra_variable_fx_status", com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonVariableFxStatus.class));
+        this.interactionsList.add(new ItemInteraction("wf_xtra_variable_fx_boss", com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonVariableFxBoss.class));
+        this.interactionsList.add(new ItemInteraction("wf_xtra_variable_fx_number", com.eu.habbo.habbohotel.items.interactions.wired.addons.WiredAddonVariableFxNumber.class));
         this.interactionsList.add(new ItemInteraction("wf_xtra_text_output_variable", WiredAddonVariablePlaceholder.class));
         this.interactionsList.add(new ItemInteraction("wf_xtra_text_input_variable", WiredAddonVariableCapturer.class));
         this.interactionsList.add(new ItemInteraction("wf_xtra_var_text_connector", WiredAddonVariableTextConverter.class));

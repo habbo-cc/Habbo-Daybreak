@@ -1,6 +1,10 @@
 package com.eu.habbo.messages.outgoing;
 
 public class Outgoing {
+    public static final int WiredVariableFxConfigMessageComposer = 739;
+    public static final int WiredVariableFxConfigRemoveMessageComposer = 2588;
+    public static final int WiredVariableFxStatusMessageComposer = 754;
+    public static final int WiredVariableFxRemoveMessageComposer = 236;
     public final static int ConfigurationItemStatesMessageComposer = 2942; // July 2026 AIR
     public final static int AreaHideMessageComposer = 1131; // July 2026 AIR
     public static final int PetStatusUpdateMessageComposer = 1907;//error 404

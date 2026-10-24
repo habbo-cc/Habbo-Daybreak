@@ -28,7 +28,9 @@ public final class WiredCapabilityService {
     public static final int CAPABILITY_CHESTS = 1 << 16;
     public static final int CAPABILITY_CHEST_WIRED = 1 << 17;
     public static final int CAPABILITY_CONTRACTS = 1 << 18;
-    public static final int KNOWN_CAPABILITY_MASK = (1 << 19) - 1;
+    /** Project-local extension: do not send AIR VariableFX packets to older clients. */
+    public static final int CAPABILITY_VARIABLE_FX = 1 << 19;
+    public static final int KNOWN_CAPABILITY_MASK = (1 << 20) - 1;
 
     /**
      * Wired 2.0 services which are implemented end-to-end in this server.
@@ -57,7 +59,8 @@ public final class WiredCapabilityService {
             | CAPABILITY_WIRED_MOVEMENTS
             | CAPABILITY_CHESTS
             | CAPABILITY_CHEST_WIRED
-            | CAPABILITY_CONTRACTS;
+            | CAPABILITY_CONTRACTS
+            | CAPABILITY_VARIABLE_FX;
 
     /** Protocol plus every currently functional service accepted by the client. */
     public static final int COMPILED_CONNECTION_CAPABILITY_MASK = CAPABILITY_PROTOCOL
@@ -163,6 +166,8 @@ public final class WiredCapabilityService {
 
     static int applyDependencies(int capabilityMask) {
         int sanitized = capabilityMask & KNOWN_CAPABILITY_MASK;
+        int fxDependencies=CAPABILITY_ADDONS | CAPABILITY_VARIABLES | CAPABILITY_VARIABLE_SYNC;
+        if((sanitized & fxDependencies)!=fxDependencies) sanitized &= ~CAPABILITY_VARIABLE_FX;
         if ((sanitized & CAPABILITY_VARIABLES) == 0) {
             sanitized &= ~(CAPABILITY_VARIABLE_SYNC | CAPABILITY_MENU_VARIABLES);
         }
